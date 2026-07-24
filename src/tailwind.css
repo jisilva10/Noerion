@@ -657,10 +657,6 @@
     --tw-ease: linear;
     transition-timing-function: linear;
   }
-  .ease-out {
-    --tw-ease: var(--ease-out);
-    transition-timing-function: var(--ease-out);
-  }
   .outline-none {
     --tw-outline-style: none;
     outline-style: none;
