@@ -29,7 +29,6 @@ export function FeatureSteps({
   const isInView = useInView(containerRef, { amount: 0.3 })
   const programmaticScrollRef = useRef(false);
 
-  // Reset to first item whenever the section comes into view
   useEffect(() => {
     if (isInView) {
       programmaticScrollRef.current = true;
@@ -38,14 +37,15 @@ export function FeatureSteps({
     }
   }, [isInView])
 
-  // Scroll active item into view on mobile (only when programmatic)
   useEffect(() => {
     if (programmaticScrollRef.current && window.innerWidth < 768) {
       const el = document.getElementById(`feature-item-${currentFeature}`);
       const slider = document.getElementById('feature-slider');
       if (el && slider) {
+        // Center the item in the slider
+        const scrollLeft = el.offsetLeft - slider.offsetLeft - (slider.clientWidth / 2) + (el.clientWidth / 2);
         slider.scrollTo({
-          left: el.offsetLeft - slider.offsetLeft - 24, // 24px padding compensation
+          left: scrollLeft,
           behavior: 'smooth'
         });
       }
@@ -78,7 +78,10 @@ export function FeatureSteps({
     let minDiff = Infinity;
     
     Array.from(container.children).forEach((child: any, idx) => {
-      const diff = Math.abs(child.offsetLeft - container.offsetLeft - scrollLeft);
+      const center = child.offsetLeft - container.offsetLeft + (child.clientWidth / 2);
+      const containerCenter = scrollLeft + (container.clientWidth / 2);
+      const diff = Math.abs(center - containerCenter);
+      
       if (diff < minDiff) {
         minDiff = diff;
         closestIndex = idx;
@@ -92,7 +95,7 @@ export function FeatureSteps({
   };
 
   return (
-    <div ref={containerRef} className={cn("py-0 pb-20 w-full", className)}>
+    <div ref={containerRef} className={cn("py-0 pb-20 w-full overflow-hidden", className)}>
       <div className="max-w-[1200px] mx-auto w-full px-6 md:px-12">
         {title && (
           <h2 className="text-3xl md:text-5xl font-cormorant font-semibold mb-12 text-center text-dark">
@@ -100,11 +103,11 @@ export function FeatureSteps({
           </h2>
         )}
 
-        <div className="flex flex-col md:grid md:grid-cols-2 gap-8 md:gap-24 items-center">
+        <div className="flex flex-col md:grid md:grid-cols-2 gap-12 md:gap-32 items-center">
           <div className="order-2 md:order-1 flex flex-col w-full justify-center">
             {/* Slider */}
             <div 
-              className="flex flex-row md:flex-col overflow-x-auto md:overflow-visible no-scrollbar snap-x snap-mandatory gap-8 pb-2 pt-4 w-[100vw] -mx-6 px-6 md:w-full md:mx-0 md:px-0" 
+              className="flex flex-row md:flex-col overflow-x-auto md:overflow-visible no-scrollbar snap-x snap-mandatory gap-6 md:gap-16 pb-2 pt-4 w-[100vw] -mx-6 px-6 md:w-full md:mx-0 md:px-0" 
               id="feature-slider"
               onScroll={handleScroll}
             >
@@ -112,7 +115,7 @@ export function FeatureSteps({
                 <motion.div
                   key={index}
                   id={`feature-item-${index}`}
-                  className="flex flex-col md:flex-row w-[calc(100vw-3rem)] shrink-0 md:w-full items-start gap-6 md:gap-8 cursor-pointer snap-center bg-transparent border-none shadow-none"
+                  className="flex flex-row w-[85vw] shrink-0 md:w-full items-start gap-4 md:gap-8 cursor-pointer snap-center bg-transparent border-none shadow-none"
                   onClick={() => {
                     programmaticScrollRef.current = true;
                     setCurrentFeature(index);
@@ -124,24 +127,24 @@ export function FeatureSteps({
                 >
                   <motion.div
                     className={cn(
-                      "w-12 h-12 md:w-12 md:h-12 rounded-full flex items-center justify-center border-2 flex-shrink-0 transition-all duration-300",
+                      "w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center border-2 flex-shrink-0 transition-all duration-300 mt-1 md:mt-0",
                       index === currentFeature
                         ? "bg-[#B89A0A] border-[#B89A0A] text-white scale-110 shadow-lg"
                         : "bg-transparent border-border text-mid",
                     )}
                   >
                     {index <= currentFeature ? (
-                      <span className="text-lg font-bold text-cream">✓</span>
+                      <span className="text-base md:text-lg font-bold text-cream">✓</span>
                     ) : (
-                      <span className="text-lg font-semibold font-sans">{index + 1}</span>
+                      <span className="text-base md:text-lg font-semibold font-sans">{index + 1}</span>
                     )}
                   </motion.div>
 
-                  <div className="flex-1 mt-1">
+                  <div className="flex-1">
                     <h3 className="text-xl md:text-2xl font-semibold font-cormorant text-dark">
                       {feature.title || feature.step}
                     </h3>
-                    <p className="text-[15px] md:text-base text-dark font-sans mt-3 leading-relaxed">
+                    <p className="text-[15px] md:text-base text-dark font-sans mt-2 md:mt-3 leading-relaxed">
                       {feature.content}
                     </p>
                   </div>
@@ -150,7 +153,7 @@ export function FeatureSteps({
             </div>
 
             {/* Pagination Dots (Mobile Only) */}
-            <div className="flex md:hidden justify-center items-center gap-2 mt-4">
+            <div className="flex md:hidden justify-center items-center gap-2 mt-6">
               {features.map((_, index) => (
                 <div 
                   key={index} 
