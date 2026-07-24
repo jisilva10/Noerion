@@ -108,8 +108,9 @@ export function FeatureSteps({
                     <motion.div 
                       layoutId={`chip-desktop-${index}`}
                       className="absolute inset-0 flex items-center justify-center"
+                      transition={{ layout: { duration: 0.8, type: "spring", bounce: 0.3 } }}
                     >
-                      <ChipEye forceAsleep width="38px" height="38px" />
+                      <ChipEye forceAsleep width="48px" height="48px" />
                     </motion.div>
                   ) : null}
                 </div>
@@ -152,14 +153,15 @@ export function FeatureSteps({
           <motion.div 
             layoutId={`chip-desktop-${currentFeature}`}
             className="z-10 relative flex items-center justify-center"
-            style={{ width: 48, height: 48 }}
+            style={{ width: 120, height: 120 }}
+            transition={{ layout: { duration: 0.8, type: "spring", bounce: 0.3 } }}
           >
             <motion.div
               initial={{ rotate: -180, scale: 0.5 }}
               animate={{ rotate: 0, scale: 1 }}
-              transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
+              transition={{ duration: 0.8, type: "spring", bounce: 0.3 }}
             >
-               <ChipEye width="48px" height="48px" wakeDelay={400} />
+               <ChipEye width="120px" height="120px" wakeDelay={800} />
             </motion.div>
           </motion.div>
         </div>
@@ -185,14 +187,15 @@ export function FeatureSteps({
           <motion.div 
             layoutId={`chip-mobile-${currentFeature}`}
             className="z-10 relative flex items-center justify-center"
-            style={{ width: 40, height: 40 }}
+            style={{ width: 100, height: 100 }}
+            transition={{ layout: { duration: 0.8, type: "spring", bounce: 0.3 } }}
           >
             <motion.div
               initial={{ rotate: -180, scale: 0.5 }}
               animate={{ rotate: 0, scale: 1 }}
-              transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
+              transition={{ duration: 0.8, type: "spring", bounce: 0.3 }}
             >
-               <ChipEye width="40px" height="40px" wakeDelay={400} />
+               <ChipEye width="100px" height="100px" wakeDelay={800} />
             </motion.div>
           </motion.div>
         </div>
@@ -226,8 +229,9 @@ export function FeatureSteps({
                       <motion.div 
                         layoutId={`chip-mobile-${index}`}
                         className="absolute inset-0 flex items-center justify-center"
+                        transition={{ layout: { duration: 0.8, type: "spring", bounce: 0.3 } }}
                       >
-                        <ChipEye forceAsleep width="38px" height="38px" />
+                        <ChipEye forceAsleep width="48px" height="48px" />
                       </motion.div>
                     ) : null}
                   </div>
