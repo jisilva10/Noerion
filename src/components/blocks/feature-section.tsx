@@ -112,7 +112,7 @@ export function FeatureSteps({
             {features.map((feature, index) => (
               <motion.div
                 key={index}
-                className="flex flex-row items-start gap-8 cursor-pointer overflow-visible"
+                className="flex flex-row items-start gap-8 cursor-pointer overflow-visible px-2 py-2"
                 onClick={() => {
                   setCurrentFeature(index);
                   setProgress(0);
@@ -125,7 +125,7 @@ export function FeatureSteps({
                   className={cn(
                     "w-12 h-12 rounded-full flex items-center justify-center border-2 flex-shrink-0 transition-transform duration-300",
                     index === currentFeature
-                      ? "bg-[#B89A0A] border-[#B89A0A] text-white scale-110 shadow-lg"
+                      ? "bg-[#B89A0A] border-[#B89A0A] text-white scale-125 shadow-lg"
                       : "bg-transparent border-border text-mid",
                   )}
                 >
@@ -178,7 +178,7 @@ export function FeatureSteps({
         {/* =========================================
             MOBILE LAYOUT (Hidden on desktop)
             ========================================= */}
-        <div className="flex md:hidden flex-col w-full">
+        <div className="flex md:hidden flex-col w-full overflow-visible">
           
           {/* Mobile Image (Top) */}
           <div className="relative h-[280px] w-full rounded-2xl overflow-hidden shadow-sm border border-border mb-8">
@@ -205,10 +205,12 @@ export function FeatureSteps({
             </AnimatePresence>
           </div>
 
-          {/* Mobile Slider (Bottom) */}
-          <div className="w-[100vw] -mx-6 flex flex-col relative overflow-hidden">
+          {/* Mobile Slider (Bottom) 
+              Uses the 'left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-[100vw]' trick to break out of ALL parent padding 
+              and center perfectly on the screen edge-to-edge. */}
+          <div className="relative w-[100vw] left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] flex flex-col overflow-visible">
             <div 
-              className="flex overflow-x-auto snap-x snap-mandatory gap-6 px-6 no-scrollbar w-full pb-4" 
+              className="flex overflow-x-auto snap-x snap-mandatory gap-6 px-8 no-scrollbar w-full pb-4" 
               id="feature-slider"
               onScroll={handleScroll}
             >
@@ -216,7 +218,7 @@ export function FeatureSteps({
                 <div
                   key={`mob-text-${index}`}
                   id={`mobile-feature-item-${index}`}
-                  className="flex flex-col w-[calc(100vw-3rem)] shrink-0 snap-center gap-4 cursor-pointer pt-2"
+                  className="flex flex-col w-[85vw] shrink-0 snap-center gap-4 cursor-pointer pt-2 px-2"
                   onClick={() => {
                     programmaticScrollRef.current = true;
                     setCurrentFeature(index);
@@ -227,7 +229,7 @@ export function FeatureSteps({
                     className={cn(
                       "w-10 h-10 rounded-full flex items-center justify-center border-2 flex-shrink-0 transition-transform duration-300",
                       index === currentFeature
-                        ? "bg-[#B89A0A] border-[#B89A0A] text-white scale-110 shadow-md"
+                        ? "bg-[#B89A0A] border-[#B89A0A] text-white scale-125 shadow-md"
                         : "bg-transparent border-border text-mid",
                     )}
                   >
