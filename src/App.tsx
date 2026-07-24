@@ -157,7 +157,7 @@ export default function App() {
   </div>
   <FeatureSteps 
     features={demoFeatures}
-    autoPlayInterval={8000}
+    autoPlayInterval={12000}
   />
 </section>
 

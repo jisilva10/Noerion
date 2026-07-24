@@ -85,23 +85,14 @@ export const SCENES: SceneConfig[] = [
    ══════════════════════════════════════════════════════════════ */
 const rootV: Variants = {
   hidden: { opacity: 1 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.06, delayChildren: 0.08 } },
-  exit: { opacity: 1, transition: { staggerChildren: 0.04, staggerDirection: -1 } },
+  visible: { opacity: 1, transition: { staggerChildren: 0.045, delayChildren: 0.06 } },
+  exit: { opacity: 1, transition: { staggerChildren: 0.03, staggerDirection: -1 } },
 };
 
 const lineV: Variants = {
-  hidden: { pathLength: 0, opacity: 0 },
-  visible: {
-    pathLength: 1,
-    opacity: 1,
-    transition: { pathLength: { duration: 0.85, ease: [0.65, 0, 0.35, 1] }, opacity: { duration: 0.2 } },
-  },
-  exit: {
-    pathLength: 0,
-    pathOffset: 1,
-    opacity: 0,
-    transition: { duration: 0.45, ease: [0.65, 0, 0.35, 1] },
-  },
+  hidden: { opacity: 0, y: 6 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+  exit: { opacity: 0, y: -6, transition: { duration: 0.32, ease: [0.65, 0, 0.35, 1] } },
 };
 
 const popV: Variants = {
@@ -441,7 +432,8 @@ const SceneEcosystem: React.FC = () => (
         fill="none"
         strokeLinecap="round"
         strokeLinejoin="round"
-        animate={{ pathLength: [0, 1, 1, 0] }}
+        strokeDasharray={340}
+        animate={{ strokeDashoffset: [340, 0, 0, 340] }}
         transition={{ duration: 6, times: [0, 0.5, 0.86, 1], repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.circle
@@ -468,7 +460,8 @@ const SceneEcosystem: React.FC = () => (
         fill="none"
         strokeLinecap="round"
         transform="rotate(-90 390 397)"
-        animate={{ pathLength: [0, 0.78, 0.78, 0] }}
+        strokeDasharray={176}
+        animate={{ strokeDashoffset: [176, 39, 39, 176] }}
         transition={{ duration: 6, times: [0, 0.42, 0.88, 1], repeat: Infinity, ease: "easeInOut" }}
       />
     </motion.g>

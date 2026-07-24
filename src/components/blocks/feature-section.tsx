@@ -79,7 +79,7 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
 
   const isMobile = useIsMobile();
   const reduce = useReducedMotion();
-  const isInView = useInView(wrapRef, { amount: 0.25 });
+  const isInView = useInView(wrapRef, { amount: 0.45 });
 
   /* ─── medicion ─────────────────────────────────────────────── */
   const measure = useCallback(() => {
