@@ -14,7 +14,6 @@ interface FeatureStepsProps {
   className?: string
   title?: string
   autoPlayInterval?: number
-  imageHeight?: string
 }
 
 export function FeatureSteps({
@@ -28,18 +27,20 @@ export function FeatureSteps({
   
   const containerRef = useRef<HTMLDivElement>(null)
   const isInView = useInView(containerRef, { amount: 0.3 })
+  const programmaticScrollRef = useRef(false);
 
   // Reset to first item whenever the section comes into view
   useEffect(() => {
     if (isInView) {
+      programmaticScrollRef.current = true;
       setCurrentFeature(0)
       setProgress(0)
     }
   }, [isInView])
 
-  // Scroll active item into view on mobile
+  // Scroll active item into view on mobile (only when programmatic)
   useEffect(() => {
-    if (window.innerWidth < 768) {
+    if (programmaticScrollRef.current && window.innerWidth < 768) {
       const el = document.getElementById(`feature-item-${currentFeature}`);
       const slider = document.getElementById('feature-slider');
       if (el && slider) {
@@ -48,16 +49,18 @@ export function FeatureSteps({
           behavior: 'smooth'
         });
       }
+      programmaticScrollRef.current = false;
     }
   }, [currentFeature]);
 
   useEffect(() => {
-    if (!isInView) return; // Pause animation if not in view
+    if (!isInView) return; 
 
     const timer = setInterval(() => {
       if (progress < 100) {
         setProgress((prev) => prev + 100 / (autoPlayInterval / 100))
       } else {
+        programmaticScrollRef.current = true;
         setCurrentFeature((prev) => (prev + 1) % features.length)
         setProgress(0)
       }
@@ -65,6 +68,28 @@ export function FeatureSteps({
 
     return () => clearInterval(timer);
   }, [progress, features.length, autoPlayInterval, isInView])
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    if (window.innerWidth >= 768) return;
+    const container = e.currentTarget;
+    const scrollLeft = container.scrollLeft;
+    
+    let closestIndex = 0;
+    let minDiff = Infinity;
+    
+    Array.from(container.children).forEach((child: any, idx) => {
+      const diff = Math.abs(child.offsetLeft - container.offsetLeft - scrollLeft);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closestIndex = idx;
+      }
+    });
+
+    if (closestIndex !== currentFeature) {
+      setCurrentFeature(closestIndex);
+      setProgress(0);
+    }
+  };
 
   return (
     <div ref={containerRef} className={cn("py-0 pb-20 w-full", className)}>
@@ -76,45 +101,66 @@ export function FeatureSteps({
         )}
 
         <div className="flex flex-col md:grid md:grid-cols-2 gap-8 md:gap-16 items-center">
-          <div className="order-2 md:order-1 flex flex-row md:flex-col overflow-x-auto no-scrollbar snap-x snap-mandatory gap-4 md:gap-16 ml-0 md:ml-[120px] pb-8 pt-4 px-4 md:px-0 w-full" id="feature-slider">
-            {features.map((feature, index) => (
-              <motion.div
-                key={index}
-                id={`feature-item-${index}`}
-                className="flex flex-col md:flex-row w-[82vw] shrink-0 md:w-auto items-start gap-6 md:gap-10 cursor-pointer snap-center bg-white md:bg-transparent p-8 md:p-0 rounded-3xl md:rounded-none shadow-sm md:shadow-none border border-border md:border-none"
-                onClick={() => {
-                  setCurrentFeature(index);
-                  setProgress(0);
-                }}
-                initial={{ opacity: 0.4 }}
-                animate={{ opacity: index === currentFeature ? 1 : 0.4 }}
-                transition={{ duration: 0.5 }}
-              >
+          <div className="order-2 md:order-1 flex flex-col w-full ml-0 md:ml-[120px]">
+            {/* Slider */}
+            <div 
+              className="flex flex-row md:flex-col overflow-x-auto no-scrollbar snap-x snap-mandatory gap-4 md:gap-16 pb-4 pt-4 px-4 md:px-0 w-full" 
+              id="feature-slider"
+              onScroll={handleScroll}
+            >
+              {features.map((feature, index) => (
                 <motion.div
-                  className={cn(
-                    "w-12 h-12 md:w-12 md:h-12 rounded-full flex items-center justify-center border-2 flex-shrink-0 transition-all duration-300",
-                    index === currentFeature
-                      ? "bg-[#B89A0A] border-[#B89A0A] text-white scale-110 shadow-lg"
-                      : "bg-transparent border-border text-mid",
-                  )}
+                  key={index}
+                  id={`feature-item-${index}`}
+                  className="flex flex-col md:flex-row w-full shrink-0 md:w-auto items-start gap-6 md:gap-10 cursor-pointer snap-center bg-[var(--cream)] md:bg-transparent p-8 md:p-0 rounded-3xl md:rounded-none shadow-md md:shadow-none border border-border md:border-none"
+                  onClick={() => {
+                    programmaticScrollRef.current = true;
+                    setCurrentFeature(index);
+                    setProgress(0);
+                  }}
+                  initial={{ opacity: 0.4 }}
+                  animate={{ opacity: index === currentFeature ? 1 : 0.4 }}
+                  transition={{ duration: 0.5 }}
                 >
-                  {index <= currentFeature ? (
-                    <span className="text-lg font-bold text-cream">✓</span>
-                  ) : (
-                    <span className="text-lg font-semibold font-sans">{index + 1}</span>
-                  )}
-                </motion.div>
+                  <motion.div
+                    className={cn(
+                      "w-12 h-12 md:w-12 md:h-12 rounded-full flex items-center justify-center border-2 flex-shrink-0 transition-all duration-300",
+                      index === currentFeature
+                        ? "bg-[#B89A0A] border-[#B89A0A] text-white scale-110 shadow-lg"
+                        : "bg-transparent border-border text-mid",
+                    )}
+                  >
+                    {index <= currentFeature ? (
+                      <span className="text-lg font-bold text-cream">✓</span>
+                    ) : (
+                      <span className="text-lg font-semibold font-sans">{index + 1}</span>
+                    )}
+                  </motion.div>
 
-                <div className="flex-1 mt-1 pr-2 md:pr-0">
-                  <h3 className="text-xl md:text-2xl font-semibold font-cormorant text-dark">
-                    {feature.title || feature.step}
-                  </h3>
-                  <p className="text-[15px] md:text-base text-dark font-sans mt-3 leading-relaxed">
-                    {feature.content}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
+                  <div className="flex-1 mt-1 pr-2 md:pr-0">
+                    <h3 className="text-xl md:text-2xl font-semibold font-cormorant text-dark">
+                      {feature.title || feature.step}
+                    </h3>
+                    <p className="text-[15px] md:text-base text-dark font-sans mt-3 leading-relaxed">
+                      {feature.content}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Pagination Dots (Mobile Only) */}
+            <div className="flex md:hidden justify-center items-center gap-2 mt-4">
+              {features.map((_, index) => (
+                <div 
+                  key={index} 
+                  className={cn(
+                    "h-2 rounded-full transition-all duration-300",
+                    index === currentFeature ? "w-6 bg-[#B89A0A]" : "w-2 bg-border"
+                  )}
+                />
+              ))}
+            </div>
           </div>
 
           <div
