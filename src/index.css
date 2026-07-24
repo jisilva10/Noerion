@@ -654,7 +654,7 @@ canvas {
   border-top: 1px solid var(--border);
   padding: 100px 56px 120px;
 }
-.process-header { margin-bottom: 80px; }
+.process-header { margin-bottom: 80px; max-width: 1400px; margin-left: auto; margin-right: auto; }
 .process-header h2 {
   font-family: 'Cormorant', serif;
   font-weight: 500;
@@ -672,6 +672,8 @@ canvas {
   position: relative;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  max-width: 1400px;
+  margin: 0 auto;
 }
 .track-line-bg {
   position: absolute;

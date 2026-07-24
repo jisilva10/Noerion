@@ -83,10 +83,10 @@ export function FeatureSteps({
   };
 
   return (
-    <div ref={containerRef} className={cn("w-full max-w-[1200px] mx-auto", className)}>
+    <div ref={containerRef} className={cn("w-full max-w-[1400px] mx-auto", className)}>
       
       {/* DESKTOP VIEW (Hidden on Mobile) */}
-      <div className="hidden md:flex flex-row gap-16 items-center w-full">
+      <div className="hidden md:flex flex-row gap-32 items-center w-full">
         {/* Left Column: Text */}
         <div className="w-1/2 flex flex-col gap-10">
           {features.map((feature, index) => {
@@ -154,7 +154,7 @@ export function FeatureSteps({
       {/* MOBILE VIEW (Hidden on Desktop) */}
       <div className="flex md:hidden flex-col w-full">
         {/* Top Image */}
-        <div className="relative h-[320px] w-full rounded-2xl overflow-hidden shadow-sm border border-border mb-8">
+        <div className="relative h-[320px] w-full rounded-2xl overflow-hidden shadow-sm border border-border mb-16">
           <AnimatePresence mode="wait">
             <motion.img
               key={currentFeature}
