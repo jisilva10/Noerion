@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { CheckCircle2, BarChart3, TrendingUp, Users, Activity, Target, Search } from "lucide-react";
+import { CheckCircle2, TrendingUp, Users, Activity, Target, Search } from "lucide-react";
 import { ChipEye } from "../ui/ChipEye";
 
 interface ServiceAnimationProps {
