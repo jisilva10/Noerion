@@ -88,12 +88,21 @@ export const ChipEye: React.FC<ChipEyeProps> = ({ className = '', width = "0.9em
     >
       <defs>
         <clipPath id={`wake-${clipId}`}>
-          {/* Animates from scaleY(0) [bottom] to scaleY(1) [full] */}
           <rect 
             x="-2" y="-2" width="26" height="20" 
             style={{ 
               transformOrigin: "center bottom", 
               transform: isAlive ? "scaleY(1)" : "scaleY(0)", 
+              transition: "transform 0.8s cubic-bezier(0.2, 0, 0, 1)" 
+            }} 
+          />
+        </clipPath>
+        <clipPath id={`sleep-${clipId}`}>
+          <rect 
+            x="-2" y="-2" width="26" height="20" 
+            style={{ 
+              transformOrigin: "center top", 
+              transform: isAlive ? "scaleY(0)" : "scaleY(1)", 
               transition: "transform 0.8s cubic-bezier(0.2, 0, 0, 1)" 
             }} 
           />
@@ -105,8 +114,8 @@ export const ChipEye: React.FC<ChipEyeProps> = ({ className = '', width = "0.9em
         {/* Main Body */}
         <rect x="5" y="2" width="12" height="12" rx="1.5" strokeWidth="1.2" fill="none" />
         
-        {/* Closed Eye (Line) */}
-        <line x1="8.5" y1="8" x2="13.5" y2="8" strokeWidth="1.5" />
+        {/* Closed Eye (Line) - hides as the gold layer reveals it */}
+        <line x1="8.5" y1="8" x2="13.5" y2="8" strokeWidth="1.5" clipPath={`url(#sleep-${clipId})`} />
 
         {/* Pins */}
         <line x1="5" y1="5.5" x2="2" y2="5.5" />
