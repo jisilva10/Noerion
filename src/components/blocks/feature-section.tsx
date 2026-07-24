@@ -3,6 +3,81 @@ import { motion, AnimatePresence, useInView, LayoutGroup } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { ChipEye } from "../ui/ChipEye"
 import { ServiceAnimation } from "./ServiceAnimations"
+import { Search } from "lucide-react";
+
+const CharacterChip = ({ currentFeature, isMobile }: { currentFeature: number, isMobile: boolean }) => {
+  const chipId = isMobile ? `chip-mobile-${currentFeature}` : `chip-desktop-${currentFeature}`;
+  const chipSize = isMobile ? 100 : 120;
+
+  // We define the character's movement based on the scenario.
+  // We use key={currentFeature} on the inner motion.div so the animation restarts perfectly every time.
+  
+  let animationProps = {};
+  let extraElements = null;
+
+  if (currentFeature === 0) {
+    // Scenario 1: Automation. Rolls along the floor, looking up at the pipeline.
+    animationProps = {
+      x: [0, -120, 120, 0],
+      y: [120, 120, 120, 120], // Floor level
+      rotate: [0, -15, 15, 0]
+    };
+  } else if (currentFeature === 1) {
+    // Scenario 2: AI Ecosystem. Floats in the bottom left, emitting pulses to the neural network.
+    animationProps = {
+      x: [0, -150, -150, 0],
+      y: [0, 100, 100, 0], // Bottom left
+      scale: [1, 0.8, 0.8, 1]
+    };
+    extraElements = (
+      <motion.div 
+        className="absolute inset-0 rounded-full border-2 border-[#B89A0A]"
+        animate={{ scale: [1, 3], opacity: [0.8, 0] }}
+        transition={{ delay: 2.5, duration: 2, repeat: Infinity }}
+      />
+    );
+  } else if (currentFeature === 2) {
+    // Scenario 3: Consulting. Holds a magnifying glass, scanning the blueprint above.
+    animationProps = {
+      x: [0, -140, 140, 0],
+      y: [100, 100, 100, 100], // Floor level
+      rotate: [0, -10, 10, 0]
+    };
+    extraElements = (
+      <motion.div
+        className="absolute -right-4 -top-2 text-[#B89A0A] bg-white rounded-full p-2 shadow-lg border border-border"
+        initial={{ scale: 0, rotate: 45 }}
+        animate={{ scale: 1, rotate: 0 }}
+        transition={{ delay: 2, type: "spring", bounce: 0.5 }}
+      >
+        <Search size={24} strokeWidth={3} />
+      </motion.div>
+    );
+  }
+
+  return (
+    <motion.div
+      key={`chip-active-wrapper-${isMobile ? 'm' : 'd'}-${currentFeature}`} // Force remount for layoutId to trigger instantly
+      layoutId={chipId}
+      className="absolute left-1/2 top-1/2 z-50 flex items-center justify-center pointer-events-none"
+      style={{ 
+        width: chipSize, height: chipSize, 
+        marginLeft: -chipSize / 2, marginTop: -chipSize / 2 
+      }}
+      transition={{ duration: 1.5, type: "tween", ease: "easeInOut" }}
+    >
+      <motion.div
+        key={`character-anim-${currentFeature}`}
+        animate={animationProps}
+        transition={{ delay: 1.5, duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        className="relative"
+      >
+        {extraElements}
+        <ChipEye width={`${chipSize}px`} height={`${chipSize}px`} disableMouseFollow={true} wakeDelay={1500} />
+      </motion.div>
+    </motion.div>
+  );
+};
 
 interface Feature {
   step: string
@@ -146,6 +221,9 @@ export function FeatureSteps({
                 <ServiceAnimation index={currentFeature} isMobile={false} />
               </motion.div>
             </AnimatePresence>
+
+            {/* Render active chip OUTSIDE AnimatePresence so it mounts instantly! */}
+            <CharacterChip currentFeature={currentFeature} isMobile={false} />
           </div>
         </div>
 
@@ -165,6 +243,7 @@ export function FeatureSteps({
                 <ServiceAnimation index={currentFeature} isMobile={true} />
               </motion.div>
             </AnimatePresence>
+            <CharacterChip currentFeature={currentFeature} isMobile={true} />
           </div>
 
           {/* Horizontal Slider */}
