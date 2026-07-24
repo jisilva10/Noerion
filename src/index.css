@@ -1033,6 +1033,10 @@ footer p {
     display: flex; flex-direction: column; gap: 48px; 
     padding-left: 0; 
   }
+  .step {
+    flex: none;
+    padding: 0 0 0 40px;
+  }
   .track-line-bg { 
     display: block; left: 10px; top: 24px; bottom: 0; 
     width: 1px; height: auto; transform: none; 
