@@ -42,7 +42,6 @@ export function FeatureSteps({
       const el = document.getElementById(`mobile-feature-item-${currentFeature}`);
       const slider = document.getElementById('feature-slider');
       if (el && slider) {
-        // Center the item perfectly
         const scrollLeft = el.offsetLeft - slider.offsetLeft - (slider.clientWidth / 2) + (el.clientWidth / 2);
         slider.scrollTo({
           left: scrollLeft,
@@ -95,7 +94,7 @@ export function FeatureSteps({
   };
 
   return (
-    <div ref={containerRef} className={cn("w-full", className)}>
+    <div ref={containerRef} className={cn("w-full overflow-hidden md:overflow-visible", className)}>
       <div className="max-w-[1200px] mx-auto w-full md:px-12">
         {title && (
           <h2 className="text-3xl md:text-5xl font-cormorant font-semibold mb-12 text-center text-dark">
@@ -177,7 +176,7 @@ export function FeatureSteps({
         {/* =========================================
             MOBILE LAYOUT (Hidden on desktop)
             ========================================= */}
-        <div className="flex md:hidden flex-col w-full">
+        <div className="flex md:hidden flex-col w-full relative">
           
           <div className="relative h-[300px] w-full rounded-2xl overflow-hidden shadow-sm border border-border mb-8">
             <AnimatePresence mode="wait">
@@ -205,11 +204,11 @@ export function FeatureSteps({
 
           {/* 
             Standard full-bleed slider:
-            -mx-[24px] perfectly negates the 24px padding from .services in index.css
-            w-[100vw] makes it span the screen
-            px-[24px] puts the padding back INSIDE the scroll area
+            By using calc(100% + 48px) and marginLeft: -24px, we safely break out of the 
+            24px mobile padding from the parent .services section without causing 
+            horizontal scrollbars on the document (which 100vw does). 
           */}
-          <div className="w-[100vw] -mx-[24px] flex flex-col">
+          <div style={{ width: 'calc(100% + 48px)', marginLeft: '-24px' }} className="flex flex-col relative">
             <div 
               className="flex overflow-x-auto snap-x snap-mandatory gap-6 px-[24px] no-scrollbar w-full pb-4" 
               id="feature-slider"
@@ -219,14 +218,13 @@ export function FeatureSteps({
                 <div
                   key={`mob-text-${index}`}
                   id={`mobile-feature-item-${index}`}
-                  className="flex flex-col w-[85vw] shrink-0 snap-center gap-5 cursor-pointer pt-2"
+                  className="flex flex-col w-[85%] shrink-0 snap-center gap-5 cursor-pointer pt-2"
                   onClick={() => {
                     programmaticScrollRef.current = true;
                     setCurrentFeature(index);
                     setProgress(0);
                   }}
                 >
-                  {/* Circle */}
                   <div
                     className={cn(
                       "w-12 h-12 rounded-full flex items-center justify-center border-2 flex-shrink-0 transition-transform duration-300",
@@ -242,12 +240,11 @@ export function FeatureSteps({
                     )}
                   </div>
 
-                  {/* Text */}
                   <div className="flex-1 transition-opacity duration-300" style={{ opacity: index === currentFeature ? 1 : 0.4 }}>
-                    <h3 className="text-2xl font-semibold font-cormorant text-dark">
+                    <h3 className="text-2xl font-semibold font-cormorant text-dark leading-tight">
                       {feature.title || feature.step}
                     </h3>
-                    <p className="text-base text-dark font-sans mt-2 leading-relaxed">
+                    <p className="text-[16px] text-dark font-sans mt-2 leading-relaxed">
                       {feature.content}
                     </p>
                   </div>
