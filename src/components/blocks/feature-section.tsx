@@ -66,7 +66,6 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
   const [current, setCurrent] = useState(0);
   const [homeIndex, setHomeIndex] = useState(0);
   const [phase, setPhase] = useState<Phase>("parked");
-  const [progress, setProgress] = useState(0);
   const [geom, setGeom] = useState<Geom | null>(null);
   const [gazeStep, setGazeStep] = useState(0);
 
@@ -130,6 +129,14 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
       const t = setTimeout(() => setPhase("onstage"), reduce ? 500 : OUT_MS);
       return () => clearTimeout(t);
     }
+    if (phase === "onstage") {
+      if (!isInView) return;
+      const t = setTimeout(() => {
+        programmaticScrollRef.current = true;
+        setCurrent((c) => (c + 1) % features.length);
+      }, autoPlayInterval);
+      return () => clearTimeout(t);
+    }
     if (phase === "returning") {
       const t = setTimeout(() => {
         setHomeIndex(current);
@@ -137,29 +144,12 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
       }, reduce ? 420 : IN_MS);
       return () => clearTimeout(t);
     }
-  }, [phase, geom, current, reduce, isInView]);
+  }, [phase, geom, current, reduce, isInView, autoPlayInterval, features.length]);
 
   // el usuario (o el reloj) eligio otro servicio
   useEffect(() => {
-    if (phase === "onstage" && current !== homeIndex) {
-      setPhase("returning");
-      setProgress(0);
-    }
+    if (phase === "onstage" && current !== homeIndex) setPhase("returning");
   }, [current, phase, homeIndex]);
-
-  /* ─── autoplay: solo corre mientras la escena esta viva ────── */
-  useEffect(() => {
-    if (!isInView || phase !== "onstage") return;
-    const timer = setInterval(() => {
-      setProgress((p) => {
-        if (p < 100) return p + 100 / (autoPlayInterval / 100);
-        programmaticScrollRef.current = true;
-        setCurrent((c) => (c + 1) % features.length);
-        return 0;
-      });
-    }, 100);
-    return () => clearInterval(timer);
-  }, [isInView, phase, autoPlayInterval, features.length]);
 
   /* ─── mirada dirigida ──────────────────────────────────────── */
   useEffect(() => {
@@ -206,7 +196,6 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
     if (i === current) return;
     if (scroll) programmaticScrollRef.current = true;
     setCurrent(i);
-    setProgress(0);
   };
 
   /* ─── geometria del vuelo ──────────────────────────────────── */
@@ -230,12 +219,6 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
   const outFrames = useMemo(() => {
     if (!flight) return null;
     const { ox, oy, d, rollEnd, tx, ty, k, apex } = flight;
-    if (reduce) {
-      return {
-        anim: { x: [ox, tx], y: [oy, ty], scale: [1, k], rotate: [0, 540], opacity: [1, 1] },
-        t: { duration: 0.5, ease: "easeInOut" } as Transition,
-      };
-    }
     // una sola vuelta continua sobre el texto, luego se deja caer
     return {
       anim: {
@@ -243,6 +226,7 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
         y: [oy, oy, oy, apex, ty + 6, ty],
         rotate: [0, 180, 360, 384, 354, 360],
         scale: [1, 1, 1, (1 + k) / 2, k * 1.02, k],
+        opacity: [1, 1, 1, 1, 1, 1],
       },
       t: {
         duration: OUT_MS / 1000,
@@ -250,17 +234,11 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
         ease: ["easeIn", "linear", "easeIn", "easeIn", "easeOut"],
       } as Transition,
     };
-  }, [flight, reduce]);
+  }, [flight]);
 
   const inFrames = useMemo(() => {
     if (!flight) return null;
     const { ox, oy, d, rollEnd, tx, ty, k, apex } = flight;
-    if (reduce) {
-      return {
-        anim: { x: [tx, ox], y: [ty, oy], scale: [k, 1], rotate: [540, 0] },
-        t: { duration: 0.42, ease: "easeInOut" } as Transition,
-      };
-    }
     // se levanta del escenario y rueda de vuelta, misma calma
     return {
       anim: {
@@ -268,6 +246,7 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
         y: [ty, ty - 10, apex, oy, oy, oy],
         rotate: [360, 372, 360, 360, 180, 0],
         scale: [k, k * 1.02, (1 + k) / 2, 1, 1, 1],
+        opacity: [1, 1, 1, 1, 1, 1],
       },
       t: {
         duration: IN_MS / 1000,
@@ -276,7 +255,7 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
         ease: ["easeOut", "easeIn", "easeOut", "linear", "easeOut"],
       } as Transition,
     };
-  }, [flight, reduce]);
+  }, [flight]);
 
   const awake = phase === "onstage";
   const chipAway = (i: number) => i === homeIndex && phase !== "parked";
@@ -297,8 +276,10 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
       ? outFrames?.anim
       : phase === "returning"
       ? inFrames?.anim
+      : phase === "onstage" && flight
+      ? { x: flight.tx, y: flight.ty, rotate: 360, scale: flight.k, opacity: 1 }
       : flight
-      ? { x: flight.tx, y: flight.ty, rotate: 540, scale: flight.k }
+      ? { x: flight.ox, y: flight.oy, rotate: 0, scale: 1, opacity: 0 }
       : undefined;
 
   const flyTrans: Transition =
@@ -306,9 +287,7 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
       ? outFrames?.t ?? {}
       : phase === "returning"
       ? inFrames?.t ?? {}
-      : { duration: 0.45, ease: "easeInOut" };
-
-  /* ─── Las piezas reutilizables se inyectarán directamente para evitar remounts ─── */
+      : { duration: 0.3, ease: "easeInOut" };
 
   return (
     <div ref={wrapRef} className={cn("relative w-full max-w-[1400px] mx-auto", className)}>
@@ -358,12 +337,15 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
                     {f.content}
                   </p>
                   <div className="mt-4 h-px w-full bg-border/70 relative overflow-hidden">
-                    {active && (
-                      <div
-                        className="absolute inset-y-0 left-0 bg-gold transition-[width] duration-100 ease-linear"
-                        style={{ width: `${progress}%` }}
-                      />
-                    )}
+                    <motion.div
+                      className="absolute inset-y-0 left-0 bg-gold"
+                      initial={{ width: "0%" }}
+                      animate={{ width: active && phase === "onstage" ? "100%" : "0%" }}
+                      transition={{
+                        duration: active && phase === "onstage" ? autoPlayInterval / 1000 : 0.3,
+                        ease: "linear",
+                      }}
+                    />
                   </div>
                 </div>
               );
@@ -407,19 +389,19 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
                 className="group flex flex-col w-[85%] shrink-0 snap-center cursor-pointer"
               >
                 <div
-                  ref={(el) => {
-                    slotRefs.current[i] = el;
-                  }}
-                  className="w-9 h-9 relative flex items-center justify-center"
-                >
-                  {chipAway(i) ? (
-                    <span className="block w-[18px] h-[18px] rounded-[5px] border border-dashed border-border" />
-                  ) : (
-                    <span className="transition-transform duration-500 group-hover:-translate-y-[3px]">
-                      <ChipEye forceAsleep width="36px" height="36px" />
-                    </span>
-                  )}
-                </div>
+                    ref={(el) => {
+                      slotRefs.current[i] = el;
+                    }}
+                    className="w-9 h-9 relative flex items-center justify-center"
+                  >
+                    {chipAway(i) ? (
+                      <span className="block w-[18px] h-[18px] rounded-[5px] border border-dashed border-border" />
+                    ) : (
+                      <span className="transition-transform duration-500 group-hover:-translate-y-[3px]">
+                        <ChipEye forceAsleep width="36px" height="36px" />
+                      </span>
+                    )}
+                  </div>
                 <h3 className="text-xl font-semibold font-cormorant text-dark mt-3">{f.title || f.step}</h3>
                 <p
                   className={cn(
@@ -448,7 +430,7 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
       )}
 
       {/* ── EL PERSONAJE ────────────────────────────────────── */}
-      {flight && phase !== "parked" && (
+      {flight && (
         <motion.div
           className="absolute top-0 left-0 z-40 pointer-events-none"
           style={{ width: HOME, height: HOME, marginLeft: -HOME / 2, marginTop: -HOME / 2, willChange: "transform" }}
