@@ -104,7 +104,7 @@ export function FeatureSteps({
           <div className="order-2 md:order-1 flex flex-col w-full ml-0 md:ml-[120px]">
             {/* Slider */}
             <div 
-              className="flex flex-row md:flex-col overflow-x-auto no-scrollbar snap-x snap-mandatory gap-4 md:gap-16 pb-4 pt-4 px-4 md:px-0 w-full" 
+              className="flex flex-row md:flex-col overflow-x-auto no-scrollbar snap-x snap-mandatory gap-6 md:gap-16 pb-8 pt-4 px-8 md:px-0 w-full" 
               id="feature-slider"
               onScroll={handleScroll}
             >
