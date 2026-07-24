@@ -57,6 +57,8 @@ export const ChipEye: React.FC<ChipEyeProps> = ({
     let rafId: number;
     const handleMouseMove = (e: MouseEvent) => {
       if (!containerRef.current) return;
+      if (rafId) cancelAnimationFrame(rafId);
+      
       const rect = containerRef.current.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
@@ -191,7 +193,7 @@ export const ChipEye: React.FC<ChipEyeProps> = ({
 
           <g style={{
             transform: `translate(${gx}px, ${gy}px)`,
-            transition: `transform ${directed ? '0.7s' : '0.12s'} cubic-bezier(0.22, 1, 0.36, 1)`
+            transition: directed ? 'transform 0.7s cubic-bezier(0.22, 1, 0.36, 1)' : 'none'
           }}>
             <circle cx="11" cy="8" r="2" fill={goldColor} />
           </g>
