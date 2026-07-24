@@ -9,6 +9,8 @@ interface ChipEyeProps {
   forceAsleep?: boolean;
   wakeDelay?: number;
   disableMouseFollow?: boolean;
+  pupilOffset?: { x: number; y: number } | null;
+  strokeScale?: number;
 }
 
 export const ChipEye: React.FC<ChipEyeProps> = ({ 
@@ -19,7 +21,9 @@ export const ChipEye: React.FC<ChipEyeProps> = ({
   disableEyeAnimation = false,
   forceAsleep = false,
   wakeDelay = 2800,
-  disableMouseFollow = false
+  disableMouseFollow = false,
+  pupilOffset = null,
+  strokeScale = 1
 }) => {
   const containerRef = useRef<SVGSVGElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -43,8 +47,10 @@ export const ChipEye: React.FC<ChipEyeProps> = ({
     return () => clearTimeout(timer);
   }, [disableInitialSleep, forceAsleep, wakeDelay]);
 
+  const directed = pupilOffset != null;
+
   useEffect(() => {
-    if (!isAlive || disableEyeAnimation || disableMouseFollow) return;
+    if (!isAlive || disableEyeAnimation || disableMouseFollow || directed) return;
 
     let rafId: number;
     const handleMouseMove = (e: MouseEvent) => {
@@ -69,7 +75,7 @@ export const ChipEye: React.FC<ChipEyeProps> = ({
       window.removeEventListener('mousemove', handleMouseMove);
       if (rafId) cancelAnimationFrame(rafId);
     };
-  }, [isAlive, disableEyeAnimation, disableMouseFollow]);
+  }, [isAlive, disableEyeAnimation, disableMouseFollow, directed]);
 
   useEffect(() => {
     if (!isAlive || disableEyeAnimation) return;
@@ -88,23 +94,26 @@ export const ChipEye: React.FC<ChipEyeProps> = ({
     return () => clearTimeout(initialTimeout);
   }, [isAlive, disableEyeAnimation]);
 
-  const pupilRangeX = 3.5; 
-  const pupilRangeY = 3.5; 
-  
-  const pupilX = 11 + (isAlive ? mousePos.x * pupilRangeX : 0);
-  const pupilY = 8 + (isAlive ? mousePos.y * pupilRangeY : 0);
+  const pupilRangeX = 3.5;
+  const pupilRangeY = 3.5;
+
+  const gaze = directed ? pupilOffset! : (disableMouseFollow ? { x: 0, y: 0 } : mousePos);
+  const gx = (isAlive ? gaze.x : 0) * pupilRangeX;
+  const gy = (isAlive ? gaze.y : 0) * pupilRangeY;
 
   const greyColor = "#A39F93"; // Soft grey for sleeping state
   const goldColor = "#B89A0A";
 
+  const sw = (n: number) => n * strokeScale;
+
   return (
     <svg 
       ref={containerRef}
-      className={className}
+      className={className} 
       width={width} 
       height={height} 
       viewBox="0 0 22 16" 
-      fill="none" 
+      fill="none"
       style={{ overflow: 'visible', verticalAlign: 'baseline', display: 'inline-block' }}
     >
       <defs>
@@ -131,12 +140,12 @@ export const ChipEye: React.FC<ChipEyeProps> = ({
       </defs>
 
       {/* --- ASLEEP LAYER (Grey, closed eye) --- */}
-      <g stroke={greyColor} strokeWidth="1" strokeLinecap="round" clipPath={`url(#sleep-${clipId})`}>
+      <g stroke={greyColor} strokeWidth={sw(1)} strokeLinecap="round" clipPath={`url(#sleep-${clipId})`}>
         {/* Main Body */}
-        <rect x="5" y="2" width="12" height="12" rx="1.5" strokeWidth="1.2" fill="none" />
+        <rect x="5" y="2" width="12" height="12" rx="1.5" strokeWidth={sw(1.2)} fill="none" />
         
         {/* Closed Eye (Line) */}
-        <line x1="8.5" y1="8" x2="13.5" y2="8" strokeWidth="1.5" />
+        <line x1="8.5" y1="8" x2="13.5" y2="8" strokeWidth={sw(1.5)} />
 
         {/* Pins */}
         <line x1="5" y1="5.5" x2="2" y2="5.5" />
@@ -151,32 +160,41 @@ export const ChipEye: React.FC<ChipEyeProps> = ({
         <line x1="14" y1="14" x2="14" y2="16" />
       </g>
 
-      {/* --- AWAKE LAYER (Gold, open eye, alive) --- */}
-      <g clipPath={`url(#wake-${clipId})`}>
-        {/* Gold Pins */}
-        <g stroke={goldColor} strokeWidth="1" strokeLinecap="round">
-          <line x1="5" y1="5.5" x2="2" y2="5.5" />
-          <line x1="5" y1="10.5" x2="2" y2="10.5" />
-          <line x1="17" y1="5.5" x2="20" y2="5.5" />
-          <line x1="17" y1="10.5" x2="20" y2="10.5" />
-          <line x1="8" y1="2" x2="8" y2="0" />
-          <line x1="11" y1="2" x2="11" y2="0" />
-          <line x1="14" y1="2" x2="14" y2="0" />
-          <line x1="8" y1="14" x2="8" y2="16" />
-          <line x1="11" y1="14" x2="11" y2="16" />
-          <line x1="14" y1="14" x2="14" y2="16" />
+      {/* --- AWAKE LAYER (Gold, open eye) --- */}
+      <g stroke={goldColor} strokeWidth={sw(1)} strokeLinecap="round" clipPath={`url(#wake-${clipId})`}>
+        {/* Main Body */}
+        <rect x="5" y="2" width="12" height="12" rx="1.5" strokeWidth={sw(1.2)} fill={isAlive ? "rgba(184, 154, 10, 0.05)" : "none"} />
+
+        {/* The Eye */}
+        <g style={{ 
+          transformOrigin: "11px 8px", 
+          transform: isBlinking ? "scaleY(0.1)" : "scaleY(1)", 
+          transition: isBlinking ? "none" : "transform 0.15s cubic-bezier(0.2, 0, 0, 1)" 
+        }}>
+          {/* Sclera */}
+          <path d="M 6.5 8 C 8 5 14 5 15.5 8 C 14 11 8 11 6.5 8 Z" fill="none" strokeWidth={sw(1.2)} />
+          
+          {/* Pupil */}
+          <circle 
+            cx="11" cy="8" r="1.5" fill={goldColor}
+            style={{ 
+              transform: `translate(${gx}px, ${gy}px)`,
+              transition: "transform 0.1s ease-out" 
+            }} 
+          />
         </g>
 
-        {/* Gold Body & Eye (with blink transform) */}
-        <g style={{
-          transformOrigin: '11px 8px',
-          transform: isBlinking ? 'scaleY(0.05)' : 'scaleY(1)',
-          transition: 'transform 0.15s cubic-bezier(0.4, 0, 0.2, 1)'
-        }}>
-          <rect x="5" y="2" width="12" height="12" rx="1.5" stroke={goldColor} strokeWidth="1.2" fill={isAlive ? "rgba(184, 154, 10, 0.05)" : "none"}/>
-          
-          <circle cx={pupilX} cy={pupilY} r="2" fill={goldColor} />
-        </g>
+        {/* Pins */}
+        <line x1="5" y1="5.5" x2="2" y2="5.5" />
+        <line x1="5" y1="10.5" x2="2" y2="10.5" />
+        <line x1="17" y1="5.5" x2="20" y2="5.5" />
+        <line x1="17" y1="10.5" x2="20" y2="10.5" />
+        <line x1="8" y1="2" x2="8" y2="0" />
+        <line x1="11" y1="2" x2="11" y2="0" />
+        <line x1="14" y1="2" x2="14" y2="0" />
+        <line x1="8" y1="14" x2="8" y2="16" />
+        <line x1="11" y1="14" x2="11" y2="16" />
+        <line x1="14" y1="14" x2="14" y2="16" />
       </g>
     </svg>
   );
