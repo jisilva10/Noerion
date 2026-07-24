@@ -46,27 +46,28 @@ export const ChipEye: React.FC<ChipEyeProps> = ({
   useEffect(() => {
     if (!isAlive || disableEyeAnimation || disableMouseFollow) return;
 
+    let rafId: number;
     const handleMouseMove = (e: MouseEvent) => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
-      const x = e.clientX - (rect.left + rect.width / 2);
-      const y = e.clientY - (rect.top + rect.height / 2);
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
       
-      // Calculate distance to normalize the movement
-      const distance = Math.sqrt(x * x + y * y);
-      const maxDist = 15; // Max pixels the eye can move from center
+      const x = (e.clientX - centerX) / (window.innerWidth / 2);
+      const y = (e.clientY - centerY) / (window.innerHeight / 2);
       
-      if (distance > 0) {
-        setMousePos({
-          x: (x / distance) * Math.min(distance, maxDist),
-          y: (y / distance) * Math.min(distance, maxDist)
+      rafId = requestAnimationFrame(() => {
+        setMousePos({ 
+          x: Math.max(-1, Math.min(1, x)), 
+          y: Math.max(-1, Math.min(1, y)) 
         });
-      }
+      });
     };
 
     window.addEventListener('mousemove', handleMouseMove);
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
+      if (rafId) cancelAnimationFrame(rafId);
     };
   }, [isAlive, disableEyeAnimation, disableMouseFollow]);
 
