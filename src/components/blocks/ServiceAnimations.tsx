@@ -1,12 +1,14 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { CheckCircle2, BarChart3, TrendingUp, Users, Activity, Target } from "lucide-react";
+import { CheckCircle2, BarChart3, TrendingUp, Users, Activity, Target, Search } from "lucide-react";
+import { ChipEye } from "../ui/ChipEye";
 
 interface ServiceAnimationProps {
   index: number;
+  isMobile: boolean;
 }
 
-export const ServiceAnimation: React.FC<ServiceAnimationProps> = ({ index }) => {
+export const ServiceAnimation: React.FC<ServiceAnimationProps> = ({ index, isMobile }) => {
   // Shared animation container variants (0.8s delay to wait for chip landing)
   const containerVariants: any = {
     hidden: { opacity: 0 },
@@ -18,13 +20,16 @@ export const ServiceAnimation: React.FC<ServiceAnimationProps> = ({ index }) => 
     visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", bounce: 0.4 } }
   };
 
+  const chipId = isMobile ? `chip-mobile-${index}` : `chip-desktop-${index}`;
+  const chipSize = isMobile ? 100 : 120;
+
   if (index === 0) {
     // ----------------------------------------------------------------------
-    // SCENARIO 1: AUTOMATIZACIÓN (Task Cards sorting themselves)
+    // SCENARIO 1: AUTOMATIZACIÓN (The Organizer)
     // ----------------------------------------------------------------------
     return (
       <motion.div 
-        className="absolute inset-0 w-full h-full p-8 flex items-center justify-around flex-wrap"
+        className="absolute inset-0 w-full h-full p-8 flex items-end justify-around flex-wrap pb-12"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -33,11 +38,11 @@ export const ServiceAnimation: React.FC<ServiceAnimationProps> = ({ index }) => 
         {[...Array(6)].map((_, i) => (
           <motion.div
             key={`task-${i}`}
-            className="w-[140px] bg-white rounded-xl shadow-lg border border-border p-4 flex flex-col gap-3 relative overflow-hidden"
+            className="w-[120px] bg-white rounded-xl shadow-lg border border-border p-3 flex flex-col gap-2 relative overflow-hidden"
             variants={itemVariants}
             animate={{ 
-              y: [0, -10, 0],
-              rotate: [0, i % 2 === 0 ? 2 : -2, 0]
+              y: [0, -5, 0],
+              rotate: [0, i % 2 === 0 ? 1 : -1, 0]
             }}
             transition={{ 
               repeat: Infinity, 
@@ -46,28 +51,42 @@ export const ServiceAnimation: React.FC<ServiceAnimationProps> = ({ index }) => 
               delay: i * 0.2
             }}
           >
-            {/* Fake skeleton UI inside the card */}
-            <div className="w-8 h-8 rounded bg-[#FDFCF8] flex items-center justify-center text-[#B89A0A] mb-1">
-              <CheckCircle2 size={18} />
+            <div className="w-6 h-6 rounded bg-[#FDFCF8] flex items-center justify-center text-[#B89A0A] mb-1">
+              <CheckCircle2 size={14} />
             </div>
-            <div className="h-2 w-full bg-stone-100 rounded-full" />
-            <div className="h-2 w-2/3 bg-stone-100 rounded-full" />
-            
-            {/* Animated scanning line passing over the card */}
-            <motion.div 
-              className="absolute top-0 left-0 w-full h-[2px] bg-[#B89A0A]"
-              animate={{ y: [0, 100, 0], opacity: [0, 0.8, 0] }}
-              transition={{ repeat: Infinity, duration: 2.5, delay: i * 0.4 }}
-            />
+            <div className="h-1.5 w-full bg-stone-100 rounded-full" />
+            <div className="h-1.5 w-2/3 bg-stone-100 rounded-full" />
           </motion.div>
         ))}
+
+        {/* The Character Chip */}
+        <motion.div
+          layoutId={chipId}
+          className="absolute left-1/2 top-1/2 z-50 flex items-center justify-center"
+          style={{ 
+            width: chipSize, height: chipSize, 
+            marginLeft: -chipSize / 2, marginTop: -chipSize / 2 
+          }}
+          transition={{ duration: 1.5, type: "tween", ease: "easeInOut" }}
+        >
+          <motion.div
+            animate={{ 
+              x: [0, -120, 120, 0], // Patrolling left and right
+              y: [0, -60, -60, 0], // Floating up to oversee
+              rotate: [0, -10, 10, 0] // Looking around
+            }}
+            transition={{ delay: 2, duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <ChipEye width={`${chipSize}px`} height={`${chipSize}px`} disableMouseFollow={true} wakeDelay={1500} />
+          </motion.div>
+        </motion.div>
       </motion.div>
     );
   }
 
   if (index === 1) {
     // ----------------------------------------------------------------------
-    // SCENARIO 2: ECOSISTEMA IA (Glassmorphic Dashboard)
+    // SCENARIO 2: ECOSISTEMA IA (The Analyst)
     // ----------------------------------------------------------------------
     return (
       <motion.div 
@@ -81,7 +100,6 @@ export const ServiceAnimation: React.FC<ServiceAnimationProps> = ({ index }) => 
           className="w-full h-full max-w-[600px] max-h-[350px] bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/40 p-6 flex flex-col gap-6"
           variants={itemVariants}
         >
-          {/* Header */}
           <div className="flex justify-between items-center border-b border-stone-100 pb-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-[#FDFCF8] flex items-center justify-center text-[#B89A0A]">
@@ -92,15 +110,8 @@ export const ServiceAnimation: React.FC<ServiceAnimationProps> = ({ index }) => 
                 <div className="h-2 w-16 bg-stone-100 rounded-full" />
               </div>
             </div>
-            <div className="flex gap-2">
-              <div className="w-3 h-3 rounded-full bg-stone-200" />
-              <div className="w-3 h-3 rounded-full bg-stone-200" />
-            </div>
           </div>
-
-          {/* Body: Charts */}
           <div className="flex-1 flex gap-6">
-            {/* Bar Chart Area */}
             <div className="flex-1 flex items-end justify-between gap-2 h-full pb-2">
               {[40, 70, 45, 90, 60, 100].map((h, i) => (
                 <motion.div 
@@ -109,40 +120,57 @@ export const ServiceAnimation: React.FC<ServiceAnimationProps> = ({ index }) => 
                   initial={{ height: 0 }}
                   animate={{ height: `${h}%` }}
                   transition={{ 
-                    duration: 1.5, 
-                    delay: 1.2 + i * 0.1, 
-                    type: "spring", 
-                    bounce: 0.4,
-                    repeat: Infinity,
-                    repeatType: "reverse",
-                    repeatDelay: 2
+                    duration: 1.5, delay: 1.5 + i * 0.1, type: "spring", bounce: 0.4,
+                    repeat: Infinity, repeatType: "reverse", repeatDelay: 2
                   }}
                 />
               ))}
             </div>
-
-            {/* Side stats */}
-            <div className="w-1/3 flex flex-col gap-4">
-              <motion.div className="bg-[#FDFCF8] p-4 rounded-xl border border-border" variants={itemVariants}>
-                <TrendingUp size={24} className="text-[#B89A0A] mb-2" />
-                <div className="text-2xl font-bold text-stone-800">+124%</div>
-                <div className="text-xs text-stone-500">Rendimiento</div>
-              </motion.div>
-              <motion.div className="bg-[#FDFCF8] p-4 rounded-xl border border-border" variants={itemVariants}>
-                <BarChart3 size={24} className="text-[#A39F93] mb-2" />
-                <div className="text-2xl font-bold text-stone-800">8.4k</div>
-                <div className="text-xs text-stone-500">Procesos</div>
+            <div className="w-1/3 flex flex-col gap-4 pt-4">
+              <motion.div className="bg-[#FDFCF8] p-3 rounded-xl border border-border" variants={itemVariants}>
+                <TrendingUp size={20} className="text-[#B89A0A] mb-1" />
+                <div className="text-xl font-bold text-stone-800">+124%</div>
               </motion.div>
             </div>
           </div>
         </motion.div>
+
+        {/* The Character Chip */}
+        <motion.div
+          layoutId={chipId}
+          className="absolute left-1/2 top-1/2 z-50 flex items-center justify-center"
+          style={{ 
+            width: chipSize, height: chipSize, 
+            marginLeft: -chipSize / 2, marginTop: -chipSize / 2 
+          }}
+          transition={{ duration: 1.5, type: "tween", ease: "easeInOut" }}
+        >
+          <motion.div
+            animate={{ 
+              x: [0, 160, 160, 0], // Move to top right corner
+              y: [0, -80, -80, 0],
+              scale: [1, 0.7, 0.7, 1] // Shrink a bit to look like a floating assistant widget
+            }}
+            transition={{ delay: 2, duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            className="relative"
+          >
+            {/* Pulse rings emitted by the chip while analyzing */}
+            <motion.div 
+              className="absolute inset-0 rounded-full border-2 border-[#B89A0A]"
+              animate={{ scale: [1, 2.5], opacity: [0.8, 0] }}
+              transition={{ delay: 3, duration: 2, repeat: Infinity }}
+            />
+            <ChipEye width={`${chipSize}px`} height={`${chipSize}px`} disableMouseFollow={true} wakeDelay={1500} />
+          </motion.div>
+        </motion.div>
+
       </motion.div>
     );
   }
 
   if (index === 2) {
     // ----------------------------------------------------------------------
-    // SCENARIO 3: CONSULTORÍA (Network & Metrics)
+    // SCENARIO 3: CONSULTORÍA (The Investigator)
     // ----------------------------------------------------------------------
     return (
       <motion.div 
@@ -151,67 +179,63 @@ export const ServiceAnimation: React.FC<ServiceAnimationProps> = ({ index }) => 
         initial="hidden"
         animate="visible"
       >
-        {/* SVG background for connection lines */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
-          <motion.path 
-            d="M 25% 30% L 50% 50% M 75% 30% L 50% 50% M 20% 70% L 50% 50% M 80% 70% L 50% 50%" 
-            stroke="#B89A0A" 
-            strokeWidth="2" 
-            strokeDasharray="6 6"
-            strokeLinecap="round"
-            opacity="0.3"
-            animate={{ strokeDashoffset: [24, 0] }} 
-            transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-          />
-        </svg>
-
-        {/* Floating User / Metric Nodes */}
         <div className="relative w-full h-full z-10">
-          {/* Top Left */}
-          <motion.div className="absolute top-[15%] left-[15%] bg-white p-3 rounded-full shadow-lg border border-border" variants={itemVariants} animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, duration: 4, delay: 0 }}>
-            <Users size={24} className="text-[#A39F93]" />
+          {/* Top Left User */}
+          <motion.div className="absolute top-[20%] left-[20%] bg-white p-4 rounded-full shadow-lg border border-border z-10" variants={itemVariants} animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, duration: 4 }}>
+            <Users size={32} className="text-[#A39F93]" />
             <motion.div 
-              className="absolute -top-3 -right-6 bg-[#B89A0A] text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-md"
-              initial={{ scale: 0 }} animate={{ scale: [0, 1.1, 1] }} transition={{ delay: 2, duration: 0.5 }}
+              className="absolute -top-4 -right-8 bg-[#B89A0A] text-white text-xs font-bold px-3 py-1 rounded-full shadow-md"
+              initial={{ scale: 0 }} animate={{ scale: [0, 1.2, 1], opacity: [0, 1, 1, 0] }} transition={{ delay: 3, duration: 4, repeat: Infinity }}
             >
               Eficiente
             </motion.div>
           </motion.div>
 
-          {/* Top Right */}
-          <motion.div className="absolute top-[20%] right-[15%] bg-white p-3 rounded-full shadow-lg border border-border" variants={itemVariants} animate={{ y: [0, -15, 0] }} transition={{ repeat: Infinity, duration: 5, delay: 1 }}>
-            <Target size={24} className="text-[#B89A0A]" />
+          {/* Bottom Right User */}
+          <motion.div className="absolute bottom-[20%] right-[20%] bg-white p-4 rounded-full shadow-lg border border-border z-10" variants={itemVariants} animate={{ y: [0, 12, 0] }} transition={{ repeat: Infinity, duration: 5 }}>
+            <Target size={32} className="text-[#B89A0A]" />
             <motion.div 
-              className="absolute -bottom-3 -left-8 bg-stone-800 text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-md"
-              initial={{ scale: 0 }} animate={{ scale: [0, 1.1, 1] }} transition={{ delay: 2.5, duration: 0.5 }}
+              className="absolute -bottom-4 -left-12 bg-stone-800 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md"
+              initial={{ scale: 0 }} animate={{ scale: [0, 1.2, 1], opacity: [0, 0, 1, 1, 0] }} transition={{ delay: 3, duration: 4, repeat: Infinity }}
             >
               Optimizado
             </motion.div>
           </motion.div>
-
-          {/* Bottom Left */}
-          <motion.div className="absolute bottom-[20%] left-[10%] bg-white p-4 rounded-xl shadow-lg border border-border flex items-center gap-3" variants={itemVariants} animate={{ y: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 4.5, delay: 0.5 }}>
-            <div className="w-8 h-8 rounded-full bg-[#FDFCF8] flex items-center justify-center">
-              <TrendingUp size={16} className="text-[#B89A0A]" />
-            </div>
-            <div>
-              <div className="text-sm font-bold text-stone-800">+45% ROI</div>
-              <div className="text-[10px] text-stone-500">Crecimiento</div>
-            </div>
-          </motion.div>
-
-          {/* Bottom Right */}
-          <motion.div className="absolute bottom-[25%] right-[10%] bg-white p-3 rounded-full shadow-lg border border-border" variants={itemVariants} animate={{ y: [0, 12, 0] }} transition={{ repeat: Infinity, duration: 5.5, delay: 1.5 }}>
-            <Activity size={24} className="text-[#A39F93]" />
-          </motion.div>
-
-          {/* Scanning Radar Ring rotating around center */}
-          <motion.div 
-            className="absolute top-1/2 left-1/2 w-[300px] h-[300px] -mt-[150px] -ml-[150px] rounded-full border-t-2 border-[#B89A0A] opacity-20 pointer-events-none"
-            animate={{ rotate: 360 }}
-            transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
-          />
         </div>
+
+        {/* The Character Chip */}
+        <motion.div
+          layoutId={chipId}
+          className="absolute left-1/2 top-1/2 z-50 flex items-center justify-center"
+          style={{ 
+            width: chipSize, height: chipSize, 
+            marginLeft: -chipSize / 2, marginTop: -chipSize / 2 
+          }}
+          transition={{ duration: 1.5, type: "tween", ease: "easeInOut" }}
+        >
+          <motion.div
+            animate={{ 
+              x: [0, -120, 120, 0], // Float to top-left user, then bottom-right user
+              y: [0, -80, 80, 0],
+              rotate: [0, -15, 15, 0]
+            }}
+            transition={{ delay: 2, duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            className="relative"
+          >
+            <ChipEye width={`${chipSize}px`} height={`${chipSize}px`} disableMouseFollow={true} wakeDelay={1500} />
+            
+            {/* Magnifying Glass held by the chip! */}
+            <motion.div
+              className="absolute -right-4 -bottom-4 text-[#B89A0A] bg-white rounded-full p-2 shadow-lg border border-border"
+              initial={{ scale: 0, rotate: -45 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ delay: 2.5, type: "spring", bounce: 0.5 }}
+            >
+              <Search size={24} strokeWidth={3} />
+            </motion.div>
+          </motion.div>
+        </motion.div>
+
       </motion.div>
     );
   }

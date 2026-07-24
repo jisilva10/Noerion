@@ -8,6 +8,7 @@ interface ChipEyeProps {
   disableEyeAnimation?: boolean;
   forceAsleep?: boolean;
   wakeDelay?: number;
+  disableMouseFollow?: boolean;
 }
 
 export const ChipEye: React.FC<ChipEyeProps> = ({ 
@@ -17,7 +18,8 @@ export const ChipEye: React.FC<ChipEyeProps> = ({
   disableInitialSleep = false,
   disableEyeAnimation = false,
   forceAsleep = false,
-  wakeDelay = 2800
+  wakeDelay = 2800,
+  disableMouseFollow = false
 }) => {
   const containerRef = useRef<SVGSVGElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -42,33 +44,31 @@ export const ChipEye: React.FC<ChipEyeProps> = ({
   }, [disableInitialSleep, forceAsleep, wakeDelay]);
 
   useEffect(() => {
-    if (!isAlive || disableEyeAnimation) return;
+    if (!isAlive || disableEyeAnimation || disableMouseFollow) return;
 
-    // Use requestAnimationFrame for smoother tracking (zero lag)
-    let rafId: number;
     const handleMouseMove = (e: MouseEvent) => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
+      const x = e.clientX - (rect.left + rect.width / 2);
+      const y = e.clientY - (rect.top + rect.height / 2);
       
-      const x = (e.clientX - centerX) / (window.innerWidth / 2);
-      const y = (e.clientY - centerY) / (window.innerHeight / 2);
+      // Calculate distance to normalize the movement
+      const distance = Math.sqrt(x * x + y * y);
+      const maxDist = 15; // Max pixels the eye can move from center
       
-      rafId = requestAnimationFrame(() => {
-        setMousePos({ 
-          x: Math.max(-1, Math.min(1, x)), 
-          y: Math.max(-1, Math.min(1, y)) 
+      if (distance > 0) {
+        setMousePos({
+          x: (x / distance) * Math.min(distance, maxDist),
+          y: (y / distance) * Math.min(distance, maxDist)
         });
-      });
+      }
     };
 
     window.addEventListener('mousemove', handleMouseMove);
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
-      if (rafId) cancelAnimationFrame(rafId);
     };
-  }, [isAlive, disableEyeAnimation]);
+  }, [isAlive, disableEyeAnimation, disableMouseFollow]);
 
   useEffect(() => {
     if (!isAlive || disableEyeAnimation) return;
