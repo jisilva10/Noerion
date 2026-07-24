@@ -238,18 +238,21 @@ export function useLegacyAnimations() {
     // ── MOBILE MENU ──
     const menuToggle = document.getElementById("menuToggle");
     const navLinks = document.getElementById("navLinks");
-    if (menuToggle && navLinks) {
-      const toggleMenu = () => {
-        menuToggle.classList.toggle("active");
-        navLinks.classList.toggle("active");
-      };
-      menuToggle.addEventListener("click", toggleMenu);
+    
+    const toggleMenu = () => {
+      menuToggle?.classList.toggle("active");
+      navLinks?.classList.toggle("active");
+    };
+    
+    const closeMenu = () => {
+      menuToggle?.classList.remove("active");
+      navLinks?.classList.remove("active");
+    };
 
+    if (menuToggle && navLinks) {
+      menuToggle.addEventListener("click", toggleMenu);
       navLinks.querySelectorAll("a").forEach((a) => {
-        a.addEventListener("click", () => {
-          menuToggle.classList.remove("active");
-          navLinks.classList.remove("active");
-        });
+        a.addEventListener("click", closeMenu);
       });
     }
 
@@ -325,6 +328,15 @@ export function useLegacyAnimations() {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("scroll", handleParallax);
       if (canvasReqId) cancelAnimationFrame(canvasReqId);
+      
+      if (menuToggle) {
+        menuToggle.removeEventListener("click", toggleMenu);
+      }
+      if (navLinks) {
+        navLinks.querySelectorAll("a").forEach((a) => {
+          a.removeEventListener("click", closeMenu);
+        });
+      }
     };
   }, []);
 }

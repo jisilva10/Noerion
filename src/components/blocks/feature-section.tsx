@@ -37,6 +37,20 @@ export function FeatureSteps({
     }
   }, [isInView])
 
+  // Scroll active item into view on mobile
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      const el = document.getElementById(`feature-item-${currentFeature}`);
+      const slider = document.getElementById('feature-slider');
+      if (el && slider) {
+        slider.scrollTo({
+          left: el.offsetLeft - slider.offsetLeft - 16,
+          behavior: 'smooth'
+        });
+      }
+    }
+  }, [currentFeature]);
+
   useEffect(() => {
     if (!isInView) return; // Pause animation if not in view
 
@@ -62,11 +76,12 @@ export function FeatureSteps({
         )}
 
         <div className="flex flex-col md:grid md:grid-cols-2 gap-8 md:gap-16 items-center">
-          <div className="order-2 md:order-1 flex flex-col justify-center gap-16 ml-0 md:ml-[120px]">
+          <div className="order-2 md:order-1 flex flex-row md:flex-col overflow-x-auto no-scrollbar snap-x snap-mandatory gap-6 md:gap-16 ml-0 md:ml-[120px] pb-4 w-full" id="feature-slider">
             {features.map((feature, index) => (
               <motion.div
                 key={index}
-                className="flex items-start gap-8 md:gap-10 cursor-pointer snap-center"
+                id={`feature-item-${index}`}
+                className="flex w-[85vw] shrink-0 md:w-auto items-start gap-6 md:gap-10 cursor-pointer snap-center"
                 onClick={() => {
                   setCurrentFeature(index);
                   setProgress(0);
@@ -77,24 +92,24 @@ export function FeatureSteps({
               >
                 <motion.div
                   className={cn(
-                    "w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center border-2 flex-shrink-0 transition-all duration-300",
+                    "w-12 h-12 md:w-12 md:h-12 rounded-full flex items-center justify-center border-2 flex-shrink-0 transition-all duration-300",
                     index === currentFeature
-                      ? "bg-[#B89A0A] border-[#B89A0A] text-white scale-110"
+                      ? "bg-[#B89A0A] border-[#B89A0A] text-white scale-110 shadow-lg"
                       : "bg-transparent border-border text-mid",
                   )}
                 >
                   {index <= currentFeature ? (
-                    <span className="text-lg font-bold">✓</span>
+                    <span className="text-lg font-bold text-cream">✓</span>
                   ) : (
                     <span className="text-lg font-semibold font-sans">{index + 1}</span>
                   )}
                 </motion.div>
 
-                <div className="flex-1 mt-1">
+                <div className="flex-1 mt-1 pr-6 md:pr-0">
                   <h3 className="text-xl md:text-2xl font-semibold font-cormorant text-dark">
                     {feature.title || feature.step}
                   </h3>
-                  <p className="text-sm md:text-base text-dark font-sans mt-3 leading-relaxed">
+                  <p className="text-[15px] md:text-base text-dark font-sans mt-3 leading-relaxed">
                     {feature.content}
                   </p>
                 </div>
