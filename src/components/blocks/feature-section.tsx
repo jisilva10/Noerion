@@ -151,6 +151,7 @@ export function FeatureSteps({
           </AnimatePresence>
 
           <motion.div 
+            key={`chip-desktop-active-${currentFeature}`}
             layoutId={`chip-desktop-${currentFeature}`}
             className="z-10 relative flex items-center justify-center"
             style={{ width: 120, height: 120 }}
@@ -185,6 +186,7 @@ export function FeatureSteps({
           </AnimatePresence>
 
           <motion.div 
+            key={`chip-mobile-active-${currentFeature}`}
             layoutId={`chip-mobile-${currentFeature}`}
             className="z-10 relative flex items-center justify-center"
             style={{ width: 100, height: 100 }}
