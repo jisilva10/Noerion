@@ -10,172 +10,176 @@ export const ServiceAnimation: React.FC<ServiceAnimationProps> = ({ index }) => 
   const grey = "#e5e5e5"; 
   const darkGrey = "#A39F93";
 
-  // Shared variants
+  // Shared variants with 0.8s delay (to wait for chip layout animation to land)
   const fadeIn: any = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 1, delay: 0.5 } }
+    visible: { opacity: 1, transition: { duration: 0.8, delay: 0.8 } }
   };
 
   if (index === 0) {
     // ----------------------------------------------------------------------
-    // SCENARIO 1: INVENTORY & AUTOMATION
-    // Chip is walking, boxes move from right, get sorted and stacked.
+    // SCENARIO 1: INVENTORY & AUTOMATION (Scale 800x500)
+    // Chip is at center (400,250). Boxes move on a conveyor belt below.
     // ----------------------------------------------------------------------
     return (
-      <motion.svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" fill="none" initial="hidden" animate="visible" variants={fadeIn}>
+      <motion.svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" fill="none" initial="hidden" animate="visible" variants={fadeIn}>
         
         {/* Ground / Conveyor Belt */}
-        <line x1="0" y1="70" x2="100" y2="70" stroke={grey} strokeWidth="1" strokeDasharray="4 4">
-          <animate attributeName="stroke-dashoffset" from="8" to="0" dur="1s" repeatCount="indefinite" />
+        <line x1="0" y1="420" x2="800" y2="420" stroke={grey} strokeWidth="4" strokeDasharray="16 16">
+          <animate attributeName="stroke-dashoffset" from="32" to="0" dur="1s" repeatCount="indefinite" />
         </line>
+
+        {/* Telekinetic Laser from Chip */}
+        <motion.path d="M 370 280 L 370 420 M 430 280 L 430 420" stroke={gold} strokeWidth="2" strokeDasharray="8 8" opacity="0.5"
+          animate={{ strokeDashoffset: [16, 0], opacity: [0.2, 0.6, 0.2] }} transition={{ repeat: Infinity, duration: 1 }} />
         
-        {/* Little Chip Legs (Simulating walking) */}
-        <motion.line x1="47" y1="65" x2="47" y2="70" stroke={gold} strokeWidth="1.5" strokeLinecap="round"
-          animate={{ y2: [70, 66, 70], x2: [47, 44, 47] }} transition={{ repeat: Infinity, duration: 0.6, ease: "linear" }} />
-        <motion.line x1="53" y1="65" x2="53" y2="70" stroke={gold} strokeWidth="1.5" strokeLinecap="round"
-          animate={{ y2: [66, 70, 66], x2: [53, 56, 53] }} transition={{ repeat: Infinity, duration: 0.6, ease: "linear", delay: 0.3 }} />
+        {/* Scanning Box Area */}
+        <rect x="360" y="340" width="80" height="80" stroke={gold} strokeWidth="2" strokeDasharray="4 4" fill="rgba(184,154,10,0.05)" />
 
-        {/* Moving Boxes getting sorted */}
-        {/* Box 1 */}
-        <motion.g animate={{ x: [80, 50, 20, 20], y: [60, 60, 45, 45], opacity: [0, 1, 1, 0] }} transition={{ repeat: Infinity, duration: 4, times: [0, 0.4, 0.7, 1] }}>
-          <rect x="0" y="0" width="10" height="10" rx="1" stroke={darkGrey} strokeWidth="0.8" fill="#FDFCF8" />
-          <text x="2" y="7" fontSize="4" fill={darkGrey} fontFamily="sans-serif" fontWeight="bold">INV</text>
+        {/* Moving Boxes */}
+        {/* Box 1 (Loops continuously) */}
+        <motion.g animate={{ x: [800, 370, 150, 150], y: [350, 350, 270, 270], opacity: [0, 1, 1, 0] }} transition={{ repeat: Infinity, duration: 4, times: [0, 0.4, 0.7, 1] }}>
+          <rect x="0" y="0" width="60" height="70" rx="4" stroke={darkGrey} strokeWidth="3" fill="#FDFCF8" />
+          <text x="12" y="42" fontSize="22" fill={darkGrey} fontFamily="sans-serif" fontWeight="bold">INV</text>
         </motion.g>
 
-        {/* Box 2 */}
-        <motion.g animate={{ x: [80, 50, 32, 32], y: [60, 60, 45, 45], opacity: [0, 1, 1, 0] }} transition={{ repeat: Infinity, duration: 4, times: [0, 0.4, 0.7, 1], delay: 1.3 }}>
-          <rect x="0" y="0" width="10" height="10" rx="1" stroke={darkGrey} strokeWidth="0.8" fill="#FDFCF8" />
-          <line x1="2" y1="4" x2="8" y2="4" stroke={gold} strokeWidth="1" />
-          <line x1="2" y1="7" x2="6" y2="7" stroke={gold} strokeWidth="1" />
+        {/* Box 2 (Delayed) */}
+        <motion.g animate={{ x: [800, 370, 220, 220], y: [350, 350, 350, 350], opacity: [0, 1, 1, 0] }} transition={{ repeat: Infinity, duration: 4, times: [0, 0.4, 0.7, 1], delay: 1.3 }}>
+          <rect x="0" y="0" width="60" height="70" rx="4" stroke={darkGrey} strokeWidth="3" fill="#FDFCF8" />
+          <line x1="15" y1="30" x2="45" y2="30" stroke={gold} strokeWidth="4" />
+          <line x1="15" y1="45" x2="35" y2="45" stroke={gold} strokeWidth="4" />
         </motion.g>
 
-        {/* Box 3 */}
-        <motion.g animate={{ x: [80, 50, 20, 20], y: [60, 60, 33, 33], opacity: [0, 1, 1, 0] }} transition={{ repeat: Infinity, duration: 4, times: [0, 0.4, 0.7, 1], delay: 2.6 }}>
-          <rect x="0" y="0" width="10" height="10" rx="1" stroke={gold} strokeWidth="0.8" fill="#FDFCF8" />
-          <text x="2" y="7" fontSize="4" fill={gold} fontFamily="sans-serif" fontWeight="bold">OK</text>
+        {/* Box 3 (Delayed) */}
+        <motion.g animate={{ x: [800, 370, 150, 150], y: [350, 350, 350, 350], opacity: [0, 1, 1, 0] }} transition={{ repeat: Infinity, duration: 4, times: [0, 0.4, 0.7, 1], delay: 2.6 }}>
+          <rect x="0" y="0" width="60" height="70" rx="4" stroke={gold} strokeWidth="4" fill="#FDFCF8" />
+          <text x="15" y="42" fontSize="22" fill={gold} fontFamily="sans-serif" fontWeight="bold">OK</text>
         </motion.g>
 
-        {/* Static sorted stack outline in background */}
-        <rect x="19" y="44" width="12" height="12" rx="1" stroke={grey} strokeWidth="0.5" strokeDasharray="1 1" />
-        <rect x="31" y="44" width="12" height="12" rx="1" stroke={grey} strokeWidth="0.5" strokeDasharray="1 1" />
-        <rect x="19" y="32" width="12" height="12" rx="1" stroke={grey} strokeWidth="0.5" strokeDasharray="1 1" />
+        {/* Static Sorted Grid Outlines in background */}
+        <rect x="145" y="345" width="70" height="80" rx="4" stroke={grey} strokeWidth="2" strokeDasharray="4 4" />
+        <rect x="225" y="345" width="70" height="80" rx="4" stroke={grey} strokeWidth="2" strokeDasharray="4 4" />
+        <rect x="145" y="255" width="70" height="80" rx="4" stroke={grey} strokeWidth="2" strokeDasharray="4 4" />
       </motion.svg>
     );
   }
 
   if (index === 1) {
     // ----------------------------------------------------------------------
-    // SCENARIO 2: DASHBOARD & SWIPE
-    // Dashboard window above chip, chip arm swipes left/right to change panels
+    // SCENARIO 2: DASHBOARD & PULSE
+    // Dashboard behind chip. Chip emits pulse waves to swipe panels.
     // ----------------------------------------------------------------------
     return (
-      <motion.svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" fill="none" initial="hidden" animate="visible" variants={fadeIn}>
+      <motion.svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" fill="none" initial="hidden" animate="visible" variants={fadeIn}>
         
-        {/* Dashboard Window */}
-        <rect x="15" y="10" width="70" height="35" rx="3" stroke={darkGrey} strokeWidth="1" fill="#FDFCF8" />
-        <line x1="15" y1="16" x2="85" y2="16" stroke={darkGrey} strokeWidth="0.5" />
-        <circle cx="19" cy="13" r="1" fill={grey} />
-        <circle cx="22" cy="13" r="1" fill={grey} />
-        <circle cx="25" cy="13" r="1" fill={grey} />
+        {/* Dashboard Window (Huge) */}
+        <rect x="100" y="60" width="600" height="380" rx="12" stroke={darkGrey} strokeWidth="4" fill="#FDFCF8" />
+        <line x1="100" y1="110" x2="700" y2="110" stroke={darkGrey} strokeWidth="2" />
+        
+        {/* Window controls */}
+        <circle cx="130" cy="85" r="8" fill={grey} />
+        <circle cx="160" cy="85" r="8" fill={grey} />
+        <circle cx="190" cy="85" r="8" fill={grey} />
 
         {/* Dashboard Content Container (Clipping) */}
         <clipPath id="dash-clip">
-          <rect x="16" y="17" width="68" height="27" />
+          <rect x="110" y="120" width="580" height="310" />
         </clipPath>
+
+        {/* Telekinetic Pulse Wave from center (400, 250) */}
+        <motion.circle cx="400" cy="250" stroke={gold} strokeWidth="4" fill="none"
+          animate={{ r: [60, 400], opacity: [0.8, 0] }} transition={{ repeat: Infinity, duration: 3, delay: 1 }} />
+        <motion.circle cx="400" cy="250" stroke={gold} strokeWidth="2" fill="none"
+          animate={{ r: [60, 300], opacity: [0.5, 0] }} transition={{ repeat: Infinity, duration: 3, delay: 1.2 }} />
 
         <g clipPath="url(#dash-clip)">
           {/* Panel 1: Bar Charts (Slides left) */}
-          <motion.g animate={{ x: [0, 0, -80, -80, 0] }} transition={{ repeat: Infinity, duration: 6, times: [0, 0.3, 0.4, 0.8, 0.9] }}>
-            <rect x="25" y="35" width="8" height="0" fill={gold}>
-               <animate attributeName="height" values="0;12;10;15;0" dur="6s" repeatCount="indefinite" />
-               <animate attributeName="y" values="35;23;25;20;35" dur="6s" repeatCount="indefinite" />
+          <motion.g animate={{ x: [0, 0, -600, -600, 0] }} transition={{ repeat: Infinity, duration: 6, times: [0, 0.4, 0.5, 0.9, 1] }}>
+            <rect x="200" y="350" width="40" height="0" fill={gold}>
+               <animate attributeName="height" values="0;120;100;150;0" dur="6s" repeatCount="indefinite" />
+               <animate attributeName="y" values="350;230;250;200;350" dur="6s" repeatCount="indefinite" />
             </rect>
-            <rect x="38" y="35" width="8" height="0" fill={darkGrey}>
-               <animate attributeName="height" values="0;18;22;20;0" dur="6s" repeatCount="indefinite" />
-               <animate attributeName="y" values="35;17;13;15;35" dur="6s" repeatCount="indefinite" />
+            <rect x="280" y="350" width="40" height="0" fill={darkGrey}>
+               <animate attributeName="height" values="0;180;220;200;0" dur="6s" repeatCount="indefinite" />
+               <animate attributeName="y" values="350;170;130;150;350" dur="6s" repeatCount="indefinite" />
             </rect>
-            <rect x="51" y="35" width="8" height="0" fill={gold} opacity="0.6">
-               <animate attributeName="height" values="0;8;12;24;0" dur="6s" repeatCount="indefinite" />
-               <animate attributeName="y" values="35;27;23;11;35" dur="6s" repeatCount="indefinite" />
+            <rect x="360" y="350" width="40" height="0" fill={gold} opacity="0.6">
+               <animate attributeName="height" values="0;80;120;240;0" dur="6s" repeatCount="indefinite" />
+               <animate attributeName="y" values="350;270;230;110;350" dur="6s" repeatCount="indefinite" />
             </rect>
-            <rect x="64" y="35" width="8" height="0" fill={darkGrey} opacity="0.5">
-               <animate attributeName="height" values="0;22;18;15;0" dur="6s" repeatCount="indefinite" />
-               <animate attributeName="y" values="35;13;17;20;35" dur="6s" repeatCount="indefinite" />
+            <rect x="440" y="350" width="40" height="0" fill={darkGrey} opacity="0.5">
+               <animate attributeName="height" values="0;220;180;150;0" dur="6s" repeatCount="indefinite" />
+               <animate attributeName="y" values="350;130;170;200;350" dur="6s" repeatCount="indefinite" />
+            </rect>
+            <rect x="520" y="350" width="40" height="0" fill={gold}>
+               <animate attributeName="height" values="0;160;140;190;0" dur="6s" repeatCount="indefinite" />
+               <animate attributeName="y" values="350;190;210;160;350" dur="6s" repeatCount="indefinite" />
             </rect>
           </motion.g>
 
-          {/* Panel 2: Line Graph & Nodes (Slides in from right) */}
-          <motion.g animate={{ x: [80, 80, 0, 0, 80] }} transition={{ repeat: Infinity, duration: 6, times: [0, 0.3, 0.4, 0.8, 0.9] }}>
-            <polyline points="20,38 35,25 50,30 65,18 80,22" stroke={gold} strokeWidth="1.5" fill="none" />
-            <circle cx="35" cy="25" r="2" fill={darkGrey} />
-            <circle cx="50" cy="30" r="2" fill={darkGrey} />
-            <circle cx="65" cy="18" r="2" fill={gold} />
+          {/* Panel 2: Analytics Nodes (Slides in from right) */}
+          <motion.g animate={{ x: [600, 600, 0, 0, 600] }} transition={{ repeat: Infinity, duration: 6, times: [0, 0.4, 0.5, 0.9, 1] }}>
+            <polyline points="150,380 280,220 450,290 600,160 720,200" stroke={gold} strokeWidth="6" strokeLinejoin="round" fill="none" />
+            <circle cx="280" cy="220" r="12" fill={darkGrey} />
+            <circle cx="450" cy="290" r="12" fill={darkGrey} />
+            <circle cx="600" cy="160" r="16" fill={gold} />
             
-            <line x1="65" y1="18" x2="65" y2="38" stroke={gold} strokeWidth="0.5" strokeDasharray="2 2" />
+            <line x1="600" y1="160" x2="600" y2="420" stroke={gold} strokeWidth="3" strokeDasharray="8 8" />
           </motion.g>
         </g>
-
-        {/* Swiping Arm from Chip */}
-        <motion.g animate={{ x: [0, 0, -15, -15, 0] }} transition={{ repeat: Infinity, duration: 6, times: [0, 0.3, 0.4, 0.8, 0.9] }}>
-          <path d="M 50 48 Q 50 38 55 35" stroke={gold} strokeWidth="1.5" strokeLinecap="round" fill="none" />
-          {/* Hand/Cursor */}
-          <circle cx="55" cy="35" r="2" fill={darkGrey} />
-          <motion.circle cx="55" cy="35" r="4" stroke={gold} strokeWidth="0.5" fill="none" 
-            animate={{ scale: [1, 2], opacity: [0, 1, 0] }} transition={{ repeat: Infinity, duration: 1.5 }} />
-        </motion.g>
-
       </motion.svg>
     );
   }
 
   if (index === 2) {
     // ----------------------------------------------------------------------
-    // SCENARIO 3: CONSULTING & OPTIMIZATION
-    // Chip works with abstract people, using a magnifying glass to scan
+    // SCENARIO 3: CONSULTING & RADAR SCAN
+    // Chip emits a massive radar cone to scan the team nodes.
     // ----------------------------------------------------------------------
     return (
-      <motion.svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" fill="none" initial="hidden" animate="visible" variants={fadeIn}>
+      <motion.svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" fill="none" initial="hidden" animate="visible" variants={fadeIn}>
         
+        {/* Radar Cone (Sweeping Left to Right) */}
+        <motion.path d="M 400 250 L 150 50 A 300 300 0 0 0 150 450 Z" 
+          fill="url(#radar-grad)" opacity="0.4"
+          style={{ transformOrigin: "400px 250px" }}
+          animate={{ rotate: [-40, 40, -40] }} transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
+        />
+        <defs>
+          <radialGradient id="radar-grad" cx="400" cy="250" r="300" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor={gold} stopOpacity="0.8" />
+            <stop offset="100%" stopColor={gold} stopOpacity="0" />
+          </radialGradient>
+        </defs>
+
         {/* Abstract People / Team Nodes */}
-        <g stroke={darkGrey} strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-          {/* Person 1 */}
-          <circle cx="20" cy="40" r="3" />
-          <path d="M 15 50 Q 20 45 25 50" />
-          {/* Person 2 */}
-          <circle cx="35" cy="30" r="3" />
-          <path d="M 30 40 Q 35 35 40 40" />
-          {/* Person 3 */}
-          <circle cx="70" cy="35" r="3" />
-          <path d="M 65 45 Q 70 40 75 45" />
-          {/* Person 4 */}
-          <circle cx="85" cy="45" r="3" />
-          <path d="M 80 55 Q 85 50 90 55" />
+        <g stroke={darkGrey} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
+          {/* Person 1 (Top Left) */}
+          <circle cx="200" cy="150" r="20" />
+          <path d="M 150 220 Q 200 180 250 220" />
+          {/* Person 2 (Bottom Left) */}
+          <circle cx="250" cy="350" r="24" />
+          <path d="M 190 440 Q 250 390 310 440" />
+          
+          {/* Person 3 (Top Right) */}
+          <circle cx="600" cy="180" r="22" />
+          <path d="M 540 260 Q 600 210 660 260" />
+          {/* Person 4 (Bottom Right) */}
+          <circle cx="580" cy="380" r="20" />
+          <path d="M 530 450 Q 580 410 630 450" />
         </g>
 
         {/* Network connections between people and chip */}
-        <motion.path d="M 20 40 L 50 50 M 35 30 L 50 50 M 70 35 L 50 50 M 85 45 L 50 50" 
-          stroke={grey} strokeWidth="0.5" strokeDasharray="2 2"
-          animate={{ strokeDashoffset: [10, 0] }} transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+        <motion.path d="M 200 150 L 400 250 M 250 350 L 400 250 M 600 180 L 400 250 M 580 380 L 400 250" 
+          stroke={grey} strokeWidth="2" strokeDasharray="12 12"
+          animate={{ strokeDashoffset: [48, 0] }} transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
         />
 
-        {/* Magnifying Glass scanning */}
-        <motion.g animate={{ x: [-25, -10, 20, 35, -25], y: [-5, -15, -10, 0, -5] }} transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }}>
-          {/* Arm holding the glass */}
-          <path d="M 50 50 L 45 45" stroke={gold} strokeWidth="1.5" strokeLinecap="round" />
-          {/* Glass */}
-          <circle cx="42" cy="42" r="7" stroke={gold} strokeWidth="1.5" fill="rgba(184, 154, 10, 0.1)" />
-          <line x1="40" y1="44" x2="44" y2="40" stroke={gold} strokeWidth="0.5" />
-          
-          {/* Scanning beam under glass */}
-          <motion.line x1="42" y1="49" x2="42" y2="65" stroke={gold} strokeWidth="0.5" strokeDasharray="1 1"
-            animate={{ y2: [65, 80, 65], opacity: [0.3, 0.8, 0.3] }} transition={{ repeat: Infinity, duration: 1 }} />
-        </motion.g>
-
-        {/* Highlight effect when glass passes over (fake reaction) */}
-        <motion.circle cx="20" cy="40" r="4" fill={gold} opacity="0" animate={{ opacity: [0, 0.5, 0] }} transition={{ repeat: Infinity, duration: 8, times: [0, 0.05, 0.15] }} />
-        <motion.circle cx="35" cy="30" r="4" fill={gold} opacity="0" animate={{ opacity: [0, 0.5, 0] }} transition={{ repeat: Infinity, duration: 8, times: [0.1, 0.25, 0.35] }} />
-        <motion.circle cx="70" cy="35" r="4" fill={gold} opacity="0" animate={{ opacity: [0, 0.5, 0] }} transition={{ repeat: Infinity, duration: 8, times: [0.4, 0.6, 0.7] }} />
-        <motion.circle cx="85" cy="45" r="4" fill={gold} opacity="0" animate={{ opacity: [0, 0.5, 0] }} transition={{ repeat: Infinity, duration: 8, times: [0.7, 0.85, 0.95] }} />
+        {/* Highlight effect when radar passes over */}
+        <motion.circle cx="200" cy="150" r="26" fill={gold} opacity="0" animate={{ opacity: [0, 0.6, 0] }} transition={{ repeat: Infinity, duration: 6, times: [0, 0.1, 0.2] }} />
+        <motion.circle cx="250" cy="350" r="30" fill={gold} opacity="0" animate={{ opacity: [0, 0.6, 0] }} transition={{ repeat: Infinity, duration: 6, times: [0.1, 0.2, 0.3] }} />
+        <motion.circle cx="600" cy="180" r="28" fill={gold} opacity="0" animate={{ opacity: [0, 0.6, 0] }} transition={{ repeat: Infinity, duration: 6, times: [0.5, 0.6, 0.7] }} />
+        <motion.circle cx="580" cy="380" r="26" fill={gold} opacity="0" animate={{ opacity: [0, 0.6, 0] }} transition={{ repeat: Infinity, duration: 6, times: [0.7, 0.8, 0.9] }} />
 
       </motion.svg>
     );
