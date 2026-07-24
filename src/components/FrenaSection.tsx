@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ChipEye } from './ui/ChipEye';
 
 const FrenaSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -63,7 +64,11 @@ const FrenaSection: React.FC = () => {
                   style={{ backgroundColor: 'var(--dark)', borderRadius: '999px' }}
                   initial={false}
                   transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                />
+                >
+                  <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center pointer-events-none" style={{ top: '-18px' }}>
+                    <ChipEye disableInitialSleep width="22px" height="16px" />
+                  </div>
+                </motion.div>
               )}
               <span className="relative z-10 block" style={{ color: isActive ? 'var(--cream)' : 'var(--mid)' }}>{tab.title}</span>
             </button>

@@ -4,22 +4,24 @@ interface ChipEyeProps {
   className?: string;
   width?: string;
   height?: string;
+  disableInitialSleep?: boolean;
 }
 
-export const ChipEye: React.FC<ChipEyeProps> = ({ className = '', width = "0.9em", height = "0.65em" }) => {
+export const ChipEye: React.FC<ChipEyeProps> = ({ className = '', width = "0.9em", height = "0.65em", disableInitialSleep = false }) => {
   const containerRef = useRef<SVGSVGElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isBlinking, setIsBlinking] = useState(false);
-  const [isAlive, setIsAlive] = useState(false);
+  const [isAlive, setIsAlive] = useState(disableInitialSleep);
   const clipId = useId().replace(/:/g, "");
 
   // Wait for bounce animation to complete before coming alive
   useEffect(() => {
+    if (disableInitialSleep) return;
     const timer = setTimeout(() => {
       setIsAlive(true);
     }, 2800); // 2.5s tumble + 0.2s delay
     return () => clearTimeout(timer);
-  }, []);
+  }, [disableInitialSleep]);
 
   useEffect(() => {
     if (!isAlive) return;
@@ -110,12 +112,12 @@ export const ChipEye: React.FC<ChipEyeProps> = ({ className = '', width = "0.9em
       </defs>
 
       {/* --- ASLEEP LAYER (Grey, closed eye) --- */}
-      <g stroke={greyColor} strokeWidth="1" strokeLinecap="round">
+      <g stroke={greyColor} strokeWidth="1" strokeLinecap="round" clipPath={`url(#sleep-${clipId})`}>
         {/* Main Body */}
         <rect x="5" y="2" width="12" height="12" rx="1.5" strokeWidth="1.2" fill="none" />
         
-        {/* Closed Eye (Line) - hides as the gold layer reveals it */}
-        <line x1="8.5" y1="8" x2="13.5" y2="8" strokeWidth="1.5" clipPath={`url(#sleep-${clipId})`} />
+        {/* Closed Eye (Line) */}
+        <line x1="8.5" y1="8" x2="13.5" y2="8" strokeWidth="1.5" />
 
         {/* Pins */}
         <line x1="5" y1="5.5" x2="2" y2="5.5" />
