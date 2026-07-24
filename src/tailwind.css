@@ -457,8 +457,8 @@
   .bg-border {
     background-color: var(--color-border);
   }
-  .bg-stone-50 {
-    background-color: var(--color-stone-50);
+  .bg-transparent {
+    background-color: transparent;
   }
   .object-cover {
     object-fit: cover;

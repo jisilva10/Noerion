@@ -7,6 +7,7 @@ interface ChipEyeProps {
   disableInitialSleep?: boolean;
   disableEyeAnimation?: boolean;
   forceAsleep?: boolean;
+  wakeDelay?: number;
 }
 
 export const ChipEye: React.FC<ChipEyeProps> = ({ 
@@ -15,7 +16,8 @@ export const ChipEye: React.FC<ChipEyeProps> = ({
   height = "0.65em", 
   disableInitialSleep = false,
   disableEyeAnimation = false,
-  forceAsleep = false
+  forceAsleep = false,
+  wakeDelay = 2800
 }) => {
   const containerRef = useRef<SVGSVGElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -35,9 +37,9 @@ export const ChipEye: React.FC<ChipEyeProps> = ({
     }
     const timer = setTimeout(() => {
       setIsAlive(true);
-    }, 2800); // 2.5s tumble + 0.2s delay
+    }, wakeDelay);
     return () => clearTimeout(timer);
-  }, [disableInitialSleep, forceAsleep]);
+  }, [disableInitialSleep, forceAsleep, wakeDelay]);
 
   useEffect(() => {
     if (!isAlive || disableEyeAnimation) return;

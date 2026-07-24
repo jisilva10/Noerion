@@ -109,7 +109,7 @@ export function FeatureSteps({
                       layoutId={`chip-desktop-${index}`}
                       className="absolute inset-0 flex items-center justify-center"
                     >
-                      <ChipEye forceAsleep width="24px" height="24px" />
+                      <ChipEye forceAsleep width="38px" height="38px" />
                     </motion.div>
                   ) : null}
                 </div>
@@ -135,7 +135,7 @@ export function FeatureSteps({
         </div>
 
         {/* Right Column: Animation */}
-        <div className="w-1/2 relative h-[500px] rounded-2xl overflow-hidden shadow-lg border border-border bg-stone-50 flex items-center justify-center">
+        <div className="w-1/2 relative h-[500px] rounded-2xl overflow-hidden shadow-lg border border-border bg-transparent flex items-center justify-center">
           <AnimatePresence mode="wait">
             <motion.div
               key={`animation-${currentFeature}`}
@@ -151,12 +151,16 @@ export function FeatureSteps({
 
           <motion.div 
             layoutId={`chip-desktop-${currentFeature}`}
-            className="z-10 relative"
-            initial={{ rotate: 0 }}
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, type: "spring", bounce: 0.2 }}
+            className="z-10 relative flex items-center justify-center"
+            style={{ width: 48, height: 48 }}
           >
-             <ChipEye width="48px" height="48px" />
+            <motion.div
+              initial={{ rotate: -180, scale: 0.5 }}
+              animate={{ rotate: 0, scale: 1 }}
+              transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
+            >
+               <ChipEye width="48px" height="48px" wakeDelay={400} />
+            </motion.div>
           </motion.div>
         </div>
       </div>
@@ -164,7 +168,7 @@ export function FeatureSteps({
       {/* MOBILE VIEW (Hidden on Desktop) */}
       <div className="flex md:hidden flex-col w-full gap-10">
         {/* Top Animation */}
-        <div className="relative h-[320px] w-full rounded-2xl overflow-hidden shadow-sm border border-border bg-stone-50 flex items-center justify-center">
+        <div className="relative h-[320px] w-full rounded-2xl overflow-hidden shadow-sm border border-border bg-transparent flex items-center justify-center">
           <AnimatePresence mode="wait">
             <motion.div
               key={`animation-${currentFeature}`}
@@ -180,12 +184,16 @@ export function FeatureSteps({
 
           <motion.div 
             layoutId={`chip-mobile-${currentFeature}`}
-            className="z-10 relative"
-            initial={{ rotate: 0 }}
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, type: "spring", bounce: 0.2 }}
+            className="z-10 relative flex items-center justify-center"
+            style={{ width: 40, height: 40 }}
           >
-             <ChipEye width="40px" height="40px" />
+            <motion.div
+              initial={{ rotate: -180, scale: 0.5 }}
+              animate={{ rotate: 0, scale: 1 }}
+              transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
+            >
+               <ChipEye width="40px" height="40px" wakeDelay={400} />
+            </motion.div>
           </motion.div>
         </div>
 
@@ -219,7 +227,7 @@ export function FeatureSteps({
                         layoutId={`chip-mobile-${index}`}
                         className="absolute inset-0 flex items-center justify-center"
                       >
-                        <ChipEye forceAsleep width="24px" height="24px" />
+                        <ChipEye forceAsleep width="38px" height="38px" />
                       </motion.div>
                     ) : null}
                   </div>
