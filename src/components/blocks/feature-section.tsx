@@ -4,17 +4,40 @@ import type { Transition } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { ChipEye } from "../ui/ChipEye";
 import { ServiceScene, SCENES } from "./ServiceAnimations";
+import type { SceneConfig } from "./ServiceAnimations";
 
 /* ══════════════════════════════════════════════════════════════
    El chip como personaje.
 
-   parked    · todos dormidos en su repisa
-   departing · el elegido rueda sobre su texto y cae al vacio
-   onstage    · despierta y protagoniza la animacion del servicio
-   returning · la escena se deconstruye y el chip vuelve a dormir
+   Cada servicio tiene su chip dormido en la repisa, encima de su
+   texto. El elegido rueda sobre el texto, cae al marco de la
+   derecha y despierta. Al cambiar de servicio el que estaba
+   vuelve a su sitio y el nuevo ya salio: los dos se cruzan.
    ══════════════════════════════════════════════════════════════ */
 
-type Phase = "parked" | "departing" | "onstage" | "returning";
+const BASE = 100;   // caja del chip volador; siempre se escala hacia abajo, nunca se pixela
+const HOME_PX = 36; // tamano del chip dormido
+const H = HOME_PX / BASE;
+
+const PARK_MS = 160;
+const OUT_MS = 2400;
+const IN_MS = 2200;
+const OVERLAP_MS = 650; // lo que espera el nuevo antes de salir
+
+type Mode = "hidden" | "out" | "stage" | "in";
+
+type Geo = {
+  ox: number;
+  oy: number;
+  rollEnd: number;
+  d: number;
+  tx: number;
+  ty: number;
+  k: number;
+  s: number;
+  apex: number;
+  cfg: SceneConfig;
+};
 
 interface Feature {
   step: string;
@@ -26,25 +49,158 @@ interface Feature {
 interface FeatureStepsProps {
   features: Feature[];
   className?: string;
-  /** milisegundos que la escena permanece en pantalla (sin contar el vuelo) */
+  /** ms que la escena permanece en pantalla, sin contar los vuelos */
   autoPlayInterval?: number;
 }
 
-const HOME = 36;      // tamano del chip dormido, en px
-const PARK_MS = 170;
-const OUT_MS = 3200;
-const IN_MS = 2800;
+const T = (x: number, y: number, r: number, sc: number) => ({ x, y, rotate: r, scale: sc });
 
-type Geom = {
-  slots: { x: number; y: number }[];
-  rolls: number[];
-  stage: { x: number; y: number; w: number; h: number };
+function outFrames(g: Geo, reduce: boolean) {
+  const { ox, oy, d, rollEnd, tx, ty, k, apex } = g;
+  if (reduce) {
+    return {
+      anim: { x: [ox, tx], y: [oy, ty], rotate: [0, 360], scale: [H, k], opacity: [1, 1] },
+      t: { duration: 0.5, ease: "easeInOut" } as Transition,
+    };
+  }
+  return {
+    anim: {
+      x: [ox, ox + d * 0.5, rollEnd, (rollEnd + tx) / 2, tx, tx],
+      y: [oy, oy, oy, apex, ty + 6, ty],
+      rotate: [0, 180, 360, 384, 354, 360],
+      scale: [H, H, H, (H + k) / 2, k * 1.02, k],
+      opacity: [1, 1, 1, 1, 1, 1],
+    },
+    t: {
+      duration: OUT_MS / 1000,
+      times: [0, 0.24, 0.48, 0.71, 0.91, 1],
+      ease: ["easeIn", "linear", "easeIn", "easeIn", "easeOut"],
+    } as Transition,
+  };
+}
+
+function inFrames(g: Geo, reduce: boolean) {
+  const { ox, oy, d, rollEnd, tx, ty, k, apex } = g;
+  if (reduce) {
+    return {
+      anim: { x: [tx, ox], y: [ty, oy], rotate: [360, 0], scale: [k, H], opacity: [1, 1] },
+      t: { duration: 0.42, ease: "easeInOut" } as Transition,
+    };
+  }
+  return {
+    anim: {
+      x: [tx, tx, (tx + rollEnd) / 2, rollEnd, ox + d * 0.5, ox],
+      y: [ty, ty - 10, apex, oy, oy, oy],
+      rotate: [360, 372, 360, 360, 180, 0],
+      scale: [k, k * 1.02, (H + k) / 2, H, H, H],
+      opacity: [1, 1, 1, 1, 1, 1],
+    },
+    t: {
+      duration: IN_MS / 1000,
+      times: [0, 0.1, 0.35, 0.58, 0.8, 1],
+      ease: ["easeOut", "easeIn", "easeOut", "linear", "easeOut"],
+    } as Transition,
+  };
+}
+
+const scaleFrames = (obj: Record<string, number[]>, s: number) => {
+  const out: Record<string, number[]> = {};
+  for (const k of Object.keys(obj)) out[k] = k === "x" || k === "y" ? obj[k].map((v) => v * s) : obj[k];
+  return out;
 };
 
-function useIsMobile() {
-  const [m, setM] = useState(() =>
-    typeof window !== "undefined" ? window.matchMedia("(max-width: 767px)").matches : false
+/* ─── el personaje ──────────────────────────────────────────── */
+const Flyer: React.FC<{ g: Geo; mode: Mode; reduce: boolean }> = ({ g, mode, reduce }) => {
+  const [wake, setWake] = useState(mode === "in");
+  const [gz, setGz] = useState(0);
+
+  useEffect(() => {
+    if (mode === "stage") {
+      setWake(true);
+      return;
+    }
+    if (mode === "in") {
+      setWake(true);
+      const t = setTimeout(() => setWake(false), 90);
+      return () => clearTimeout(t);
+    }
+    setWake(false);
+  }, [mode]);
+
+  useEffect(() => {
+    if (mode !== "stage") return;
+    setGz(0);
+    const id = setInterval(() => setGz((v) => v + 1), g.cfg.gazeMs);
+    return () => clearInterval(id);
+  }, [mode, g.cfg]);
+
+  const out = useMemo(() => outFrames(g, reduce), [g, reduce]);
+  const back = useMemo(() => inFrames(g, reduce), [g, reduce]);
+
+  const anim =
+    mode === "out"
+      ? out.anim
+      : mode === "in"
+      ? back.anim
+      : mode === "stage"
+      ? { ...T(g.tx, g.ty, 360, g.k), opacity: 1 }
+      : { ...T(g.ox, g.oy, 0, H), opacity: 0 };
+
+  const trans: Transition =
+    mode === "out" ? out.t : mode === "in" ? back.t : { duration: mode === "stage" ? 0.3 : 0 };
+
+  const gaze = mode === "stage" ? g.cfg.gaze[gz % g.cfg.gaze.length] : null;
+  const idle = mode === "stage" ? scaleFrames(g.cfg.idle, g.s) : { x: 0, y: 0, rotate: 0 };
+
+  return (
+    <motion.div
+      className="absolute top-0 left-0 z-40 pointer-events-none"
+      style={{ width: BASE, height: BASE, marginLeft: -BASE / 2, marginTop: -BASE / 2, willChange: "transform" }}
+      initial={mode === "in" ? { ...T(g.tx, g.ty, 360, g.k), opacity: 1 } : false}
+      animate={anim}
+      transition={trans}
+    >
+      <motion.div
+        className="relative w-full h-full flex items-center justify-center"
+        animate={idle}
+        transition={mode === "stage" ? g.cfg.idleT : { duration: 0.35, ease: "easeInOut" }}
+      >
+        <AnimatePresence>
+          {mode === "stage" && (
+            <motion.span
+              key="spark"
+              className="absolute rounded-full border border-gold"
+              style={{ width: BASE * 0.6, height: BASE * 0.6 }}
+              initial={{ scale: 0.5, opacity: 0.7 }}
+              animate={{ scale: 2.4, opacity: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1, ease: "easeOut" }}
+            />
+          )}
+        </AnimatePresence>
+        <ChipEye width={`${BASE}px`} height={`${BASE}px`} disableInitialSleep disableMouseFollow forceAsleep={!wake} pupilOffset={gaze} />
+      </motion.div>
+    </motion.div>
   );
+};
+
+/* ─── marco del escenario ───────────────────────────────────── */
+const StageFrame = () => (
+  <>
+    <div className="absolute inset-0 rounded-[20px] border border-border/70 bg-white/50" />
+    {[
+      "left-4 top-4 border-l border-t",
+      "right-4 top-4 border-r border-t",
+      "left-4 bottom-4 border-l border-b",
+      "right-4 bottom-4 border-r border-b",
+    ].map((c, i) => (
+      <span key={i} className={cn("absolute w-3 h-3 border-gold/60", c)} />
+    ))}
+  </>
+);
+
+function useIsMobile() {
+  const [m, setM] = useState(() => (typeof window !== "undefined" ? window.matchMedia("(max-width: 767px)").matches : false));
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 767px)");
     const on = () => setM(mq.matches);
@@ -54,20 +210,18 @@ function useIsMobile() {
   return m;
 }
 
-const scaleFrames = (obj: Record<string, number[]>, s: number) => {
-  const out: Record<string, number[]> = {};
-  for (const k of Object.keys(obj)) {
-    out[k] = k === "x" || k === "y" ? obj[k].map((v) => v * s) : obj[k];
-  }
-  return out;
+type RawGeom = {
+  slots: { x: number; y: number }[];
+  rolls: number[];
+  stage: { x: number; y: number; w: number; h: number };
 };
 
 export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: FeatureStepsProps) {
   const [current, setCurrent] = useState(0);
-  const [homeIndex, setHomeIndex] = useState(0);
-  const [phase, setPhase] = useState<Phase>("parked");
-  const [geom, setGeom] = useState<Geom | null>(null);
-  const [gazeStep, setGazeStep] = useState(0);
+  const [stageIdx, setStageIdx] = useState<number | null>(null);
+  const [outIdx, setOutIdx] = useState<number | null>(null);
+  const [backIdx, setBackIdx] = useState<number | null>(null);
+  const [geom, setGeom] = useState<RawGeom | null>(null);
 
   const wrapRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -75,9 +229,11 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
   const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
   const sliderRef = useRef<HTMLDivElement>(null);
   const programmaticScrollRef = useRef(false);
+  const currentRef = useRef(0);
+  currentRef.current = current;
 
   const isMobile = useIsMobile();
-  const reduce = useReducedMotion();
+  const reduce = !!useReducedMotion();
   const isInView = useInView(wrapRef, { amount: 0.45 });
 
   /* ─── medicion ─────────────────────────────────────────────── */
@@ -87,7 +243,6 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
     if (!wrap || !stage) return;
     const W = wrap.getBoundingClientRect();
     const S = stage.getBoundingClientRect();
-
     const slots: { x: number; y: number }[] = [];
     const rolls: number[] = [];
     for (let i = 0; i < features.length; i++) {
@@ -104,7 +259,7 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
 
   useLayoutEffect(() => {
     measure();
-    const id = window.setTimeout(measure, 350); // por si las fuentes reflowean
+    const id = window.setTimeout(measure, 350);
     window.addEventListener("resize", measure);
     return () => {
       window.clearTimeout(id);
@@ -112,53 +267,73 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
     };
   }, [measure, isMobile]);
 
-  // remedir justo antes de cada vuelo
-  useLayoutEffect(() => {
-    if (phase === "parked" || phase === "onstage") measure();
-  }, [phase, measure]);
+  const geos = useMemo<Geo[] | null>(() => {
+    if (!geom) return null;
+    return features.map((_, i) => {
+      const cfg = SCENES[i] ?? SCENES[0];
+      const slot = geom.slots[i] ?? { x: 0, y: 0 };
+      const rollEnd = Math.max(geom.rolls[i] ?? 0, slot.x + 60);
+      const s = Math.min(geom.stage.w / cfg.vb[0], geom.stage.h / cfg.vb[1]);
+      const tx = geom.stage.x + (geom.stage.w - cfg.vb[0] * s) / 2 + cfg.anchor[0] * s;
+      const ty = geom.stage.y + (geom.stage.h - cfg.vb[1] * s) / 2 + cfg.anchor[1] * s;
+      const apex = Math.max(Math.min(slot.y, ty) - (ty > slot.y ? 32 : 56), 12);
+      return {
+        ox: slot.x,
+        oy: slot.y,
+        rollEnd,
+        d: rollEnd - slot.x,
+        tx,
+        ty,
+        k: (cfg.chip * s) / BASE,
+        s,
+        apex,
+        cfg,
+      };
+    });
+  }, [geom, features.length]);
 
-  /* ─── maquina de estados ───────────────────────────────────── */
+  /* ─── coreografia ──────────────────────────────────────────── */
   useEffect(() => {
-    if (!geom) return;
-    if (phase === "parked") {
-      if (!isInView) return; // el primer vuelo espera a que la seccion aparezca
-      const t = setTimeout(() => setPhase("departing"), PARK_MS);
-      return () => clearTimeout(t);
-    }
-    if (phase === "departing") {
-      const t = setTimeout(() => setPhase("onstage"), reduce ? 500 : OUT_MS);
-      return () => clearTimeout(t);
-    }
-    if (phase === "onstage") {
-      if (!isInView) return;
-      const t = setTimeout(() => {
-        programmaticScrollRef.current = true;
-        setCurrent((c) => (c + 1) % features.length);
-      }, autoPlayInterval);
-      return () => clearTimeout(t);
-    }
-    if (phase === "returning") {
-      const t = setTimeout(() => {
-        setHomeIndex(current);
-        setPhase("parked");
-      }, reduce ? 420 : IN_MS);
-      return () => clearTimeout(t);
-    }
-  }, [phase, geom, current, reduce, isInView, autoPlayInterval, features.length]);
+    if (!geos || !isInView) return;
+    if (stageIdx !== null || outIdx !== null || backIdx !== null) return;
+    const t = setTimeout(() => setOutIdx(currentRef.current), PARK_MS);
+    return () => clearTimeout(t);
+  }, [geos, isInView, stageIdx, outIdx, backIdx]);
 
-  // el usuario (o el reloj) eligio otro servicio
   useEffect(() => {
-    if (phase === "onstage" && current !== homeIndex) setPhase("returning");
-  }, [current, phase, homeIndex]);
+    if (outIdx === null) return;
+    const t = setTimeout(() => {
+      setStageIdx(outIdx);
+      setOutIdx(null);
+    }, reduce ? 520 : OUT_MS);
+    return () => clearTimeout(t);
+  }, [outIdx, reduce]);
 
-  /* ─── mirada dirigida ──────────────────────────────────────── */
+  // el que estaba se va; el nuevo sale un poco despues, sin esperar a que llegue
   useEffect(() => {
-    if (phase !== "onstage") return;
-    const cfg = SCENES[homeIndex] ?? SCENES[0];
-    setGazeStep(0);
-    const id = setInterval(() => setGazeStep((g) => g + 1), cfg.gazeMs);
-    return () => clearInterval(id);
-  }, [phase, homeIndex]);
+    if (backIdx === null) return;
+    const t1 = setTimeout(() => setOutIdx(currentRef.current), reduce ? 120 : OVERLAP_MS);
+    const t2 = setTimeout(() => setBackIdx(null), (reduce ? 440 : IN_MS) + 200);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [backIdx, reduce]);
+
+  useEffect(() => {
+    if (stageIdx === null || current === stageIdx) return;
+    setBackIdx(stageIdx);
+    setStageIdx(null);
+  }, [current, stageIdx]);
+
+  useEffect(() => {
+    if (stageIdx === null || !isInView) return;
+    const t = setTimeout(() => {
+      programmaticScrollRef.current = true;
+      setCurrent((c) => (c + 1) % features.length);
+    }, autoPlayInterval);
+    return () => clearTimeout(t);
+  }, [stageIdx, isInView, autoPlayInterval, features.length]);
 
   /* ─── slider movil ─────────────────────────────────────────── */
   useEffect(() => {
@@ -173,6 +348,12 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
     }
     programmaticScrollRef.current = false;
   }, [current, isMobile]);
+
+  const select = (i: number, scroll = true) => {
+    if (i === current) return;
+    if (scroll) programmaticScrollRef.current = true;
+    setCurrent(i);
+  };
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     if (!isMobile) return;
@@ -192,102 +373,10 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
     requestAnimationFrame(measure);
   };
 
-  const select = (i: number, scroll = true) => {
-    if (i === current) return;
-    if (scroll) programmaticScrollRef.current = true;
-    setCurrent(i);
-  };
-
-  /* ─── geometria del vuelo ──────────────────────────────────── */
-  const flight = useMemo(() => {
-    if (!geom || !geom.slots[homeIndex]) return null;
-    const cfg = SCENES[homeIndex] ?? SCENES[0];
-    const { x: ox, y: oy } = geom.slots[homeIndex];
-    const rollEnd = Math.max(geom.rolls[homeIndex], ox + 60);
-    const d = rollEnd - ox;
-
-    const s = Math.min(geom.stage.w / cfg.vb[0], geom.stage.h / cfg.vb[1]);
-    const tx = geom.stage.x + (geom.stage.w - cfg.vb[0] * s) / 2 + cfg.anchor[0] * s;
-    const ty = geom.stage.y + (geom.stage.h - cfg.vb[1] * s) / 2 + cfg.anchor[1] * s;
-    const k = (cfg.chip * s) / HOME;
-    // salto corto si cae hacia abajo, arco real si tiene que subir
-    const apex = Math.max(Math.min(oy, ty) - (ty > oy ? 46 : 78), 14);
-
-    return { ox, oy, rollEnd, d, tx, ty, k, s, apex, cfg };
-  }, [geom, homeIndex]);
-
-  const outFrames = useMemo(() => {
-    if (!flight) return null;
-    const { ox, oy, d, rollEnd, tx, ty, k, apex } = flight;
-    // una sola vuelta continua sobre el texto, luego se deja caer
-    return {
-      anim: {
-        x: [ox, ox + d * 0.5, rollEnd, (rollEnd + tx) / 2, tx, tx],
-        y: [oy, oy, oy, apex, ty + 6, ty],
-        rotate: [0, 180, 360, 384, 354, 360],
-        scale: [1, 1, 1, (1 + k) / 2, k * 1.02, k],
-        opacity: [1, 1, 1, 1, 1, 1],
-      },
-      t: {
-        duration: OUT_MS / 1000,
-        times: [0, 0.23, 0.46, 0.7, 0.91, 1],
-        ease: ["easeIn", "linear", "easeIn", "easeIn", "easeOut"],
-      } as Transition,
-    };
-  }, [flight]);
-
-  const inFrames = useMemo(() => {
-    if (!flight) return null;
-    const { ox, oy, d, rollEnd, tx, ty, k, apex } = flight;
-    // se levanta del escenario y rueda de vuelta, misma calma
-    return {
-      anim: {
-        x: [tx, tx, (tx + rollEnd) / 2, rollEnd, ox + d * 0.5, ox],
-        y: [ty, ty - 10, apex, oy, oy, oy],
-        rotate: [360, 372, 360, 360, 180, 0],
-        scale: [k, k * 1.02, (1 + k) / 2, 1, 1, 1],
-        opacity: [1, 1, 1, 1, 1, 1],
-      },
-      t: {
-        duration: IN_MS / 1000,
-        delay: 0.15,
-        times: [0, 0.1, 0.34, 0.56, 0.79, 1],
-        ease: ["easeOut", "easeIn", "easeOut", "linear", "easeOut"],
-      } as Transition,
-    };
-  }, [flight]);
-
-  const awake = phase === "onstage";
-  const chipAway = (i: number) => i === homeIndex && phase !== "parked";
-
-  const gaze = useMemo(() => {
-    if (!awake) return null;
-    const g = (SCENES[homeIndex] ?? SCENES[0]).gaze;
-    return g[gazeStep % g.length];
-  }, [awake, homeIndex, gazeStep]);
-
-  const idleAnim = useMemo(() => {
-    if (!flight) return { x: 0, y: 0, rotate: 0 };
-    return awake ? scaleFrames(flight.cfg.idle, flight.s) : { x: 0, y: 0, rotate: 0 };
-  }, [awake, flight]);
-
-  const flyAnim =
-    phase === "departing"
-      ? outFrames?.anim
-      : phase === "returning"
-      ? inFrames?.anim
-      : phase === "onstage" && flight
-      ? { x: flight.tx, y: flight.ty, rotate: 360, scale: flight.k, opacity: 1 }
-      : flight
-      ? { x: flight.ox, y: flight.oy, rotate: 0, scale: 1, opacity: 0 }
-      : undefined;
-
-  const flyTrans: Transition =
-    phase === "departing"
-      ? outFrames?.t ?? {}
-      : phase === "returning"
-      ? inFrames?.t ?? {}
-      : { duration: 0.3, ease: "easeInOut" };
+  const away = (i: number) => i === stageIdx || i === outIdx || i === backIdx;
+  const actorIdx = outIdx ?? stageIdx;
+  const actorMode: Mode = outIdx !== null ? "out" : stageIdx !== null ? "stage" : "hidden";
+  const scene = stageIdx;
 
   return (
     <div ref={wrapRef} className={cn("relative w-full max-w-[1400px] mx-auto", className)}>
@@ -312,11 +401,11 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
                     }}
                     className="w-9 h-9 relative flex items-center justify-center"
                   >
-                    {chipAway(i) ? (
+                    {away(i) ? (
                       <span className="block w-[18px] h-[18px] rounded-[5px] border border-dashed border-border" />
                     ) : (
                       <span className="transition-transform duration-500 group-hover:-translate-y-[3px]">
-                        <ChipEye forceAsleep width="36px" height="36px" />
+                        <ChipEye forceAsleep width={`${HOME_PX}px`} height={`${HOME_PX}px`} />
                       </span>
                     )}
                   </div>
@@ -340,11 +429,8 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
                     <motion.div
                       className="absolute inset-y-0 left-0 bg-gold"
                       initial={{ width: "0%" }}
-                      animate={{ width: active && phase === "onstage" ? "100%" : "0%" }}
-                      transition={{
-                        duration: active && phase === "onstage" ? autoPlayInterval / 1000 : 0.3,
-                        ease: "linear",
-                      }}
+                      animate={{ width: active && stageIdx === i ? "100%" : "0%" }}
+                      transition={{ duration: active && stageIdx === i ? autoPlayInterval / 1000 : 0.3, ease: "linear" }}
                     />
                   </div>
                 </div>
@@ -353,10 +439,9 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
           </div>
 
           <div ref={stageRef} className="relative w-full h-[520px]">
+            <StageFrame />
             <AnimatePresence>
-              {phase === "onstage" && (
-                <ServiceScene key={`scene-${homeIndex}`} index={homeIndex} compact={isMobile} />
-              )}
+              {scene !== null && <ServiceScene key={`scene-${scene}`} index={scene} compact={false} />}
             </AnimatePresence>
           </div>
         </div>
@@ -365,11 +450,10 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
       {/* ── MOBILE ──────────────────────────────────────────── */}
       {isMobile && (
         <div className="flex flex-col gap-8">
-          <div ref={stageRef} className="relative w-full h-[300px]">
+          <div ref={stageRef} className="relative w-full h-[320px]">
+            <StageFrame />
             <AnimatePresence>
-              {phase === "onstage" && (
-                <ServiceScene key={`scene-${homeIndex}`} index={homeIndex} compact={isMobile} />
-              )}
+              {scene !== null && <ServiceScene key={`scene-${scene}`} index={scene} compact />}
             </AnimatePresence>
           </div>
 
@@ -389,19 +473,17 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
                 className="group flex flex-col w-[85%] shrink-0 snap-center cursor-pointer"
               >
                 <div
-                    ref={(el) => {
-                      slotRefs.current[i] = el;
-                    }}
-                    className="w-9 h-9 relative flex items-center justify-center"
-                  >
-                    {chipAway(i) ? (
-                      <span className="block w-[18px] h-[18px] rounded-[5px] border border-dashed border-border" />
-                    ) : (
-                      <span className="transition-transform duration-500 group-hover:-translate-y-[3px]">
-                        <ChipEye forceAsleep width="36px" height="36px" />
-                      </span>
-                    )}
-                  </div>
+                  ref={(el) => {
+                    slotRefs.current[i] = el;
+                  }}
+                  className="w-9 h-9 relative flex items-center justify-center"
+                >
+                  {away(i) ? (
+                    <span className="block w-[18px] h-[18px] rounded-[5px] border border-dashed border-border" />
+                  ) : (
+                    <ChipEye forceAsleep width={`${HOME_PX}px`} height={`${HOME_PX}px`} />
+                  )}
+                </div>
                 <h3 className="text-xl font-semibold font-cormorant text-dark mt-3">{f.title || f.step}</h3>
                 <p
                   className={cn(
@@ -417,58 +499,15 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
 
           <div className="flex justify-center items-center gap-2 w-full">
             {features.map((_, i) => (
-              <div
-                key={i}
-                className={cn(
-                  "h-1.5 rounded-full transition-all duration-500",
-                  i === current ? "w-6 bg-gold" : "w-1.5 bg-border"
-                )}
-              />
+              <div key={i} className={cn("h-1.5 rounded-full transition-all duration-500", i === current ? "w-6 bg-gold" : "w-1.5 bg-border")} />
             ))}
           </div>
         </div>
       )}
 
-      {/* ── EL PERSONAJE ────────────────────────────────────── */}
-      {flight && (
-        <motion.div
-          className="absolute top-0 left-0 z-40 pointer-events-none"
-          style={{ width: HOME, height: HOME, marginLeft: -HOME / 2, marginTop: -HOME / 2, willChange: "transform" }}
-          initial={false}
-          animate={flyAnim}
-          transition={flyTrans}
-        >
-          <motion.div
-            className="relative w-full h-full flex items-center justify-center"
-            animate={idleAnim}
-            transition={awake ? flight.cfg.idleT : { duration: 0.35, ease: "easeInOut" }}
-          >
-            {/* chispa de aterrizaje */}
-            <AnimatePresence>
-              {awake && (
-                <motion.span
-                  key={`spark-${homeIndex}`}
-                  className="absolute rounded-full border border-gold"
-                  style={{ width: HOME, height: HOME }}
-                  initial={{ scale: 0.5, opacity: 0.7 }}
-                  animate={{ scale: 2.6, opacity: 0 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 1, ease: "easeOut" }}
-                />
-              )}
-            </AnimatePresence>
-
-            <ChipEye
-              width={`${HOME}px`}
-              height={`${HOME}px`}
-              disableInitialSleep
-              disableMouseFollow
-              forceAsleep={!awake}
-              pupilOffset={gaze}
-            />
-          </motion.div>
-        </motion.div>
-      )}
+      {/* ── los dos chips ───────────────────────────────────── */}
+      {geos && actorIdx !== null && <Flyer g={geos[actorIdx]} mode={actorMode} reduce={reduce} />}
+      {geos && backIdx !== null && <Flyer key={`back-${backIdx}`} g={geos[backIdx]} mode="in" reduce={reduce} />}
     </div>
   );
 }
