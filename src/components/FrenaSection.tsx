@@ -36,7 +36,7 @@ const FrenaSection: React.FC = () => {
       </div>
 
       {/* Pill-style Segmented Control */}
-      <div className="stagger-parent relative flex items-center justify-start sm:justify-center overflow-x-auto no-scrollbar w-full max-w-full" style={{ gap: '8px', padding: '6px', borderRadius: '999px', border: 'none', marginBottom: '80px' }}>
+      <div className="stagger-parent relative flex items-center justify-start sm:justify-center overflow-x-auto no-scrollbar w-full max-w-full" style={{ gap: '8px', paddingTop: '32px', paddingBottom: '6px', paddingLeft: '6px', paddingRight: '6px', borderRadius: '999px', border: 'none', marginBottom: '80px' }}>
         {tabs.map((tab, index) => {
           const isActive = activeTab === index;
           return (
