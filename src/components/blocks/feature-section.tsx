@@ -112,7 +112,7 @@ export function FeatureSteps({
                 <motion.div
                   key={index}
                   id={`feature-item-${index}`}
-                  className="flex flex-col md:flex-row w-full shrink-0 md:w-auto items-start gap-6 md:gap-10 cursor-pointer snap-center bg-[var(--cream)] md:bg-transparent p-8 md:p-0 rounded-3xl md:rounded-none shadow-md md:shadow-none border border-border md:border-none"
+                  className="flex flex-col md:flex-row w-[85vw] shrink-0 md:w-auto items-start gap-6 md:gap-10 cursor-pointer snap-center bg-[var(--cream)] md:bg-transparent p-8 md:p-0 rounded-3xl md:rounded-none shadow-md md:shadow-none border border-border md:border-none"
                   onClick={() => {
                     programmaticScrollRef.current = true;
                     setCurrentFeature(index);
