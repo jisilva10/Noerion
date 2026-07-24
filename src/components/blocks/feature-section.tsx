@@ -12,14 +12,12 @@ interface Feature {
 interface FeatureStepsProps {
   features: Feature[]
   className?: string
-  title?: string
   autoPlayInterval?: number
 }
 
 export function FeatureSteps({
   features,
   className,
-  title,
   autoPlayInterval = 8000,
 }: FeatureStepsProps) {
   const [currentFeature, setCurrentFeature] = useState(0)
