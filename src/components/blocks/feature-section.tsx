@@ -45,7 +45,7 @@ export function FeatureSteps({
       const slider = document.getElementById('feature-slider');
       if (el && slider) {
         slider.scrollTo({
-          left: el.offsetLeft - slider.offsetLeft - 16,
+          left: el.offsetLeft - slider.offsetLeft - 24, // 24px padding compensation
           behavior: 'smooth'
         });
       }
@@ -93,7 +93,7 @@ export function FeatureSteps({
 
   return (
     <div ref={containerRef} className={cn("py-0 pb-20 w-full", className)}>
-      <div className="w-full">
+      <div className="max-w-[1200px] mx-auto w-full px-6 md:px-12">
         {title && (
           <h2 className="text-3xl md:text-5xl font-cormorant font-semibold mb-12 text-center text-dark">
             {title}
@@ -101,10 +101,10 @@ export function FeatureSteps({
         )}
 
         <div className="flex flex-col md:grid md:grid-cols-2 gap-8 md:gap-16 items-center">
-          <div className="order-2 md:order-1 flex flex-col w-full ml-0 md:ml-[120px]">
+          <div className="order-2 md:order-1 flex flex-col w-full">
             {/* Slider */}
             <div 
-              className="flex flex-row md:flex-col overflow-x-auto no-scrollbar snap-x snap-mandatory gap-8 md:gap-16 pb-2 pt-4 px-6 md:px-0 w-full" 
+              className="flex flex-row md:flex-col overflow-x-auto no-scrollbar snap-x snap-mandatory gap-8 md:gap-16 pb-2 pt-4 w-[100vw] -mx-6 px-6 md:w-full md:mx-0 md:px-0" 
               id="feature-slider"
               onScroll={handleScroll}
             >
@@ -112,7 +112,7 @@ export function FeatureSteps({
                 <motion.div
                   key={index}
                   id={`feature-item-${index}`}
-                  className="flex flex-col md:flex-row w-full shrink-0 md:w-auto items-start gap-6 md:gap-10 cursor-pointer snap-center bg-transparent border-none shadow-none"
+                  className="flex flex-col md:flex-row w-[calc(100vw-3rem)] shrink-0 md:w-auto items-start gap-6 md:gap-10 cursor-pointer snap-center bg-transparent border-none shadow-none"
                   onClick={() => {
                     programmaticScrollRef.current = true;
                     setCurrentFeature(index);
@@ -137,7 +137,7 @@ export function FeatureSteps({
                     )}
                   </motion.div>
 
-                  <div className="flex-1 mt-1 pr-2 md:pr-0">
+                  <div className="flex-1 mt-1">
                     <h3 className="text-xl md:text-2xl font-semibold font-cormorant text-dark">
                       {feature.title || feature.step}
                     </h3>
