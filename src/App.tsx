@@ -2,6 +2,7 @@ import FrenaSection from "./components/FrenaSection";
 import { useLegacyAnimations } from "@/hooks/useLegacyAnimations";
 import { FeatureSteps } from './components/blocks/feature-section';
 import { IconBrandInstagram, IconBrandWhatsapp, IconMail } from '@tabler/icons-react';
+import { ChipEye } from './components/ui/ChipEye';
 
 const demoFeatures = [
   { 
@@ -115,7 +116,7 @@ export default function App() {
       </a>
     </div>
     <div className="grid-wrap">
-      <canvas id="gridCanvas" />
+      <ChipEye />
     </div>
   </div>
 
