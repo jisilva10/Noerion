@@ -100,11 +100,11 @@ export function FeatureSteps({
           </h2>
         )}
 
-        <div className="flex flex-col md:grid md:grid-cols-2 gap-8 md:gap-16 items-center">
-          <div className="order-2 md:order-1 flex flex-col w-full">
+        <div className="flex flex-col md:grid md:grid-cols-2 gap-8 md:gap-24 items-center">
+          <div className="order-2 md:order-1 flex flex-col w-full justify-center">
             {/* Slider */}
             <div 
-              className="flex flex-row md:flex-col overflow-x-auto no-scrollbar snap-x snap-mandatory gap-8 md:gap-16 pb-2 pt-4 w-[100vw] -mx-6 px-6 md:w-full md:mx-0 md:px-0" 
+              className="flex flex-row md:flex-col overflow-x-auto md:overflow-visible no-scrollbar snap-x snap-mandatory gap-8 pb-2 pt-4 w-[100vw] -mx-6 px-6 md:w-full md:mx-0 md:px-0" 
               id="feature-slider"
               onScroll={handleScroll}
             >
@@ -112,7 +112,7 @@ export function FeatureSteps({
                 <motion.div
                   key={index}
                   id={`feature-item-${index}`}
-                  className="flex flex-col md:flex-row w-[calc(100vw-3rem)] shrink-0 md:w-auto items-start gap-6 md:gap-10 cursor-pointer snap-center bg-transparent border-none shadow-none"
+                  className="flex flex-col md:flex-row w-[calc(100vw-3rem)] shrink-0 md:w-full items-start gap-6 md:gap-8 cursor-pointer snap-center bg-transparent border-none shadow-none"
                   onClick={() => {
                     programmaticScrollRef.current = true;
                     setCurrentFeature(index);
