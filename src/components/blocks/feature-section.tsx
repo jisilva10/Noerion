@@ -39,10 +39,9 @@ export function FeatureSteps({
 
   useEffect(() => {
     if (programmaticScrollRef.current && window.innerWidth < 768) {
-      const el = document.getElementById(`feature-item-${currentFeature}`);
+      const el = document.getElementById(`mobile-feature-item-${currentFeature}`);
       const slider = document.getElementById('feature-slider');
       if (el && slider) {
-        // Center the item in the slider
         const scrollLeft = el.offsetLeft - slider.offsetLeft - (slider.clientWidth / 2) + (el.clientWidth / 2);
         slider.scrollTo({
           left: scrollLeft,
@@ -95,82 +94,62 @@ export function FeatureSteps({
   };
 
   return (
-    <div ref={containerRef} className={cn("py-0 pb-20 w-full overflow-hidden", className)}>
-      <div className="max-w-[1200px] mx-auto w-full px-6 md:px-12">
+    <div ref={containerRef} className={cn("py-0 pb-20 w-full overflow-visible", className)}>
+      <div className="max-w-[1200px] mx-auto w-full px-6 md:px-12 overflow-visible">
         {title && (
           <h2 className="text-3xl md:text-5xl font-cormorant font-semibold mb-12 text-center text-dark">
             {title}
           </h2>
         )}
 
-        <div className="flex flex-col md:grid md:grid-cols-2 gap-12 md:gap-32 items-center">
-          <div className="order-2 md:order-1 flex flex-col w-full justify-center">
-            {/* Slider */}
-            <div 
-              className="flex flex-row md:flex-col overflow-x-auto md:overflow-visible no-scrollbar snap-x snap-mandatory gap-6 md:gap-16 pb-2 pt-4 w-[100vw] -mx-6 px-6 md:w-full md:mx-0 md:px-0" 
-              id="feature-slider"
-              onScroll={handleScroll}
-            >
-              {features.map((feature, index) => (
-                <motion.div
-                  key={index}
-                  id={`feature-item-${index}`}
-                  className="flex flex-row w-[85vw] shrink-0 md:w-full items-start gap-4 md:gap-8 cursor-pointer snap-center bg-transparent border-none shadow-none"
-                  onClick={() => {
-                    programmaticScrollRef.current = true;
-                    setCurrentFeature(index);
-                    setProgress(0);
-                  }}
-                  initial={{ opacity: 0.4 }}
-                  animate={{ opacity: index === currentFeature ? 1 : 0.4 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <motion.div
-                    className={cn(
-                      "w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center border-2 flex-shrink-0 transition-all duration-300 mt-1 md:mt-0",
-                      index === currentFeature
-                        ? "bg-[#B89A0A] border-[#B89A0A] text-white scale-110 shadow-lg"
-                        : "bg-transparent border-border text-mid",
-                    )}
-                  >
-                    {index <= currentFeature ? (
-                      <span className="text-base md:text-lg font-bold text-cream">✓</span>
-                    ) : (
-                      <span className="text-base md:text-lg font-semibold font-sans">{index + 1}</span>
-                    )}
-                  </motion.div>
-
-                  <div className="flex-1">
-                    <h3 className="text-xl md:text-2xl font-semibold font-cormorant text-dark">
-                      {feature.title || feature.step}
-                    </h3>
-                    <p className="text-[15px] md:text-base text-dark font-sans mt-2 md:mt-3 leading-relaxed">
-                      {feature.content}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Pagination Dots (Mobile Only) */}
-            <div className="flex md:hidden justify-center items-center gap-2 mt-6">
-              {features.map((_, index) => (
-                <div 
-                  key={index} 
+        {/* =========================================
+            DESKTOP LAYOUT (Hidden on mobile)
+            ========================================= */}
+        <div className="hidden md:grid grid-cols-2 gap-24 items-center w-full overflow-visible">
+          
+          {/* Column 1: Text List */}
+          <div className="flex flex-col gap-12 w-full overflow-visible py-4 pr-8">
+            {features.map((feature, index) => (
+              <motion.div
+                key={index}
+                className="flex flex-row items-start gap-8 cursor-pointer overflow-visible"
+                onClick={() => {
+                  setCurrentFeature(index);
+                  setProgress(0);
+                }}
+                initial={{ opacity: 0.4 }}
+                animate={{ opacity: index === currentFeature ? 1 : 0.4 }}
+                transition={{ duration: 0.5 }}
+              >
+                <div
                   className={cn(
-                    "h-2 rounded-full transition-all duration-300",
-                    index === currentFeature ? "w-6 bg-[#B89A0A]" : "w-2 bg-border"
+                    "w-12 h-12 rounded-full flex items-center justify-center border-2 flex-shrink-0 transition-transform duration-300",
+                    index === currentFeature
+                      ? "bg-[#B89A0A] border-[#B89A0A] text-white scale-110 shadow-lg"
+                      : "bg-transparent border-border text-mid",
                   )}
-                />
-              ))}
-            </div>
+                >
+                  {index <= currentFeature ? (
+                    <span className="text-lg font-bold text-cream">✓</span>
+                  ) : (
+                    <span className="text-lg font-semibold font-sans">{index + 1}</span>
+                  )}
+                </div>
+
+                <div className="flex-1 mt-1 overflow-visible">
+                  <h3 className="text-2xl font-semibold font-cormorant text-dark">
+                    {feature.title || feature.step}
+                  </h3>
+                  <p className="text-base text-dark font-sans mt-3 leading-relaxed">
+                    {feature.content}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
           </div>
 
-          <div
-            className={cn(
-              "order-1 md:order-2 relative h-[300px] md:h-[420px] w-full overflow-hidden rounded-2xl shadow-sm border border-border"
-            )}
-          >
+          {/* Column 2: Image */}
+          <div className="relative h-[450px] w-full rounded-2xl overflow-hidden shadow-md border border-border">
             <AnimatePresence mode="wait">
               {features.map(
                 (feature, index) =>
@@ -187,8 +166,6 @@ export function FeatureSteps({
                         src={feature.image}
                         alt={feature.step}
                         className="w-full h-full object-cover transition-transform transform duration-1000 scale-105 hover:scale-100"
-                        width={1000}
-                        height={500}
                       />
                       <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black/40 to-transparent" />
                     </motion.div>
@@ -197,6 +174,98 @@ export function FeatureSteps({
             </AnimatePresence>
           </div>
         </div>
+
+        {/* =========================================
+            MOBILE LAYOUT (Hidden on desktop)
+            ========================================= */}
+        <div className="flex md:hidden flex-col w-full">
+          
+          {/* Mobile Image (Top) */}
+          <div className="relative h-[280px] w-full rounded-2xl overflow-hidden shadow-sm border border-border mb-8">
+            <AnimatePresence mode="wait">
+              {features.map(
+                (feature, index) =>
+                  index === currentFeature && (
+                    <motion.div
+                      key={`mob-img-${index}`}
+                      className="absolute inset-0 rounded-2xl overflow-hidden"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.4 }}
+                    >
+                      <img
+                        src={feature.image}
+                        alt={feature.step}
+                        className="w-full h-full object-cover"
+                      />
+                    </motion.div>
+                  ),
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Mobile Slider (Bottom) */}
+          <div className="w-[100vw] -mx-6 flex flex-col relative overflow-hidden">
+            <div 
+              className="flex overflow-x-auto snap-x snap-mandatory gap-6 px-6 no-scrollbar w-full pb-4" 
+              id="feature-slider"
+              onScroll={handleScroll}
+            >
+              {features.map((feature, index) => (
+                <div
+                  key={`mob-text-${index}`}
+                  id={`mobile-feature-item-${index}`}
+                  className="flex flex-col w-[calc(100vw-3rem)] shrink-0 snap-center gap-4 cursor-pointer pt-2"
+                  onClick={() => {
+                    programmaticScrollRef.current = true;
+                    setCurrentFeature(index);
+                    setProgress(0);
+                  }}
+                >
+                  <div
+                    className={cn(
+                      "w-10 h-10 rounded-full flex items-center justify-center border-2 flex-shrink-0 transition-transform duration-300",
+                      index === currentFeature
+                        ? "bg-[#B89A0A] border-[#B89A0A] text-white scale-110 shadow-md"
+                        : "bg-transparent border-border text-mid",
+                    )}
+                  >
+                    {index <= currentFeature ? (
+                      <span className="text-base font-bold text-cream">✓</span>
+                    ) : (
+                      <span className="text-base font-semibold font-sans">{index + 1}</span>
+                    )}
+                  </div>
+
+                  <div className="flex-1 transition-opacity duration-300" style={{ opacity: index === currentFeature ? 1 : 0.4 }}>
+                    <h3 className="text-xl font-semibold font-cormorant text-dark">
+                      {feature.title || feature.step}
+                    </h3>
+                    <p className="text-[15px] text-dark font-sans mt-2 leading-relaxed">
+                      {feature.content}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Pagination Dots */}
+            <div className="flex justify-center items-center gap-2 mt-4 pb-2 w-full">
+              {features.map((_, index) => (
+                <div 
+                  key={`dot-${index}`} 
+                  className={cn(
+                    "h-2 rounded-full transition-all duration-300",
+                    index === currentFeature ? "w-6 bg-[#B89A0A]" : "w-2 bg-border"
+                  )}
+                />
+              ))}
+            </div>
+          </div>
+
+        </div>
+
       </div>
     </div>
   )
