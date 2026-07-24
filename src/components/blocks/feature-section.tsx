@@ -98,7 +98,12 @@ export function FeatureSteps({
                   setCurrentFeature(index);
                   setProgress(0);
                 }}
-                className="flex flex-row items-start gap-6 cursor-pointer group"
+                className={cn(
+                  "flex flex-row items-start gap-6 cursor-pointer group p-6 -mx-6 rounded-2xl transition-all duration-500",
+                  isActive 
+                    ? "bg-[#B89A0A]/[0.02] border border-[#B89A0A]/20 shadow-sm" 
+                    : "border border-transparent hover:bg-black/[0.02]"
+                )}
               >
                 {/* Number or Check */}
                 <div className={cn(
@@ -154,7 +159,7 @@ export function FeatureSteps({
       {/* MOBILE VIEW (Hidden on Desktop) */}
       <div className="flex md:hidden flex-col w-full">
         {/* Top Image */}
-        <div className="relative h-[320px] w-full rounded-2xl overflow-hidden shadow-sm border border-border mb-16">
+        <div className="relative h-[320px] w-full rounded-2xl overflow-hidden shadow-sm border border-border mb-20">
           <AnimatePresence mode="wait">
             <motion.img
               key={currentFeature}
@@ -190,7 +195,12 @@ export function FeatureSteps({
                     setCurrentFeature(index);
                     setProgress(0);
                   }}
-                  className="flex flex-col w-[85%] shrink-0 snap-center cursor-pointer gap-4"
+                  className={cn(
+                    "flex flex-col w-[85%] shrink-0 snap-center cursor-pointer gap-5 p-6 rounded-3xl transition-all duration-500",
+                    isActive 
+                      ? "bg-[#B89A0A]/[0.03] border border-[#B89A0A]/20 shadow-sm" 
+                      : "border border-border/40"
+                  )}
                 >
                   {/* Number or Check */}
                   <div className={cn(
