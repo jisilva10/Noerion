@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import FrenaSection from "./components/FrenaSection";
 import { useLegacyAnimations } from "@/hooks/useLegacyAnimations";
 import { FeatureSteps } from './components/blocks/feature-section';
