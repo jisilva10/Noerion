@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence, useInView } from "framer-motion"
 import { cn } from "@/lib/utils"
+import { ChipEye } from "../ui/ChipEye"
+import { ServiceAnimation } from "./ServiceAnimations"
 
 interface Feature {
   step: string
@@ -100,18 +102,16 @@ export function FeatureSteps({
                 }}
                 className="flex flex-row items-start gap-6 cursor-pointer group"
               >
-                {/* Number or Check */}
-                <div className={cn(
-                  "w-10 h-10 rounded-full flex items-center justify-center font-sans transition-colors duration-300 flex-shrink-0 mt-1",
-                  isActive 
-                    ? "bg-[#B89A0A] text-white" 
-                    : "bg-transparent text-mid border border-border group-hover:border-[#B89A0A]"
-                )}>
-                  {isActive ? (
-                    <span className="text-lg font-bold">✓</span>
-                  ) : (
-                    <span className="text-sm font-semibold">{index + 1}</span>
-                  )}
+                {/* Chip Placeholder / Inactive Chip */}
+                <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 mt-1 relative">
+                  {!isActive ? (
+                    <motion.div 
+                      layoutId={`chip-desktop-${index}`}
+                      className="absolute inset-0 flex items-center justify-center"
+                    >
+                      <ChipEye forceAsleep width="24px" height="24px" />
+                    </motion.div>
+                  ) : null}
                 </div>
 
                 {/* Text Content */}
@@ -134,39 +134,59 @@ export function FeatureSteps({
           })}
         </div>
 
-        {/* Right Column: Image */}
-        <div className="w-1/2 relative h-[500px] rounded-2xl overflow-hidden shadow-lg border border-border">
+        {/* Right Column: Animation */}
+        <div className="w-1/2 relative h-[500px] rounded-2xl overflow-hidden shadow-lg border border-border bg-stone-50 flex items-center justify-center">
           <AnimatePresence mode="wait">
-            <motion.img
-              key={currentFeature}
-              src={features[currentFeature].image}
-              alt={features[currentFeature].step}
-              className="absolute inset-0 w-full h-full object-cover"
+            <motion.div
+              key={`animation-${currentFeature}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-            />
+              className="absolute inset-0"
+            >
+              <ServiceAnimation index={currentFeature} />
+            </motion.div>
           </AnimatePresence>
+
+          <motion.div 
+            layoutId={`chip-desktop-${currentFeature}`}
+            className="z-10 relative"
+            initial={{ rotate: 0 }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, type: "spring", bounce: 0.2 }}
+          >
+             <ChipEye width="48px" height="48px" />
+          </motion.div>
         </div>
       </div>
 
       {/* MOBILE VIEW (Hidden on Desktop) */}
       <div className="flex md:hidden flex-col w-full gap-10">
-        {/* Top Image */}
-        <div className="relative h-[320px] w-full rounded-2xl overflow-hidden shadow-sm border border-border">
+        {/* Top Animation */}
+        <div className="relative h-[320px] w-full rounded-2xl overflow-hidden shadow-sm border border-border bg-stone-50 flex items-center justify-center">
           <AnimatePresence mode="wait">
-            <motion.img
-              key={currentFeature}
-              src={features[currentFeature].image}
-              alt={features[currentFeature].step}
-              className="absolute inset-0 w-full h-full object-cover"
+            <motion.div
+              key={`animation-${currentFeature}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4 }}
-            />
+              className="absolute inset-0"
+            >
+              <ServiceAnimation index={currentFeature} />
+            </motion.div>
           </AnimatePresence>
+
+          <motion.div 
+            layoutId={`chip-mobile-${currentFeature}`}
+            className="z-10 relative"
+            initial={{ rotate: 0 }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, type: "spring", bounce: 0.2 }}
+          >
+             <ChipEye width="40px" height="40px" />
+          </motion.div>
         </div>
 
         {/* Horizontal Slider 
@@ -192,18 +212,16 @@ export function FeatureSteps({
                   }}
                   className="flex flex-col w-[85%] shrink-0 snap-center cursor-pointer gap-4"
                 >
-                  {/* Number or Check */}
-                  <div className={cn(
-                    "w-10 h-10 rounded-full flex items-center justify-center font-sans transition-colors duration-300",
-                    isActive 
-                      ? "bg-[#B89A0A] text-white shadow-md" 
-                      : "bg-transparent text-mid border border-border"
-                  )}>
-                    {isActive ? (
-                      <span className="text-lg font-bold">✓</span>
-                    ) : (
-                      <span className="text-sm font-semibold">{index + 1}</span>
-                    )}
+                  {/* Chip Placeholder / Inactive Chip */}
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 relative">
+                    {!isActive ? (
+                      <motion.div 
+                        layoutId={`chip-mobile-${index}`}
+                        className="absolute inset-0 flex items-center justify-center"
+                      >
+                        <ChipEye forceAsleep width="24px" height="24px" />
+                      </motion.div>
+                    ) : null}
                   </div>
 
                   {/* Text Content */}

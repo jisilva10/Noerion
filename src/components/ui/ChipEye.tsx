@@ -6,6 +6,7 @@ interface ChipEyeProps {
   height?: string;
   disableInitialSleep?: boolean;
   disableEyeAnimation?: boolean;
+  forceAsleep?: boolean;
 }
 
 export const ChipEye: React.FC<ChipEyeProps> = ({ 
@@ -13,22 +14,30 @@ export const ChipEye: React.FC<ChipEyeProps> = ({
   width = "0.9em", 
   height = "0.65em", 
   disableInitialSleep = false,
-  disableEyeAnimation = false
+  disableEyeAnimation = false,
+  forceAsleep = false
 }) => {
   const containerRef = useRef<SVGSVGElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isBlinking, setIsBlinking] = useState(false);
-  const [isAlive, setIsAlive] = useState(disableInitialSleep);
+  const [isAlive, setIsAlive] = useState(disableInitialSleep && !forceAsleep);
   const clipId = useId().replace(/:/g, "");
 
   // Wait for bounce animation to complete before coming alive
   useEffect(() => {
-    if (disableInitialSleep) return;
+    if (forceAsleep) {
+      setIsAlive(false);
+      return;
+    }
+    if (disableInitialSleep) {
+      setIsAlive(true);
+      return;
+    }
     const timer = setTimeout(() => {
       setIsAlive(true);
     }, 2800); // 2.5s tumble + 0.2s delay
     return () => clearTimeout(timer);
-  }, [disableInitialSleep]);
+  }, [disableInitialSleep, forceAsleep]);
 
   useEffect(() => {
     if (!isAlive || disableEyeAnimation) return;
