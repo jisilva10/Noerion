@@ -76,12 +76,12 @@ export function FeatureSteps({
         )}
 
         <div className="flex flex-col md:grid md:grid-cols-2 gap-8 md:gap-16 items-center">
-          <div className="order-2 md:order-1 flex flex-row md:flex-col overflow-x-auto no-scrollbar snap-x snap-mandatory gap-6 md:gap-16 ml-0 md:ml-[120px] pb-4 w-full" id="feature-slider">
+          <div className="order-2 md:order-1 flex flex-row md:flex-col overflow-x-auto no-scrollbar snap-x snap-mandatory gap-4 md:gap-16 ml-0 md:ml-[120px] pb-8 pt-4 px-4 md:px-0 w-full" id="feature-slider">
             {features.map((feature, index) => (
               <motion.div
                 key={index}
                 id={`feature-item-${index}`}
-                className="flex w-[85vw] shrink-0 md:w-auto items-start gap-6 md:gap-10 cursor-pointer snap-center"
+                className="flex flex-col md:flex-row w-[82vw] shrink-0 md:w-auto items-start gap-6 md:gap-10 cursor-pointer snap-center bg-white md:bg-transparent p-8 md:p-0 rounded-3xl md:rounded-none shadow-sm md:shadow-none border border-border md:border-none"
                 onClick={() => {
                   setCurrentFeature(index);
                   setProgress(0);
@@ -105,7 +105,7 @@ export function FeatureSteps({
                   )}
                 </motion.div>
 
-                <div className="flex-1 mt-1 pr-6 md:pr-0">
+                <div className="flex-1 mt-1 pr-2 md:pr-0">
                   <h3 className="text-xl md:text-2xl font-semibold font-cormorant text-dark">
                     {feature.title || feature.step}
                   </h3>

@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import FrenaSection from "./components/FrenaSection";
 import { useLegacyAnimations } from "@/hooks/useLegacyAnimations";
 import { FeatureSteps } from './components/blocks/feature-section';
@@ -27,6 +28,7 @@ const demoFeatures = [
 
 export default function App() {
   useLegacyAnimations();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <>
@@ -52,13 +54,13 @@ export default function App() {
     </svg>
     N
   </a>
-  <div className="menu-toggle" id="menuToggle">
+  <div className={`menu-toggle ${isMenuOpen ? 'active' : ''}`} onClick={() => setIsMenuOpen(!isMenuOpen)}>
     <span></span><span></span>
   </div>
-  <div className="nav-links" id="navLinks">
-    <a href="#servicios">Servicios</a>
-    <a href="#nosotros">Quiénes somos</a>
-    <a href="#contacto" className="cta">Contacto</a>
+  <div className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
+    <a href="#servicios" onClick={() => setIsMenuOpen(false)}>Servicios</a>
+    <a href="#nosotros" onClick={() => setIsMenuOpen(false)}>Quiénes somos</a>
+    <a href="#contacto" className="cta" onClick={() => setIsMenuOpen(false)}>Contacto</a>
   </div>
 </nav>
 

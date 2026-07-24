@@ -236,25 +236,7 @@ export function useLegacyAnimations() {
     }
 
     // ── MOBILE MENU ──
-    const menuToggle = document.getElementById("menuToggle");
-    const navLinks = document.getElementById("navLinks");
-    
-    const toggleMenu = () => {
-      menuToggle?.classList.toggle("active");
-      navLinks?.classList.toggle("active");
-    };
-    
-    const closeMenu = () => {
-      menuToggle?.classList.remove("active");
-      navLinks?.classList.remove("active");
-    };
-
-    if (menuToggle && navLinks) {
-      menuToggle.addEventListener("click", toggleMenu);
-      navLinks.querySelectorAll("a").forEach((a) => {
-        a.addEventListener("click", closeMenu);
-      });
-    }
+    // Handled by React state in App.tsx
 
     // ── SCROLL ANIMATIONS (Fade, Stagger, Reveal) ──
     const scrollObserver = new IntersectionObserver(
@@ -328,15 +310,6 @@ export function useLegacyAnimations() {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("scroll", handleParallax);
       if (canvasReqId) cancelAnimationFrame(canvasReqId);
-      
-      if (menuToggle) {
-        menuToggle.removeEventListener("click", toggleMenu);
-      }
-      if (navLinks) {
-        navLinks.querySelectorAll("a").forEach((a) => {
-          a.removeEventListener("click", closeMenu);
-        });
-      }
     };
   }, []);
 }
