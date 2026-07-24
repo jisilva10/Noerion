@@ -308,33 +308,7 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
       ? inFrames?.t ?? {}
       : { duration: 0.45, ease: "easeInOut" };
 
-  /* ─── piezas reutilizables ─────────────────────────────────── */
-  const Slot = ({ i }: { i: number }) => (
-    <div
-      ref={(el) => {
-        slotRefs.current[i] = el;
-      }}
-      className="w-9 h-9 relative flex items-center justify-center"
-    >
-      {chipAway(i) ? (
-        <span className="block w-[18px] h-[18px] rounded-[5px] border border-dashed border-border" />
-      ) : (
-        <span className="transition-transform duration-500 group-hover:-translate-y-[3px]">
-          <ChipEye forceAsleep width="36px" height="36px" />
-        </span>
-      )}
-    </div>
-  );
-
-  const Stage = ({ h }: { h: string }) => (
-    <div ref={stageRef} className={cn("relative w-full", h)}>
-      <AnimatePresence>
-        {phase === "onstage" && (
-          <ServiceScene key={`scene-${homeIndex}`} index={homeIndex} compact={isMobile} />
-        )}
-      </AnimatePresence>
-    </div>
-  );
+  /* ─── Las piezas reutilizables se inyectarán directamente para evitar remounts ─── */
 
   return (
     <div ref={wrapRef} className={cn("relative w-full max-w-[1400px] mx-auto", className)}>
@@ -353,7 +327,20 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
                   onClick={() => select(i)}
                   className="group cursor-pointer select-none"
                 >
-                  <Slot i={i} />
+                  <div
+                    ref={(el) => {
+                      slotRefs.current[i] = el;
+                    }}
+                    className="w-9 h-9 relative flex items-center justify-center"
+                  >
+                    {chipAway(i) ? (
+                      <span className="block w-[18px] h-[18px] rounded-[5px] border border-dashed border-border" />
+                    ) : (
+                      <span className="transition-transform duration-500 group-hover:-translate-y-[3px]">
+                        <ChipEye forceAsleep width="36px" height="36px" />
+                      </span>
+                    )}
+                  </div>
                   <h3
                     className={cn(
                       "text-2xl font-semibold font-cormorant mt-3 transition-colors duration-500",
@@ -383,14 +370,26 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
             })}
           </div>
 
-          <Stage h="h-[520px]" />
+          <div ref={stageRef} className="relative w-full h-[520px]">
+            <AnimatePresence>
+              {phase === "onstage" && (
+                <ServiceScene key={`scene-${homeIndex}`} index={homeIndex} compact={isMobile} />
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       )}
 
       {/* ── MOBILE ──────────────────────────────────────────── */}
       {isMobile && (
         <div className="flex flex-col gap-8">
-          <Stage h="h-[300px]" />
+          <div ref={stageRef} className="relative w-full h-[300px]">
+            <AnimatePresence>
+              {phase === "onstage" && (
+                <ServiceScene key={`scene-${homeIndex}`} index={homeIndex} compact={isMobile} />
+              )}
+            </AnimatePresence>
+          </div>
 
           <div
             ref={sliderRef}
@@ -407,7 +406,20 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
                 onClick={() => select(i)}
                 className="group flex flex-col w-[85%] shrink-0 snap-center cursor-pointer"
               >
-                <Slot i={i} />
+                <div
+                  ref={(el) => {
+                    slotRefs.current[i] = el;
+                  }}
+                  className="w-9 h-9 relative flex items-center justify-center"
+                >
+                  {chipAway(i) ? (
+                    <span className="block w-[18px] h-[18px] rounded-[5px] border border-dashed border-border" />
+                  ) : (
+                    <span className="transition-transform duration-500 group-hover:-translate-y-[3px]">
+                      <ChipEye forceAsleep width="36px" height="36px" />
+                    </span>
+                  )}
+                </div>
                 <h3 className="text-xl font-semibold font-cormorant text-dark mt-3">{f.title || f.step}</h3>
                 <p
                   className={cn(
