@@ -5,9 +5,16 @@ interface ChipEyeProps {
   width?: string;
   height?: string;
   disableInitialSleep?: boolean;
+  disableEyeAnimation?: boolean;
 }
 
-export const ChipEye: React.FC<ChipEyeProps> = ({ className = '', width = "0.9em", height = "0.65em", disableInitialSleep = false }) => {
+export const ChipEye: React.FC<ChipEyeProps> = ({ 
+  className = '', 
+  width = "0.9em", 
+  height = "0.65em", 
+  disableInitialSleep = false,
+  disableEyeAnimation = false
+}) => {
   const containerRef = useRef<SVGSVGElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isBlinking, setIsBlinking] = useState(false);
@@ -24,7 +31,7 @@ export const ChipEye: React.FC<ChipEyeProps> = ({ className = '', width = "0.9em
   }, [disableInitialSleep]);
 
   useEffect(() => {
-    if (!isAlive) return;
+    if (!isAlive || disableEyeAnimation) return;
 
     // Use requestAnimationFrame for smoother tracking (zero lag)
     let rafId: number;
@@ -50,10 +57,10 @@ export const ChipEye: React.FC<ChipEyeProps> = ({ className = '', width = "0.9em
       window.removeEventListener('mousemove', handleMouseMove);
       if (rafId) cancelAnimationFrame(rafId);
     };
-  }, [isAlive]);
+  }, [isAlive, disableEyeAnimation]);
 
   useEffect(() => {
-    if (!isAlive) return;
+    if (!isAlive || disableEyeAnimation) return;
 
     const blink = () => {
       setIsBlinking(true);
@@ -67,7 +74,7 @@ export const ChipEye: React.FC<ChipEyeProps> = ({ className = '', width = "0.9em
 
     const initialTimeout = setTimeout(blink, 1000); 
     return () => clearTimeout(initialTimeout);
-  }, [isAlive]);
+  }, [isAlive, disableEyeAnimation]);
 
   const pupilRangeX = 3.5; 
   const pupilRangeY = 3.5; 

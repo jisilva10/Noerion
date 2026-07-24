@@ -65,8 +65,8 @@ const FrenaSection: React.FC = () => {
                   initial={false}
                   transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 >
-                  <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center pointer-events-none" style={{ top: '-18px' }}>
-                    <ChipEye disableInitialSleep width="22px" height="16px" />
+                  <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center pointer-events-none" style={{ top: '-22px' }}>
+                    <ChipEye disableInitialSleep disableEyeAnimation width="28px" height="20px" />
                   </div>
                 </motion.div>
               )}
