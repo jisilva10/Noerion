@@ -110,13 +110,14 @@ const fadeV: Variants = {
 const popStyle: React.CSSProperties = { transformBox: "fill-box", transformOrigin: "center" };
 
 const CompactCtx = React.createContext(false);
-const useLabelStyle = (): React.CSSProperties => {
+
+const useLabelStyle = (gold?: boolean): React.CSSProperties => {
   const compact = React.useContext(CompactCtx);
   return {
-    fontFamily: "'DM Sans', sans-serif",
-    fontSize: compact ? 16 : 11,
-    letterSpacing: compact ? 3 : 2.2,
-    fontWeight: 500,
+    fontFamily: gold ? "'Cormorant Garamond', serif" : "'DM Sans', sans-serif",
+    fontSize: compact ? 22 : (gold ? 24 : 15),
+    letterSpacing: compact ? 2 : (gold ? 1 : 3),
+    fontWeight: gold ? 600 : 700,
   };
 };
 
@@ -127,7 +128,7 @@ const Label: React.FC<{
   gold?: boolean;
   anchor?: "start" | "middle" | "end";
 }> = ({ x, y, text, gold, anchor = "start" }) => (
-  <motion.text x={x} y={y} variants={fadeV} textAnchor={anchor} fill={gold ? GOLD : MUTED} style={useLabelStyle()}>
+  <motion.text x={x} y={y} variants={fadeV} textAnchor={anchor} fill={gold ? GOLD : MUTED} style={useLabelStyle(gold)}>
     {text}
   </motion.text>
 );
@@ -141,9 +142,9 @@ const BELT = 372;
 
 const SceneAutomation: React.FC = () => (
   <>
-    <Label x={40} y={100} text="INVENTARIO" />
-    <Label x={480} y={100} text="PAGOS" anchor="end" />
-    <Label x={256} y={462} text="OPERACION SIN PAUSAS" gold anchor="middle" />
+    <Label x={40} y={90} text="INVENTARIO" />
+    <Label x={480} y={90} text="PAGOS" anchor="end" />
+    <Label x={256} y={476} text="OPERACION SIN PAUSAS" gold anchor="middle" />
 
     {/* Estanteria */}
     <motion.rect x={40} y={118} width={112} height={122} stroke={SOFT} strokeWidth={1.5} fill="none" variants={lineV} />
@@ -274,8 +275,8 @@ const FEEDS = [
 
 const SceneEcosystem: React.FC = () => (
   <>
-    <Label x={28} y={96} text="DATOS" />
-    <Label x={188} y={44} text="TABLERO IA" gold />
+    <Label x={28} y={90} text="DATOS" />
+    <Label x={188} y={38} text="TABLERO IA" gold />
     <Label x={492} y={478} text="TIEMPO REAL" anchor="end" />
 
     <motion.ellipse cx={72} cy={128} rx={30} ry={10} stroke={SOFT} strokeWidth={1.5} fill="none" variants={lineV} />
@@ -488,7 +489,7 @@ const SceneConsulting: React.FC = () => (
         <line x1={190} y1={350} x2={418} y2={350} stroke={GOLD} strokeWidth={1.4} />
         <line x1={190} y1={344} x2={190} y2={356} stroke={GOLD} strokeWidth={1.4} strokeLinecap="round" />
         <line x1={418} y1={344} x2={418} y2={356} stroke={GOLD} strokeWidth={1.4} strokeLinecap="round" />
-        <text x={304} y={382} textAnchor="middle" fill={GOLD} style={useLabelStyle()}>
+        <text x={304} y={382} textAnchor="middle" fill={GOLD} style={useLabelStyle(true)}>
           MENOS PASOS
         </text>
       </motion.g>
@@ -496,13 +497,13 @@ const SceneConsulting: React.FC = () => (
 
     {/* Etiquetas */}
     <motion.g variants={fadeV}>
-      <motion.text x={56} y={150} fill={MUTED} style={useLabelStyle()} animate={{ opacity: [0, 1, 1, 0] }} transition={loop(L, [0, 0.06, 0.93, 1])}>
+      <motion.text x={56} y={144} fill={MUTED} style={useLabelStyle()} animate={{ opacity: [0, 1, 1, 0] }} transition={loop(L, [0, 0.06, 0.93, 1])}>
         DIAGNOSTICO
       </motion.text>
-      <motion.text x={490} y={150} textAnchor="end" fill={GOLD} style={useLabelStyle()} animate={{ opacity: [0, 0, 1, 1, 0, 0] }} transition={loop(L, [0, 0.12, 0.18, 0.5, 0.56, 1])}>
+      <motion.text x={490} y={144} textAnchor="end" fill={GOLD} style={useLabelStyle(true)} animate={{ opacity: [0, 0, 1, 1, 0, 0] }} transition={loop(L, [0, 0.12, 0.18, 0.5, 0.56, 1])}>
         TAREAS REPETITIVAS
       </motion.text>
-      <motion.text x={490} y={150} textAnchor="end" fill={GOLD} style={useLabelStyle()} animate={{ opacity: [0, 0, 1, 1, 0] }} transition={loop(L, [0, 0.64, 0.72, 0.93, 1])}>
+      <motion.text x={490} y={144} textAnchor="end" fill={GOLD} style={useLabelStyle(true)} animate={{ opacity: [0, 0, 1, 1, 0] }} transition={loop(L, [0, 0.64, 0.72, 0.93, 1])}>
         HERRAMIENTA A MEDIDA
       </motion.text>
     </motion.g>
