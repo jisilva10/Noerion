@@ -241,8 +241,17 @@ const SceneAutomation: React.FC = () => (
 
     {/* Bandeja Final (Servidor / Bóveda) */}
     <motion.g variants={fadeV}>
-      <motion.rect x={440} y={BELT - 46} width={46} height={66} rx={4} stroke={GOLD} strokeWidth={1.5} fill="none" />
+      {/* Estructura exterior (sin la pared izquierda para que quede abierto) */}
+      <motion.path
+        d={`M 440 ${BELT - 36} L 440 ${BELT - 42} A 4 4 0 0 1 444 ${BELT - 46} L 482 ${BELT - 46} A 4 4 0 0 1 486 ${BELT - 42} L 486 ${BELT + 16} A 4 4 0 0 1 482 ${BELT + 20} L 444 ${BELT + 20} A 4 4 0 0 1 440 ${BELT + 16} L 440 ${BELT + 4}`}
+        stroke={GOLD}
+        strokeWidth={1.5}
+        fill="none"
+      />
+      {/* Marco de la ranura de entrada */}
       <motion.path d={`M 440 ${BELT - 36} L 452 ${BELT - 36} L 452 ${BELT + 4} L 440 ${BELT + 4}`} stroke={GOLD} strokeWidth={1.5} fill="none" strokeLinejoin="round" />
+      
+      {/* Detalles del servidor */}
       <motion.line x1={460} y1={BELT - 32} x2={476} y2={BELT - 32} stroke={GOLD} strokeWidth={1.5} strokeLinecap="round" />
       <motion.line x1={460} y1={BELT - 22} x2={476} y2={BELT - 22} stroke={GOLD} strokeWidth={1.5} strokeLinecap="round" />
       <motion.circle cx={472} cy={BELT + 8} r={2.5} fill={GOLD} />
@@ -517,13 +526,19 @@ const SceneConsulting: React.FC = () => (
 
     {/* Etiquetas */}
     <motion.g variants={fadeV}>
-      <motion.text x={32} y={144} fill={GOLD} style={useLabelStyle(true)} animate={{ opacity: [0, 1, 1, 0] }} transition={loop(L, [0, 0.06, 0.93, 1])}>
+      {/* Primer título: DIAGNÓSTICO: */}
+      <motion.text x={32} y={144} fill={GOLD} style={useLabelStyle(true)} animate={{ opacity: [0, 1, 1, 0, 0] }} transition={loop(L, [0, 0.06, 0.5, 0.56, 1])}>
         DIAGNÓSTICO:
       </motion.text>
       <motion.text x={234} y={144} textAnchor="start" fill={MUTED} style={useLabelStyle()} animate={{ opacity: [0, 0, 1, 1, 0, 0] }} transition={loop(L, [0, 0.12, 0.18, 0.5, 0.56, 1])}>
         tareas repetitivas
       </motion.text>
-      <motion.text x={234} y={144} textAnchor="start" fill={MUTED} style={useLabelStyle()} animate={{ opacity: [0, 0, 1, 1, 0] }} transition={loop(L, [0, 0.64, 0.72, 0.93, 1])}>
+
+      {/* Segundo título: SOLUCIÓN: */}
+      <motion.text x={32} y={144} fill={GOLD} style={useLabelStyle(true)} animate={{ opacity: [0, 0, 1, 1, 0] }} transition={loop(L, [0, 0.56, 0.64, 0.93, 1])}>
+        SOLUCIÓN:
+      </motion.text>
+      <motion.text x={186} y={144} textAnchor="start" fill={MUTED} style={useLabelStyle()} animate={{ opacity: [0, 0, 1, 1, 0] }} transition={loop(L, [0, 0.64, 0.72, 0.93, 1])}>
         herramienta a medida
       </motion.text>
     </motion.g>
