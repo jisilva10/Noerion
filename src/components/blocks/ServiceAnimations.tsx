@@ -115,9 +115,9 @@ const useLabelStyle = (gold?: boolean): React.CSSProperties => {
   const compact = React.useContext(CompactCtx);
   return {
     fontFamily: gold ? "'Cormorant Garamond', serif" : "'DM Sans', sans-serif",
-    fontSize: compact ? 22 : (gold ? 24 : 15),
-    letterSpacing: compact ? 2 : (gold ? 1 : 3),
-    fontWeight: gold ? 600 : 700,
+    fontSize: compact ? (gold ? 22 : 16) : (gold ? 24 : 18),
+    letterSpacing: compact ? 2 : (gold ? 1 : 2),
+    fontWeight: 600,
   };
 };
 
@@ -239,8 +239,14 @@ const SceneAutomation: React.FC = () => (
       </motion.g>
     ))}
 
-    {/* Bandeja */}
-    <motion.path d={`M 440 ${BELT - 34} L 440 ${BELT + 42} L 486 ${BELT + 42} L 486 ${BELT - 34}`} stroke={GOLD} strokeWidth={1.5} fill="none" strokeLinejoin="round" opacity={0.8} variants={lineV} />
+    {/* Bandeja Final (Servidor / Bóveda) */}
+    <motion.g variants={fadeV}>
+      <motion.rect x={440} y={BELT - 46} width={46} height={66} rx={4} stroke={GOLD} strokeWidth={1.5} fill="none" />
+      <motion.path d={`M 440 ${BELT - 36} L 452 ${BELT - 36} L 452 ${BELT + 4} L 440 ${BELT + 4}`} stroke={GOLD} strokeWidth={1.5} fill="none" strokeLinejoin="round" />
+      <motion.line x1={460} y1={BELT - 32} x2={476} y2={BELT - 32} stroke={GOLD} strokeWidth={1.5} strokeLinecap="round" />
+      <motion.line x1={460} y1={BELT - 22} x2={476} y2={BELT - 22} stroke={GOLD} strokeWidth={1.5} strokeLinecap="round" />
+      <motion.circle cx={472} cy={BELT + 8} r={2.5} fill={GOLD} />
+    </motion.g>
 
     {/* Comprobante */}
     <motion.path d="M 408 126 L 408 216 L 420 208 L 432 216 L 444 208 L 456 216 L 468 208 L 480 216 L 480 126 Z" stroke={GOLD} strokeWidth={1.5} fill="none" strokeLinejoin="round" variants={lineV} />
@@ -514,10 +520,10 @@ const SceneConsulting: React.FC = () => (
       <motion.text x={32} y={144} fill={GOLD} style={useLabelStyle(true)} animate={{ opacity: [0, 1, 1, 0] }} transition={loop(L, [0, 0.06, 0.93, 1])}>
         DIAGNÓSTICO:
       </motion.text>
-      <motion.text x={224} y={144} textAnchor="start" fill={MUTED} style={useLabelStyle()} animate={{ opacity: [0, 0, 1, 1, 0, 0] }} transition={loop(L, [0, 0.12, 0.18, 0.5, 0.56, 1])}>
+      <motion.text x={234} y={144} textAnchor="start" fill={MUTED} style={useLabelStyle()} animate={{ opacity: [0, 0, 1, 1, 0, 0] }} transition={loop(L, [0, 0.12, 0.18, 0.5, 0.56, 1])}>
         tareas repetitivas
       </motion.text>
-      <motion.text x={224} y={144} textAnchor="start" fill={MUTED} style={useLabelStyle()} animate={{ opacity: [0, 0, 1, 1, 0] }} transition={loop(L, [0, 0.64, 0.72, 0.93, 1])}>
+      <motion.text x={234} y={144} textAnchor="start" fill={MUTED} style={useLabelStyle()} animate={{ opacity: [0, 0, 1, 1, 0] }} transition={loop(L, [0, 0.64, 0.72, 0.93, 1])}>
         herramienta a medida
       </motion.text>
     </motion.g>
