@@ -164,14 +164,28 @@ const SceneAutomation: React.FC = () => (
     <motion.path d="M 96 240 C 96 288 84 302 84 314" stroke={SOFT} strokeWidth={1.3} fill="none" strokeDasharray="4 6" variants={lineV} />
     <motion.path d="M 78 306 L 84 316 L 90 306" stroke={SOFT} strokeWidth={1.3} fill="none" strokeLinecap="round" strokeLinejoin="round" variants={lineV} />
 
-    {/* La linea */}
-    <motion.line x1={34} y1={BELT} x2={486} y2={BELT} stroke={SOFT} strokeWidth={1.5} variants={lineV} />
+    {/* La linea (cinta) - dividida para no cruzar el chip ni la bandeja */}
+    <motion.line x1={34} y1={BELT} x2={208} y2={BELT} stroke={SOFT} strokeWidth={1.5} variants={lineV} />
+    <motion.line x1={304} y1={BELT} x2={440} y2={BELT} stroke={SOFT} strokeWidth={1.5} variants={lineV} />
     <motion.line x1={34} y1={BELT - 16} x2={34} y2={BELT + 16} stroke={SOFT} strokeWidth={1.5} strokeLinecap="round" variants={lineV} />
     <motion.g variants={fadeV}>
       <motion.line
         x1={34}
         y1={BELT}
-        x2={486}
+        x2={208}
+        y2={BELT}
+        stroke={GOLD}
+        strokeWidth={1.8}
+        strokeLinecap="round"
+        strokeDasharray="5 19"
+        opacity={0.55}
+        animate={{ strokeDashoffset: [0, -48] }}
+        transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+      />
+      <motion.line
+        x1={304}
+        y1={BELT}
+        x2={440}
         y2={BELT}
         stroke={GOLD}
         strokeWidth={1.8}
@@ -500,10 +514,10 @@ const SceneConsulting: React.FC = () => (
       <motion.text x={32} y={144} fill={GOLD} style={useLabelStyle(true)} animate={{ opacity: [0, 1, 1, 0] }} transition={loop(L, [0, 0.06, 0.93, 1])}>
         DIAGNÓSTICO:
       </motion.text>
-      <motion.text x={186} y={144} textAnchor="start" fill={MUTED} style={useLabelStyle()} animate={{ opacity: [0, 0, 1, 1, 0, 0] }} transition={loop(L, [0, 0.12, 0.18, 0.5, 0.56, 1])}>
+      <motion.text x={224} y={144} textAnchor="start" fill={MUTED} style={useLabelStyle()} animate={{ opacity: [0, 0, 1, 1, 0, 0] }} transition={loop(L, [0, 0.12, 0.18, 0.5, 0.56, 1])}>
         tareas repetitivas
       </motion.text>
-      <motion.text x={186} y={144} textAnchor="start" fill={MUTED} style={useLabelStyle()} animate={{ opacity: [0, 0, 1, 1, 0] }} transition={loop(L, [0, 0.64, 0.72, 0.93, 1])}>
+      <motion.text x={224} y={144} textAnchor="start" fill={MUTED} style={useLabelStyle()} animate={{ opacity: [0, 0, 1, 1, 0] }} transition={loop(L, [0, 0.64, 0.72, 0.93, 1])}>
         herramienta a medida
       </motion.text>
     </motion.g>
