@@ -55,14 +55,8 @@ interface FeatureStepsProps {
 
 const T = (x: number, y: number, r: number, sc: number) => ({ x, y, rotate: r, scale: sc });
 
-function outFrames(g: Geo, reduce: boolean) {
+function outFrames(g: Geo) {
   const { ox, oy, d, rollEnd, tx, ty, k, apex } = g;
-  if (reduce) {
-    return {
-      anim: { x: [ox, tx], y: [oy, ty], rotate: [0, 360], scale: [H, k], opacity: [1, 1] },
-      t: { duration: 0.5, ease: "easeInOut" } as Transition,
-    };
-  }
   return {
     anim: {
       x: [ox, ox + d * 0.5, rollEnd, (rollEnd + tx) / 2, tx, tx],
@@ -79,14 +73,8 @@ function outFrames(g: Geo, reduce: boolean) {
   };
 }
 
-function inFrames(g: Geo, reduce: boolean) {
+function inFrames(g: Geo) {
   const { ox, oy, d, rollEnd, tx, ty, k, apex } = g;
-  if (reduce) {
-    return {
-      anim: { x: [tx, ox], y: [ty, oy], rotate: [360, 0], scale: [k, H], opacity: [1, 1] },
-      t: { duration: 0.42, ease: "easeInOut" } as Transition,
-    };
-  }
   return {
     anim: {
       x: [tx, tx, (tx + rollEnd) / 2, rollEnd, ox + d * 0.5, ox],
@@ -110,7 +98,7 @@ const scaleFrames = (obj: Record<string, number[]>, s: number) => {
 };
 
 /* ─── el personaje ──────────────────────────────────────────── */
-const Flyer: React.FC<{ g: Geo; mode: Mode; reduce: boolean }> = ({ g, mode, reduce }) => {
+const Flyer: React.FC<{ g: Geo; mode: Mode }> = ({ g, mode }) => {
   const [wake, setWake] = useState(mode === "in");
   const [gz, setGz] = useState(0);
 
@@ -134,8 +122,8 @@ const Flyer: React.FC<{ g: Geo; mode: Mode; reduce: boolean }> = ({ g, mode, red
     return () => clearInterval(id);
   }, [mode, g.cfg]);
 
-  const out = useMemo(() => outFrames(g, reduce), [g, reduce]);
-  const back = useMemo(() => inFrames(g, reduce), [g, reduce]);
+  const out = useMemo(() => outFrames(g), [g]);
+  const back = useMemo(() => inFrames(g), [g]);
 
   const anim =
     mode === "out"
@@ -152,11 +140,17 @@ const Flyer: React.FC<{ g: Geo; mode: Mode; reduce: boolean }> = ({ g, mode, red
   const gaze = mode === "stage" ? g.cfg.gaze[gz % g.cfg.gaze.length] : null;
   const idle = mode === "stage" ? scaleFrames(g.cfg.idle, g.s) : { x: 0, y: 0, rotate: 0 };
 
+  const initial = mode === "out" 
+    ? { ...T(g.ox, g.oy, 0, H), opacity: 1 }
+    : mode === "in"
+    ? { ...T(g.tx, g.ty, 360, g.k), opacity: 1 }
+    : false;
+
   return (
     <motion.div
       className="absolute top-0 left-0 z-40 pointer-events-none"
-      style={{ width: BASE, height: BASE, marginLeft: -BASE / 2, marginTop: -BASE / 2, willChange: "transform" }}
-      initial={mode === "in" ? { ...T(g.tx, g.ty, 360, g.k), opacity: 1 } : false}
+      style={{ width: BASE, height: BASE, marginLeft: -BASE / 2, marginTop: -BASE / 2 }}
+      initial={initial}
       animate={anim}
       transition={trans}
     >
@@ -506,8 +500,8 @@ export function FeatureSteps({ features, className, autoPlayInterval = 12000 }: 
       )}
 
       {/* ── los dos chips ───────────────────────────────────── */}
-      {geos && actorIdx !== null && <Flyer g={geos[actorIdx]} mode={actorMode} reduce={reduce} />}
-      {geos && backIdx !== null && <Flyer key={`back-${backIdx}`} g={geos[backIdx]} mode="in" reduce={reduce} />}
+      {geos && actorIdx !== null && <Flyer g={geos[actorIdx]} mode={actorMode} />}
+      {geos && backIdx !== null && <Flyer key={`back-${backIdx}`} g={geos[backIdx]} mode="in" />}
     </div>
   );
 }
