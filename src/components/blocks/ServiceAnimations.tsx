@@ -497,14 +497,14 @@ const SceneConsulting: React.FC = () => (
 
     {/* Etiquetas */}
     <motion.g variants={fadeV}>
-      <motion.text x={56} y={144} fill={MUTED} style={useLabelStyle()} animate={{ opacity: [0, 1, 1, 0] }} transition={loop(L, [0, 0.06, 0.93, 1])}>
-        DIAGNOSTICO
+      <motion.text x={32} y={144} fill={MUTED} style={useLabelStyle()} animate={{ opacity: [0, 1, 1, 0] }} transition={loop(L, [0, 0.06, 0.93, 1])}>
+        diagnóstico:
       </motion.text>
-      <motion.text x={490} y={144} textAnchor="end" fill={GOLD} style={useLabelStyle(true)} animate={{ opacity: [0, 0, 1, 1, 0, 0] }} transition={loop(L, [0, 0.12, 0.18, 0.5, 0.56, 1])}>
-        TAREAS REPETITIVAS
+      <motion.text x={500} y={144} textAnchor="end" fill={GOLD} style={useLabelStyle(true)} animate={{ opacity: [0, 0, 1, 1, 0, 0] }} transition={loop(L, [0, 0.12, 0.18, 0.5, 0.56, 1])}>
+        tareas repetitivas
       </motion.text>
-      <motion.text x={490} y={144} textAnchor="end" fill={GOLD} style={useLabelStyle(true)} animate={{ opacity: [0, 0, 1, 1, 0] }} transition={loop(L, [0, 0.64, 0.72, 0.93, 1])}>
-        HERRAMIENTA A MEDIDA
+      <motion.text x={500} y={144} textAnchor="end" fill={GOLD} style={useLabelStyle(true)} animate={{ opacity: [0, 0, 1, 1, 0] }} transition={loop(L, [0, 0.64, 0.72, 0.93, 1])}>
+        herramienta a medida
       </motion.text>
     </motion.g>
   </>
