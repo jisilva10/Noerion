@@ -95,7 +95,7 @@ export default function App() {
         <IconBrandWhatsapp size={20} stroke={1.5} />
         <span>WhatsApp</span>
       </a>
-      <a href="https://mail.google.com/mail/?view=cm&fs=1&to=jisignacio10@gmail.com" target="_blank" rel="noreferrer" className="contact-chip">
+      <a href="mailto:jisignacio10@gmail.com?subject=Consulta%20desde%20kayronconsulting.com" className="contact-chip">
         <IconMail size={20} stroke={1.5} />
         <span>Email</span>
       </a>
@@ -258,7 +258,7 @@ export default function App() {
       <IconBrandWhatsapp size={20} stroke={1.5} />
       <span>WhatsApp</span>
     </a>
-    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=jisignacio10@gmail.com" target="_blank" rel="noreferrer" className="contact-chip">
+    <a href="mailto:jisignacio10@gmail.com?subject=Consulta%20desde%20kayronconsulting.com" className="contact-chip">
       <IconMail size={20} stroke={1.5} />
       <span>Email</span>
     </a>
