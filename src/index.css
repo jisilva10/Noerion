@@ -1061,21 +1061,82 @@ footer p {
 }
 
 
-.contact-chip { display: flex; align-items: center; gap: 10px; padding: 12px 28px; border: 1.5px solid var(--gold); border-radius: 100px; color: var(--dark); text-decoration: none; font-family: 'DM Sans', sans-serif; font-size: 16px; transition: all 0.3s ease; }
-.contact-chip:hover { background: var(--gold); color: var(--cream); }
+/* ─────────────────────────────────────────────────────────────
+   Contacto: UNA sola acción.
+
+   Antes había tres botones idénticos (WhatsApp, Email, Instagram) y
+   ninguno era el importante: el ojo tenía que elegir y no elegía. Ahora
+   WhatsApp es el único canal —sólido, con el texto diciendo qué pasa y no
+   qué herramienta es— el correo va abajo como dato, y las redes al pie.
+
+   El botón es tinta con texto crema, no oro: el brand book prohíbe el oro
+   sobre crema porque no contrasta. El oro entra solo al pasar el mouse,
+   sobre la tinta, que es donde sí se lee.
+   ───────────────────────────────────────────────────────────── */
+
+.cta-principal {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 38px;
+  background: var(--dark);
+  color: var(--cream);
+  border: 1.5px solid var(--dark);
+  border-radius: 100px;
+  text-decoration: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 17px;
+  letter-spacing: 0.01em;
+  transition: color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 0 rgba(24, 24, 15, 0.18);
+}
+.cta-principal:hover {
+  color: var(--gold);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(24, 24, 15, 0.22);
+}
+
+.cta-secundario {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--stone, #8A8679);
+  text-decoration: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  transition: color 0.3s ease;
+}
+.cta-secundario:hover { color: var(--dark); }
 
 .hero-chips-wrap {
   display: flex;
-  gap: 16px;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  margin-top: 24px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+  margin-top: 32px;
 }
-.hero-chips-wrap .contact-chip {
+.cta-final-acciones {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+.hero-chips-wrap > a {
   opacity: 0;
   animation: fadeUp 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
-.hero-chips-wrap .contact-chip:nth-child(1) { animation-delay: 2.0s; }
-.hero-chips-wrap .contact-chip:nth-child(2) { animation-delay: 2.2s; }
-.hero-chips-wrap .contact-chip:nth-child(3) { animation-delay: 2.4s; }
+.hero-chips-wrap > a:nth-child(1) { animation-delay: 2.0s; }
+.hero-chips-wrap > a:nth-child(2) { animation-delay: 2.2s; }
+
+.footer-social {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--stone, #8A8679);
+  text-decoration: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+.footer-social:hover { color: var(--gold); }
 

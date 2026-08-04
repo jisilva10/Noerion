@@ -91,17 +91,13 @@ export default function App() {
       </p>
     </div>
     <div className="hero-chips-wrap">
-      <a href="https://wa.me/593986145983" target="_blank" rel="noreferrer" className="contact-chip">
+      <a href="https://wa.me/593986145983?text=Hola%20Jos%C3%A9%20Ignacio%2C%20vengo%20de%20la%20web.%20Me%20gustar%C3%ADa%20agendar%20los%2030%20minutos." target="_blank" rel="noreferrer" className="cta-principal">
         <IconBrandWhatsapp size={20} stroke={1.5} />
-        <span>WhatsApp</span>
+        <span>Hablemos 30 minutos</span>
       </a>
-      <a href="mailto:jisignacio10@gmail.com?subject=Consulta%20desde%20kayronconsulting.com" className="contact-chip">
-        <IconMail size={20} stroke={1.5} />
-        <span>Email</span>
-      </a>
-      <a href="https://www.instagram.com/kayron.consulting/" target="_blank" rel="noreferrer" className="contact-chip">
-        <IconBrandInstagram size={20} stroke={1.5} />
-        <span>Instagram</span>
+      <a href="mailto:jisignacio10@gmail.com?subject=Consulta%20desde%20kayronconsulting.com" className="cta-secundario">
+        <IconMail size={16} stroke={1.5} />
+        <span>jisignacio10@gmail.com</span>
       </a>
     </div>
     <div className="grid-wrap">
@@ -253,18 +249,14 @@ export default function App() {
     es <em>ahora.</em></span>
   </h2>
   <p style={{ marginBottom: '32px' }}>Sin compromiso. Con claridad sobre qué está frenando tu empresa y cómo resolverlo.</p>
-  <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
-    <a href="https://wa.me/593986145983" target="_blank" rel="noreferrer" className="contact-chip">
+  <div className="cta-final-acciones">
+    <a href="https://wa.me/593986145983?text=Hola%20Jos%C3%A9%20Ignacio%2C%20vengo%20de%20la%20web.%20Me%20gustar%C3%ADa%20agendar%20los%2030%20minutos." target="_blank" rel="noreferrer" className="cta-principal">
       <IconBrandWhatsapp size={20} stroke={1.5} />
-      <span>WhatsApp</span>
+      <span>Hablemos 30 minutos</span>
     </a>
-    <a href="mailto:jisignacio10@gmail.com?subject=Consulta%20desde%20kayronconsulting.com" className="contact-chip">
-      <IconMail size={20} stroke={1.5} />
-      <span>Email</span>
-    </a>
-    <a href="https://www.instagram.com/kayron.consulting/" target="_blank" rel="noreferrer" className="contact-chip">
-      <IconBrandInstagram size={20} stroke={1.5} />
-      <span>Instagram</span>
+    <a href="mailto:jisignacio10@gmail.com?subject=Consulta%20desde%20kayronconsulting.com" className="cta-secundario">
+      <IconMail size={16} stroke={1.5} />
+      <span>jisignacio10@gmail.com</span>
     </a>
   </div>
 </section>
@@ -273,6 +265,10 @@ export default function App() {
   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px', width: '100%' }}>
     <p>© 2026 Kayron Consulting &amp; Engineering</p>
     <p>Ecuador</p>
+    <a href="https://www.instagram.com/kayron.consulting/" target="_blank" rel="noreferrer" className="footer-social">
+      <IconBrandInstagram size={18} stroke={1.5} />
+      <span>@kayron.consulting</span>
+    </a>
   </div>
 </footer>
 
