@@ -82,10 +82,10 @@ export default function App() {
 
   <div className="hero-right">
     <div className="hero-copy">
-      <h2>
+      <h1>
         Activamos tu<br />
         <em>momento.</em>
-      </h2>
+      </h1>
       <p>
         Optimizamos tus procesos con inteligencia artificial y automatización. Resultados reales, sistemas que funcionan, equipos que los adoptan.
       </p>
@@ -187,7 +187,14 @@ export default function App() {
   <div className="block-founder">
     <div className="founder-photo-col creative-reveal">
       <div className="founder-photo-frame">
-        <img src="founder.png" alt="José Ignacio Silva" />
+        <img
+          src="founder-portrait.jpg"
+          alt="José Ignacio Silva, fundador y consultor principal de Kayron Consulting &amp; Engineering"
+          width="1086"
+          height="1448"
+          loading="lazy"
+          decoding="async"
+        />
         <div className="photo-name-tag">
           <h3>José Ignacio Silva</h3>
           <p>Fundador &amp; Consultor Principal</p>
