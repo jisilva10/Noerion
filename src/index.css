@@ -36,7 +36,6 @@ html, body {
 }
 html {
   scroll-behavior: smooth;
-  scroll-snap-type: y mandatory;
 }
 
 body {
@@ -45,10 +44,16 @@ body {
   color: var(--dark);
 }
 
-/* Snap sections into place */
+/* Los enlaces del menú tienen que aterrizar DEBAJO de la barra fija, no
+   tapados por ella. Eso es todo lo que hace falta acá.
+
+   Acá vivía `scroll-snap-type: y mandatory` con cada sección como punto de
+   anclaje. Se sacó: el snap obligatorio solo funciona cuando cada sección
+   entra en la pantalla, y acá 5 de 7 son más altas que el viewport en móvil
+   (la de «El Origen» mide casi 2000px). Además el footer, de 195px, pedía
+   como punto de anclaje unos 600px de espacio vacío debajo para poder
+   alinearse contra el tope — y eso era scroll fantasma después del pie. */
 header, section, footer {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
   scroll-margin-top: 96px;
 }
 
@@ -113,7 +118,12 @@ nav.scrolled { border-bottom-color: var(--border); }
 .hero {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  /* svh = la pantalla que se ve de verdad. En iOS, 100vh mide la pantalla con
+     la barra de direcciones ya retraída, así que el hero quedaba más alto que
+     lo visible y sobraba scroll. El vh queda de respaldo para navegadores
+     viejos, que lo pisa la línea de abajo si entienden svh. */
   min-height: 100vh;
+  min-height: 100svh;
   padding-top: 96px;
 }
 

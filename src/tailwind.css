@@ -752,7 +752,6 @@ html, body {
 }
 html {
   scroll-behavior: smooth;
-  scroll-snap-type: y mandatory;
 }
 body {
   background: var(--cream);
@@ -760,8 +759,6 @@ body {
   color: var(--dark);
 }
 header, section, footer {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
   scroll-margin-top: 96px;
 }
 nav {
@@ -822,6 +819,7 @@ nav.scrolled {
   display: grid;
   grid-template-columns: 1fr 1fr;
   min-height: 100vh;
+  min-height: 100svh;
   padding-top: 96px;
 }
 .hero-left {
