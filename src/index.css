@@ -1128,15 +1128,23 @@ footer p {
 .hero-chips-wrap > a:nth-child(1) { animation-delay: 2.0s; }
 .hero-chips-wrap > a:nth-child(2) { animation-delay: 2.2s; }
 
+/* Instagram: botón de ícono, redondo, arriba del copyright.
+   Notable de verdad, pero en el pie: no compite con el único CTA. */
 .footer-social {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  color: var(--stone, #8A8679);
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border: 1.5px solid var(--gold);
+  border-radius: 50%;
+  color: var(--dark);
   text-decoration: none;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
-  transition: color 0.3s ease;
+  transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
 }
-.footer-social:hover { color: var(--gold); }
+.footer-social:hover {
+  background: var(--dark);
+  color: var(--gold);
+  transform: translateY(-2px);
+}
 

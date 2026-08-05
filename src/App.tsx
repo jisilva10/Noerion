@@ -91,7 +91,7 @@ export default function App() {
       </p>
     </div>
     <div className="hero-chips-wrap">
-      <a href="https://wa.me/593986145983?text=Hola%20Jos%C3%A9%20Ignacio%2C%20vengo%20de%20la%20web.%20Me%20gustar%C3%ADa%20agendar%20los%2030%20minutos." target="_blank" rel="noreferrer" className="cta-principal">
+      <a href="https://wa.me/593986145983?text=Hola%2C%20vi%20la%20web%20y%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20lo%20que%20hacen." target="_blank" rel="noreferrer" className="cta-principal">
         <IconBrandWhatsapp size={20} stroke={1.5} />
         <span>Hablemos 30 minutos</span>
       </a>
@@ -250,7 +250,7 @@ export default function App() {
   </h2>
   <p style={{ marginBottom: '32px' }}>Sin compromiso. Con claridad sobre qué está frenando tu empresa y cómo resolverlo.</p>
   <div className="cta-final-acciones">
-    <a href="https://wa.me/593986145983?text=Hola%20Jos%C3%A9%20Ignacio%2C%20vengo%20de%20la%20web.%20Me%20gustar%C3%ADa%20agendar%20los%2030%20minutos." target="_blank" rel="noreferrer" className="cta-principal">
+    <a href="https://wa.me/593986145983?text=Hola%2C%20vi%20la%20web%20y%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20lo%20que%20hacen." target="_blank" rel="noreferrer" className="cta-principal">
       <IconBrandWhatsapp size={20} stroke={1.5} />
       <span>Hablemos 30 minutos</span>
     </a>
@@ -263,12 +263,18 @@ export default function App() {
 
 <footer>
   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px', width: '100%' }}>
+    <a
+      href="https://www.instagram.com/kayron.consulting/"
+      target="_blank"
+      rel="noreferrer"
+      className="footer-social"
+      aria-label="Instagram de Kayron: @kayron.consulting"
+      title="@kayron.consulting"
+    >
+      <IconBrandInstagram size={24} stroke={1.5} />
+    </a>
     <p>© 2026 Kayron Consulting &amp; Engineering</p>
     <p>Ecuador</p>
-    <a href="https://www.instagram.com/kayron.consulting/" target="_blank" rel="noreferrer" className="footer-social">
-      <IconBrandInstagram size={18} stroke={1.5} />
-      <span>@kayron.consulting</span>
-    </a>
   </div>
 </footer>
 
