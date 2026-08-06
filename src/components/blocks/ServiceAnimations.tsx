@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import type { Transition, Variants } from "framer-motion";
 
 /* ══════════════════════════════════════════════════════════════
-   PALETA KAYRON
+   PALETA NOERION
    ══════════════════════════════════════════════════════════════ */
 const GOLD = "#B89A0A";
 const SOFT = "#CFC8BA";

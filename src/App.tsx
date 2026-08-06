@@ -37,7 +37,7 @@ export default function App() {
 
 <nav id="navbar">
   <a className="nav-logo" href="#">
-    KAYR
+    NOERI
     <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
       <rect x="5" y="2" width="12" height="12" rx="1.5" stroke="#B89A0A" strokeWidth="1.2" fill="none"/>
       <line x1="5" y1="5.5" x2="2" y2="5.5" stroke="#B89A0A" strokeWidth="1" strokeLinecap="round"/>
@@ -69,22 +69,22 @@ export default function App() {
 
   <div className="hero-left">
     <div className="hero-wordmark">
-      KAYR
+      NOERI
       <ChipEye className="chip-bounce" />
       N
     </div>
     <div className="hero-rule"></div>
     <div className="hero-sub">Consulting &amp; Engineering</div>
     <p className="hero-definition">
-      kayr·on &nbsp;|&nbsp; del griego. (kairós) el momento exacto &nbsp;/&nbsp; (-on) fuerza que activa
+      noerion &nbsp;|&nbsp; del griego. (noerós) lo que comprende &nbsp;/&nbsp; (-ion) partícula que actúa
     </p>
   </div>
 
   <div className="hero-right">
     <div className="hero-copy">
       <h1>
-        Activamos tu<br />
-        <em>momento.</em>
+        Comprensión<br />
+        <em>en acción.</em>
       </h1>
       <p>
         Optimizamos tus procesos con inteligencia artificial y automatización. Resultados reales, sistemas que funcionan, equipos que los adoptan.
@@ -95,7 +95,7 @@ export default function App() {
         <IconBrandWhatsapp size={20} stroke={1.5} />
         <span>Hablemos 30 minutos</span>
       </a>
-      <a href="mailto:jisignacio10@gmail.com?subject=Consulta%20desde%20kayronconsulting.com" className="cta-secundario">
+      <a href="mailto:jisignacio10@gmail.com?subject=Consulta%20desde%20noerionconsulting.com" className="cta-secundario">
         <IconMail size={16} stroke={1.5} />
         <span>jisignacio10@gmail.com</span>
       </a>
@@ -166,15 +166,15 @@ export default function App() {
         <div className="header-label">El Origen</div>
         <h2 className="header-title reveal-text" style={{ fontSize: '3rem', lineHeight: '1.1', marginBottom: '1rem' }}>
           <span>¿QUÉ SIGNIFICA<br />
-          <em>KAYR·ON?</em></span>
+          <em>NOERION?</em></span>
         </h2>
       </div>
       <div>
         <p className="header-pull">
-          Kairós era la comprensión griega del tiempo que importa. No el que se mide en relojes, sino el instante preciso en que actuar marca la diferencia entre avanzar o quedarse.
+          Nous era la palabra griega para la mente que comprende. No la que acumula datos, sino la que ve la estructura de un problema y sabe dónde hay que actuar. De ahí noerós: lo que comprende.
         </p>
         <p className="header-body">
-          Le sumamos <strong>-on</strong>, el sufijo de las partículas que mueven el universo. El electrón. El fotón. No solo el momento. La fuerza que lo activa.
+          Le sumamos <strong>-ion</strong>, el sufijo de las partículas que mueven el universo. El electrón. El fotón. No solo entender. La comprensión puesta en acción.
         </p>
       </div>
     </div>
@@ -185,7 +185,7 @@ export default function App() {
       <div className="founder-photo-frame">
         <img
           src="founder-portrait.jpg"
-          alt="José Ignacio Silva, fundador y consultor principal de Kayron Consulting &amp; Engineering"
+          alt="José Ignacio Silva, fundador y consultor principal de Noerion Consulting &amp; Engineering"
           width="1086"
           height="1448"
           loading="lazy"
@@ -219,8 +219,8 @@ export default function App() {
         </div>
       </div>
       <div className="ft-quote">
-        <blockquote>"Tu momento de transformación ya existe dentro de tu empresa. Nosotros somos la fuerza que lo activa."</blockquote>
-        <cite>José Ignacio Silva, Fundador de Kayron</cite>
+        <blockquote>"La respuesta ya está dentro de tu empresa. Nosotros la comprendemos y la ponemos en acción."</blockquote>
+        <cite>José Ignacio Silva, Fundador de Noerion</cite>
       </div>
     </div>
   </div>
@@ -229,8 +229,8 @@ export default function App() {
 
 <section className="footer-cta fade-up-scroll" id="contacto">
   <h2 className="reveal-text">
-    <span>Tu momento<br />
-    KAYR
+    <span>La respuesta ya está.<br />
+    NOERI
     <svg width="1.05em" height="0.75em" viewBox="0 0 22 16" fill="none" style={{ display: 'inline-block', margin: '0 0.05em', transform: 'translateY(-0.15em)' }}>
       <rect x="5" y="2" width="12" height="12" rx="1.5" stroke="#B89A0A" strokeWidth="1.2" fill="none"/>
       <line x1="5" y1="5.5" x2="2" y2="5.5" stroke="#B89A0A" strokeWidth="1" strokeLinecap="round"/>
@@ -246,7 +246,7 @@ export default function App() {
       <circle cx="11" cy="8" r="2" fill="#B89A0A"/>
     </svg>
     N<br />
-    es <em>ahora.</em></span>
+    la pone en <em>acción.</em></span>
   </h2>
   <p style={{ marginBottom: '32px' }}>Sin compromiso. Con claridad sobre qué está frenando tu empresa y cómo resolverlo.</p>
   <div className="cta-final-acciones">
@@ -254,7 +254,7 @@ export default function App() {
       <IconBrandWhatsapp size={20} stroke={1.5} />
       <span>Hablemos 30 minutos</span>
     </a>
-    <a href="mailto:jisignacio10@gmail.com?subject=Consulta%20desde%20kayronconsulting.com" className="cta-secundario">
+    <a href="mailto:jisignacio10@gmail.com?subject=Consulta%20desde%20noerionconsulting.com" className="cta-secundario">
       <IconMail size={16} stroke={1.5} />
       <span>jisignacio10@gmail.com</span>
     </a>
@@ -264,16 +264,16 @@ export default function App() {
 <footer>
   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px', width: '100%' }}>
     <a
-      href="https://www.instagram.com/kayron.consulting/"
+      href="https://www.instagram.com/noerion.consulting/"
       target="_blank"
       rel="noreferrer"
       className="footer-social"
-      aria-label="Instagram de Kayron: @kayron.consulting"
-      title="@kayron.consulting"
+      aria-label="Instagram de Noerion: @noerion.consulting"
+      title="@noerion.consulting"
     >
       <IconBrandInstagram size={24} stroke={1.5} />
     </a>
-    <p>© 2026 Kayron Consulting &amp; Engineering</p>
+    <p>© 2026 Noerion Consulting &amp; Engineering</p>
     <p>Ecuador</p>
   </div>
 </footer>
