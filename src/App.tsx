@@ -76,7 +76,7 @@ export default function App() {
     <div className="hero-rule"></div>
     <div className="hero-sub">Consulting &amp; Engineering</div>
     <p className="hero-definition">
-      noerion &nbsp;|&nbsp; del griego. (noerós) lo que comprende &nbsp;/&nbsp; (-ion) partícula que actúa
+      noerion &nbsp;|&nbsp; del griego. (noerós) lo que comprende &nbsp;/&nbsp; (-ion) lo que se hace
     </p>
   </div>
 
@@ -174,7 +174,7 @@ export default function App() {
           Nous era la palabra griega para la mente que comprende. No la que acumula datos, sino la que ve la estructura de un problema y sabe dónde hay que actuar. De ahí noerós: lo que comprende.
         </p>
         <p className="header-body">
-          Le sumamos <strong>-ion</strong>, el sufijo de las partículas que mueven el universo. El electrón. El fotón. No solo entender. La comprensión puesta en acción.
+          Le sumamos <strong>-ion</strong>, la terminación de las palabras que nombran un acto, no un estado. Acción. Ejecución. No solo entender: que pase.
         </p>
       </div>
     </div>
@@ -219,7 +219,7 @@ export default function App() {
         </div>
       </div>
       <div className="ft-quote">
-        <blockquote>"La respuesta ya está dentro de tu empresa. Nosotros la comprendemos y la ponemos en acción."</blockquote>
+        <blockquote>"No implementamos inteligencia artificial porque esté de moda. La usamos donde entendimos que hace falta."</blockquote>
         <cite>José Ignacio Silva, Fundador de Noerion</cite>
       </div>
     </div>
@@ -229,8 +229,7 @@ export default function App() {
 
 <section className="footer-cta fade-up-scroll" id="contacto">
   <h2 className="reveal-text">
-    <span>La respuesta ya está.<br />
-    NOERI
+    <span>NOERI
     <svg width="1.05em" height="0.75em" viewBox="0 0 22 16" fill="none" style={{ display: 'inline-block', margin: '0 0.05em', transform: 'translateY(-0.15em)' }}>
       <rect x="5" y="2" width="12" height="12" rx="1.5" stroke="#B89A0A" strokeWidth="1.2" fill="none"/>
       <line x1="5" y1="5.5" x2="2" y2="5.5" stroke="#B89A0A" strokeWidth="1" strokeLinecap="round"/>
@@ -246,7 +245,7 @@ export default function App() {
       <circle cx="11" cy="8" r="2" fill="#B89A0A"/>
     </svg>
     N<br />
-    la pone en <em>acción.</em></span>
+    <em>Comprensión en acción.</em></span>
   </h2>
   <p style={{ marginBottom: '32px' }}>Sin compromiso. Con claridad sobre qué está frenando tu empresa y cómo resolverlo.</p>
   <div className="cta-final-acciones">
