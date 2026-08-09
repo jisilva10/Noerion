@@ -187,7 +187,7 @@ export default function App() {
           src="founder-portrait.jpg"
           alt="José Ignacio Silva, fundador y consultor principal de Noerion Consulting &amp; Engineering"
           width="1086"
-          height="1448"
+          height="1279"
           loading="lazy"
           decoding="async"
         />
