@@ -63,11 +63,8 @@
       "description": "Consultoría en inteligencia artificial, automatización de procesos, estrategia empresarial y gestión del talento para empresas en Ecuador.",
       "slogan": "Comprensión en acción.",
       "priceRange": "$$",
-      "founder": {
-        "@type": "Person",
-        "name": "José Ignacio Silva",
-        "jobTitle": "Fundador & Consultor Principal"
-      },
+      "founder": { "@id": "https://www.noerionconsulting.com/#fundador" },
+      "employee": { "@id": "https://www.noerionconsulting.com/#fundador" },
       "address": {
         "@type": "PostalAddress",
         "addressCountry": "EC"
@@ -90,13 +87,34 @@
         "@type": "OfferCatalog",
         "name": "Servicios de consultoría",
         "itemListElement": [
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Inteligencia Artificial" } },
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Automatización de Procesos" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Automatización de Procesos", "url": "https://www.noerionconsulting.com/automatizacion-de-procesos/" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Inteligencia Artificial", "url": "https://www.noerionconsulting.com/inteligencia-artificial-empresas/" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Consultoría de Procesos", "url": "https://www.noerionconsulting.com/consultoria-de-procesos/" } },
           { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Estrategia Empresarial" } },
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Gestión del Talento" } },
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Consultoría de Procesos" } }
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Gestión del Talento" } }
         ]
       }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://www.noerionconsulting.com/#fundador",
+      "name": "José Ignacio Silva",
+      "jobTitle": "Fundador & Consultor Principal",
+      "worksFor": { "@id": "https://www.noerionconsulting.com/#organization" },
+      "image": "https://www.noerionconsulting.com/founder-portrait.jpg",
+      "knowsAbout": [
+        "Inteligencia artificial aplicada a empresas",
+        "Automatización de procesos",
+        "Estrategia empresarial",
+        "Gestión del talento",
+        "n8n",
+        "Modelos de lenguaje"
+      ],
+      "knowsLanguage": ["es", "en"],
+      "sameAs": [
+        "https://www.linkedin.com/in/jis-ai",
+        "https://www.tiktok.com/@jis_ai"
+      ]
     },
     {
       "@type": "WebSite",
@@ -121,10 +139,12 @@
         Optimizamos tus procesos con inteligencia artificial y automatización.
         Resultados reales, sistemas que funcionan, equipos que los adoptan.
       </p>
-      <p>
-        Servicios: Inteligencia Artificial, Automatización, Estrategia Empresarial,
-        Gestión del Talento y Consultoría de Procesos para empresas en Ecuador.
-      </p>
+      <p>Servicios para empresas en Ecuador:</p>
+      <ul>
+        <li><a href="/automatizacion-de-procesos/">Automatización de procesos</a></li>
+        <li><a href="/inteligencia-artificial-empresas/">Inteligencia artificial para empresas</a></li>
+        <li><a href="/consultoria-de-procesos/">Consultoría de procesos</a></li>
+      </ul>
       <p>
         Escríbenos por <a href="https://wa.me/593986145983">WhatsApp</a> o al correo
         <a href="mailto:jisignacio10@gmail.com">jisignacio10@gmail.com</a>.
