@@ -23,3 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 .claude/
+
+# Material para la ficha de Google: no es parte del sitio
+FOTOS-FICHA-GOOGLE/
