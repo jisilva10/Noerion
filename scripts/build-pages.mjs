@@ -9,7 +9,7 @@
  * y esa segunda pasada no siempre llega.
  */
 
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { PAGINAS, SITIO } from './paginas.mjs';
@@ -20,7 +20,7 @@ const DIST = join(RAIZ, 'dist');
 const HOY = new Date().toISOString().slice(0, 10);
 
 const FUENTES =
-  'https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@200;300;400;500&display=swap';
+  'https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap';
 
 /** Texto plano para los datos estructurados: el JSON-LD no admite etiquetas. */
 const plano = (s) => s.replace(/<[^>]+>/g, '');
@@ -32,141 +32,150 @@ const attr = (s) =>
 const json = (obj) =>
   JSON.stringify(obj, null, 2).replace(/</g, '\\u003c');
 
+/* El logotipo del manual, tal cual, metido en el HTML para que se pinte con
+   el texto y no haya un salto mientras carga. */
+const LOGO = readFileSync(join(RAIZ, 'public/marca/noerion-positivo.svg'), 'utf8')
+  .replace(/<\?xml[^>]*>/, '')
+  .trim()
+  .replace('<svg ', '<svg class="logo" role="img" aria-label="Noerion" ');
+
+const WA_ICONO = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21"/><path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1"/></svg>`;
+
 /* ══════════════════════════════════════════
    ESTILOS
-   Van dentro del HTML y no como archivo aparte: son pocos y así la página
-   pinta en el primer viaje, sin una segunda petición de por medio.
+   Los mismos de la portada, valor por valor: crema, tinta y oro; Cormorant
+   para titulares y DM Sans para el resto. Van dentro del HTML y no como
+   archivo aparte: son pocos y así la página pinta en el primer viaje.
 ══════════════════════════════════════════ */
 const ESTILOS = `
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--cream:#F4F1EB;--white:#FAFAF8;--dark:#18180F;--mid:#40403A;--light:#8A8679;--gold:#B89A0A;--border:#E2DDD5}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{background:var(--cream);color:var(--dark);font-family:'DM Sans',system-ui,sans-serif;font-weight:300;line-height:1.6;overflow-x:hidden}
-a{color:inherit}
-img{max-width:100%;height:auto}
+:root{--crema:#F4F1EB;--papel:#FAFAF8;--tinta:#18180F;--grafito:#40403A;--piedra:#6C685C;--arena:#E2DDD5;--oro:#B89A0A;--oro-texto:#7D6906;--ios:cubic-bezier(.32,.72,0,1);--gutter:clamp(16px,5vw,56px)}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:84px}
+body{background:var(--crema);color:var(--tinta);font-family:'DM Sans','Helvetica Neue',Arial,sans-serif;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img,svg{display:block;max-width:100%}
+:focus-visible{outline:2px solid var(--oro);outline-offset:3px;border-radius:6px}
 
-/* La barra es la misma de la portada, valor por valor. Una página de
-   servicio que se sintiera «otro sitio» rompería la confianza justo donde
-   hace falta sostenerla. */
-nav.barra{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:flex-start;justify-content:space-between;padding:28px 56px;background:rgba(244,241,235,.92);backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:border-color .3s}
-nav.barra.scrolled{border-bottom-color:var(--border)}
-.nav-logo{display:inline-flex;align-items:center;font-family:'Cormorant',serif;font-weight:600;font-size:28px;color:var(--dark);letter-spacing:.06em;line-height:1;gap:0;text-decoration:none}
-.nav-links{display:flex;align-items:center;gap:40px;padding-top:6px}
-.nav-links a{font-family:'DM Sans',sans-serif;font-weight:300;font-size:11px;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--dark);transition:color .2s}
-.nav-links a:hover{color:var(--gold)}
-.nav-links a.cta{color:var(--gold);border-bottom:1px solid var(--gold);padding-bottom:2px}
-.menu-toggle{display:none;flex-direction:column;gap:6px;cursor:pointer;z-index:200;padding:8px;margin-right:-8px}
-.menu-toggle span{width:24px;height:1.5px;background:var(--dark);transition:.4s cubic-bezier(.22,1,.36,1);transform-origin:center}
-.menu-toggle.active span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
-.menu-toggle.active span:nth-child(2){transform:translateY(-7.5px) rotate(-45deg)}
+.barra{position:fixed;inset:0 0 auto 0;z-index:100;border-bottom:1px solid transparent;transition:background-color .45s var(--ios),border-color .45s}
+.barra.bajo{background:rgba(244,241,235,.74);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);border-bottom-color:rgba(24,24,15,.06)}
+.barra-dentro{position:relative;z-index:2;max-width:1240px;margin:0 auto;height:72px;padding-inline:var(--gutter);display:flex;align-items:center;gap:32px}
+.barra .logo{width:150px;height:auto}
+.barra-enlaces{display:flex;gap:30px;margin-left:auto}
+.barra-enlaces a{font-size:14px;color:var(--grafito);transition:color .3s}
+.barra-enlaces a:hover{color:var(--tinta)}
+.barra-cta{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 18px;border-radius:999px;background:var(--tinta);color:var(--crema);font-size:14px;font-weight:500}
+.barra-cta svg{color:#3ddc84}
+.barra-menu{display:none;width:44px;height:44px;margin-right:-10px;position:relative;background:none;border:0;cursor:pointer;color:var(--tinta)}
+.barra-menu span{position:absolute;left:12px;right:12px;height:1.5px;background:currentColor;transition:transform .45s var(--ios)}
+.barra-menu span:first-child{top:18px}.barra-menu span:last-child{top:25px}
+.abierta .barra-menu span:first-child{transform:translateY(3.5px) rotate(45deg)}
+.abierta .barra-menu span:last-child{transform:translateY(-3.5px) rotate(-45deg)}
+.barra-hoja{position:fixed;inset:0;z-index:1;background:var(--crema);padding:110px var(--gutter) 40px;display:flex;flex-direction:column;gap:8px;opacity:0;pointer-events:none;transition:opacity .4s var(--ios)}
+.abierta .barra-hoja{opacity:1;pointer-events:auto}
+.barra-hoja a{font-family:'Cormorant',Georgia,serif;font-size:clamp(2.2rem,9vw,3rem);line-height:1.25}
 
-.wrap{max-width:820px;margin:0 auto;padding:0 56px}
-
-.migas{padding:136px 0 0;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--light)}
-.migas a{text-decoration:none;color:var(--light)}
-.migas a:hover{color:var(--gold)}
+.wrap{max-width:820px;margin:0 auto;padding:0 var(--gutter)}
+.migas{padding:128px 0 0;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--piedra)}
+.migas a:hover{color:var(--tinta)}
 .migas span{margin:0 8px;opacity:.5}
-
-.cabecera{padding:32px 0 56px;border-bottom:1px solid var(--border)}
-h1{font-family:'Cormorant',serif;font-weight:400;font-size:clamp(2.6rem,7vw,4.2rem);line-height:1.05;letter-spacing:-.01em;margin-bottom:28px}
-.lead{font-family:'Cormorant',serif;font-size:clamp(1.25rem,2.6vw,1.6rem);line-height:1.5;color:var(--mid);font-style:italic;max-width:38ch}
-
-section.bloque{padding:56px 0;border-bottom:1px solid var(--border)}
-h2{font-family:'Cormorant',serif;font-weight:400;font-size:clamp(1.7rem,4vw,2.4rem);line-height:1.15;margin-bottom:24px}
-h3{font-family:'DM Sans',sans-serif;font-weight:500;font-size:15px;letter-spacing:.02em;margin-bottom:6px}
-p{margin-bottom:18px;color:var(--mid);max-width:64ch}
+.cabecera{padding:26px 0 56px;border-bottom:1px solid var(--arena)}
+h1{font-family:'Cormorant',Georgia,serif;font-weight:400;font-size:clamp(2.8rem,7.4vw,5rem);line-height:1;letter-spacing:-.02em;margin-bottom:26px;text-wrap:balance}
+.lead{font-family:'Cormorant',Georgia,serif;font-size:clamp(1.3rem,2.6vw,1.7rem);line-height:1.4;color:var(--oro-texto);font-style:italic;max-width:40ch}
+section.bloque{padding:56px 0;border-bottom:1px solid var(--arena)}
+h2{font-family:'Cormorant',Georgia,serif;font-weight:400;font-size:clamp(1.9rem,4vw,2.6rem);line-height:1.1;margin-bottom:22px;text-wrap:balance}
+h3{font-family:'Cormorant',Georgia,serif;font-weight:500;font-size:1.45rem;line-height:1.15;margin-bottom:6px}
+p{margin-bottom:18px;color:var(--grafito);max-width:64ch}
 p:last-child{margin-bottom:0}
-strong{font-weight:500;color:var(--dark)}
-
+strong{font-weight:500;color:var(--tinta)}
 ul.puntos{list-style:none;display:grid;gap:16px;margin-top:8px}
-ul.puntos li{position:relative;padding-left:26px;color:var(--mid);max-width:64ch}
-ul.puntos li::before{content:"";position:absolute;left:0;top:11px;width:10px;height:1px;background:var(--gold)}
-
+ul.puntos li{position:relative;padding-left:26px;color:var(--grafito);max-width:64ch}
+ul.puntos li::before{content:"";position:absolute;left:0;top:12px;width:12px;height:1px;background:var(--oro)}
 ol.pasos{list-style:none;display:grid;gap:28px;margin-top:8px}
 ol.pasos li{display:grid;grid-template-columns:56px 1fr;gap:20px;align-items:start}
-.paso-n{font-family:'Cormorant',serif;font-size:26px;color:var(--gold);line-height:1}
-.paso-d{color:var(--mid);margin:0}
-
-.faq details{border-bottom:1px solid var(--border);padding:20px 0}
-.faq details:first-of-type{border-top:1px solid var(--border)}
-.faq summary{cursor:pointer;list-style:none;font-weight:400;font-size:1.02rem;display:flex;justify-content:space-between;gap:20px;align-items:center}
+.paso-n{font-family:'Cormorant',Georgia,serif;font-size:1.6rem;color:var(--oro-texto);line-height:1}
+.paso-d{color:var(--grafito);margin:0}
+.faq details{border-bottom:1px solid var(--arena);padding:22px 0}
+.faq details:first-of-type{border-top:1px solid var(--arena)}
+.faq summary{cursor:pointer;list-style:none;font-family:'Cormorant',Georgia,serif;font-weight:500;font-size:1.4rem;line-height:1.2;display:flex;justify-content:space-between;gap:20px;align-items:center}
 .faq summary::-webkit-details-marker{display:none}
-.faq summary::after{content:"+";color:var(--gold);font-size:20px;line-height:1;flex:none}
-.faq details[open] summary::after{content:"–"}
+.faq summary::after{content:"+";flex:none;width:32px;height:32px;border-radius:50%;border:1px solid rgba(24,24,15,.14);display:grid;place-items:center;font-family:'DM Sans',sans-serif;font-size:18px;font-weight:300}
+.faq details[open] summary::after{content:"–";background:var(--tinta);color:var(--crema);border-color:var(--tinta)}
 .faq details p{margin:14px 0 0}
-
-.cierre{padding:72px 0 88px;text-align:center}
+.cierre{padding:80px 0 96px;text-align:center}
 .cierre h2{margin-bottom:14px}
-.cierre p{margin:0 auto 32px;color:var(--mid)}
-.acciones{display:flex;flex-wrap:wrap;gap:14px;justify-content:center}
-.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 30px;border-radius:2px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;transition:background .2s,color .2s,border-color .2s}
-.btn-principal{background:var(--dark);color:var(--cream)}
-.btn-principal:hover{background:var(--gold)}
-.btn-secundario{border:1px solid var(--border);color:var(--mid)}
-.btn-secundario:hover{border-color:var(--gold);color:var(--gold)}
-
-.pie{padding:44px 48px;border-top:1px solid var(--border);text-align:center;font-size:12px;color:var(--light);display:grid;gap:14px}
-.pie-links{display:flex;flex-wrap:wrap;gap:22px;justify-content:center}
-.pie-links a{font-size:11px;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;color:var(--light)}
-.pie-links a:hover{color:var(--gold)}
-
+.cierre h2 em{color:var(--oro-texto)}
+.cierre p{margin:0 auto 32px;color:var(--grafito)}
+.acciones{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.btn{display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 26px;border-radius:999px;font-size:15px;font-weight:500;transition:transform .5s var(--ios),border-color .3s,box-shadow .5s var(--ios)}
+.btn-principal{background:var(--tinta);color:var(--crema);box-shadow:0 10px 30px -12px rgba(24,24,15,.55)}
+.btn-principal svg{color:#3ddc84}
+.btn-principal:hover{transform:translateY(-2px);box-shadow:0 0 0 4px rgba(184,154,10,.18),0 18px 40px -14px rgba(24,24,15,.6)}
+.btn-secundario{border:1px solid rgba(24,24,15,.16);color:var(--tinta)}
+.btn-secundario:hover{border-color:var(--tinta);transform:translateY(-2px)}
+.pie{border-top:1px solid var(--arena);padding:44px 0 36px}
+.pie-dentro{max-width:1240px;margin:0 auto;padding:0 var(--gutter);display:grid;grid-template-columns:1fr auto;gap:24px 48px;align-items:center}
+.pie .logo{width:140px;height:auto}
+.pie-marca p{margin:10px 0 0;font-size:13px;color:var(--piedra)}
+.pie-links{display:flex;flex-wrap:wrap;gap:8px 24px;font-size:14px;color:var(--grafito)}
+.pie-links a:hover{color:var(--tinta);text-decoration:underline;text-underline-offset:4px}
+.pie-legal{grid-column:1/-1;font-size:12.5px;color:var(--piedra);margin:0}
 @media (max-width:900px){
-  nav.barra,nav.barra.scrolled{padding:0;background:transparent;backdrop-filter:none;border-bottom:none;pointer-events:none}
-  .nav-logo{display:none}
-  .menu-toggle{display:flex;position:fixed;top:24px;right:24px;pointer-events:auto;margin:0;padding:12px}
-  .nav-links{position:fixed;top:0;right:-100%;width:100%;height:100vh;background:rgba(244,241,235,.98);backdrop-filter:blur(12px);flex-direction:column;justify-content:center;align-items:center;gap:48px;transition:right .5s cubic-bezier(.22,1,.36,1);z-index:100;pointer-events:auto;padding-top:0}
-  .nav-links.active{right:0}
-  .nav-links a{font-size:16px;letter-spacing:.25em}
-  .wrap{padding:0 24px}
-  .migas{padding-top:96px}
-  .pie{padding:36px 24px}
+  .barra-enlaces{display:none}
+  .barra-cta{margin-left:auto}
+  .barra-menu{display:block}
+  .barra-dentro{height:64px;gap:12px}
+  .barra .logo{width:140px}
+  .migas{padding-top:100px}
   ol.pasos li{grid-template-columns:40px 1fr;gap:14px}
+  .pie-dentro{grid-template-columns:1fr}
 }
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+@media (max-width:560px){
+  .barra-cta span{display:none}
+  .barra-cta{width:40px;padding:0;justify-content:center}
+  .acciones .btn{width:100%;justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 `.trim();
 
 /* ══════════════════════════════════════════
    PARTES DE LA PÁGINA
 ══════════════════════════════════════════ */
 
-/* El chip que reemplaza la O del logotipo. Va como SVG dentro del HTML —
-   no como imagen— para que se pinte junto con el texto y no haya un salto
-   mientras carga. */
-const CHIP = `<svg width="22" height="16" viewBox="0 0 22 16" fill="none" aria-hidden="true">
-      <rect x="5" y="2" width="12" height="12" rx="1.5" stroke="#B89A0A" stroke-width="1.2" fill="none"/>
-      <line x1="5" y1="5.5" x2="2" y2="5.5" stroke="#B89A0A" stroke-width="1" stroke-linecap="round"/>
-      <line x1="5" y1="10.5" x2="2" y2="10.5" stroke="#B89A0A" stroke-width="1" stroke-linecap="round"/>
-      <line x1="17" y1="5.5" x2="20" y2="5.5" stroke="#B89A0A" stroke-width="1" stroke-linecap="round"/>
-      <line x1="17" y1="10.5" x2="20" y2="10.5" stroke="#B89A0A" stroke-width="1" stroke-linecap="round"/>
-      <line x1="8" y1="2" x2="8" y2="0" stroke="#B89A0A" stroke-width="1" stroke-linecap="round"/>
-      <line x1="11" y1="2" x2="11" y2="0" stroke="#B89A0A" stroke-width="1" stroke-linecap="round"/>
-      <line x1="14" y1="2" x2="14" y2="0" stroke="#B89A0A" stroke-width="1" stroke-linecap="round"/>
-      <line x1="8" y1="14" x2="8" y2="16" stroke="#B89A0A" stroke-width="1" stroke-linecap="round"/>
-      <line x1="11" y1="14" x2="11" y2="16" stroke="#B89A0A" stroke-width="1" stroke-linecap="round"/>
-      <line x1="14" y1="14" x2="14" y2="16" stroke="#B89A0A" stroke-width="1" stroke-linecap="round"/>
-      <circle cx="11" cy="8" r="2" fill="#B89A0A"/>
-    </svg>`;
+const ENLACES = [
+  ['/#servicios', 'Qué hacemos'],
+  ['/#proceso', 'Cómo trabajamos'],
+  ['/#nosotros', 'Nosotros'],
+  ['/#preguntas', 'Preguntas'],
+];
 
 const barra = () => `
-<nav class="barra" id="navbar">
-  <a class="nav-logo" href="/" aria-label="Noerion — inicio">NOERI${CHIP}N</a>
-  <div class="menu-toggle" id="menuToggle" role="button" tabindex="0" aria-label="Abrir menú" aria-expanded="false">
-    <span></span><span></span>
+<header class="barra" id="navbar">
+  <div class="barra-dentro">
+    <a href="/" aria-label="Noerion, ir al inicio">${LOGO}</a>
+    <nav class="barra-enlaces" aria-label="Secciones">
+      ${ENLACES.map(([h, t]) => `<a href="${h}">${t}</a>`).join('\n      ')}
+    </nav>
+    <a class="barra-cta" href="${SITIO.whatsapp}" target="_blank" rel="noopener">${WA_ICONO}<span>Escríbenos</span></a>
+    <button class="barra-menu" id="menuToggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span></button>
   </div>
-  <div class="nav-links" id="navLinks">
-    <a href="/#servicios">Servicios</a>
-    <a href="/#nosotros">Quiénes somos</a>
-    <a href="/#contacto" class="cta">Contacto</a>
-  </div>
-</nav>`;
+  <nav class="barra-hoja" id="navLinks" aria-label="Secciones">
+    ${ENLACES.map(([h, t]) => `<a href="${h}">${t}</a>`).join('\n    ')}
+  </nav>
+</header>`;
 
 const pie = () => `
 <footer class="pie">
-  <div class="pie-links">
-    <a href="/">Inicio</a>
-    ${PAGINAS.map((p) => `<a href="/${p.slug}/">${attr(p.breadcrumb)}</a>`).join('\n    ')}
+  <div class="pie-dentro">
+    <div class="pie-marca">
+      <a href="/" aria-label="Noerion, ir al inicio">${LOGO}</a>
+      <p>Consulting &amp; Engineering · Quito, Ecuador</p>
+    </div>
+    <nav class="pie-links" aria-label="Servicios">
+      <a href="/">Inicio</a>
+      ${PAGINAS.map((p) => `<a href="/${p.slug}/">${attr(p.breadcrumb)}</a>`).join('\n      ')}
+    </nav>
+    <p class="pie-legal">© ${new Date().getFullYear()} Noerion Consulting &amp; Engineering</p>
   </div>
-  <p>© ${new Date().getFullYear()} Noerion Consulting &amp; Engineering — Ecuador</p>
 </footer>`;
 
 const seccion = (s) => {
@@ -306,10 +315,10 @@ ${barra()}
   ${faq(p.faq)}
 
   <section class="cierre">
-    <h2>Hablemos treinta minutos</h2>
-    <p>Sin compromiso. Sale de ahí con claridad sobre qué está frenando su empresa y cómo resolverlo.</p>
+    <h2>Hablemos treinta minutos. <em>Sin costo.</em></h2>
+    <p>Sin compromiso. Sales de ahí con claridad sobre qué está frenando tu negocio y cómo resolverlo.</p>
     <div class="acciones">
-      <a class="btn btn-principal" href="${SITIO.whatsapp}" target="_blank" rel="noopener">Escribir por WhatsApp</a>
+      <a class="btn btn-principal" href="${SITIO.whatsapp}" target="_blank" rel="noopener">${WA_ICONO}Escríbenos por WhatsApp</a>
       <a class="btn btn-secundario" href="mailto:${SITIO.email}?subject=Consulta%20sobre%20${encodeURIComponent(p.breadcrumb)}">${SITIO.email}</a>
     </div>
   </section>
@@ -318,30 +327,27 @@ ${barra()}
 ${pie()}
 
 <script>
-// Lo mínimo para que la barra se comporte como en la portada: el borde
-// que aparece al bajar y el menú de móvil. Nada más corre en estas páginas.
+// Lo mínimo para que la barra se comporte como en la portada: el cristal que
+// aparece al bajar y el menú del celular. Nada más corre en estas páginas.
 (function(){
   var barra = document.getElementById('navbar');
   var boton = document.getElementById('menuToggle');
   var menu  = document.getElementById('navLinks');
 
   addEventListener('scroll', function(){
-    barra.classList.toggle('scrolled', scrollY > 10);
+    barra.classList.toggle('bajo', scrollY > 12);
   }, { passive: true });
 
   function alternar(){
-    var abierto = menu.classList.toggle('active');
-    boton.classList.toggle('active', abierto);
+    var abierto = barra.classList.toggle('abierta');
     boton.setAttribute('aria-expanded', String(abierto));
     boton.setAttribute('aria-label', abierto ? 'Cerrar menú' : 'Abrir menú');
+    document.body.style.overflow = abierto ? 'hidden' : '';
   }
 
   boton.addEventListener('click', alternar);
-  boton.addEventListener('keydown', function(e){
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); alternar(); }
-  });
   menu.addEventListener('click', function(e){
-    if (e.target.tagName === 'A' && menu.classList.contains('active')) alternar();
+    if (e.target.tagName === 'A' && barra.classList.contains('abierta')) alternar();
   });
 })();
 </script>

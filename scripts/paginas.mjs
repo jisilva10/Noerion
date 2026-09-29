@@ -89,7 +89,7 @@ export const PAGINAS = [
     faq: [
       {
         p: '¿Cuánto tarda una automatización?',
-        r: 'Depende del proceso, pero la mayoría de los flujos que construimos entran en operación entre dos y seis semanas desde el diagnóstico. Priorizamos que algo esté funcionando pronto antes que entregar todo de golpe al final.',
+        r: 'Depende del proceso, pero la mayoría de los flujos que construimos entran en operación entre dos y cuatro semanas desde el diagnóstico. Priorizamos que algo esté funcionando pronto antes que entregar todo de golpe al final.',
       },
       {
         p: '¿Tengo que cambiar el sistema que ya uso?',
@@ -208,7 +208,7 @@ export const PAGINAS = [
     faq: [
       {
         p: '¿Cómo empieza el trabajo?',
-        r: 'Con una conversación de treinta minutos, sin costo y sin compromiso. Sale de ahí con claridad sobre qué está frenando su empresa, contrate o no.',
+        r: 'Con una conversación de treinta minutos, sin costo y sin compromiso. Sales de ahí con claridad sobre qué está frenando tu empresa, contrates o no.',
       },
       {
         p: '¿Cuánto dura una consultoría?',
@@ -216,7 +216,7 @@ export const PAGINAS = [
       },
       {
         p: '¿Qué diferencia tienen frente a una consultora grande?',
-        r: 'Trabaja directamente con quien hace el análisis, no con un equipo junior supervisado a distancia. Y la implementación viene incluida: no hay que contratar aparte a alguien que ejecute lo que se recomendó.',
+        r: 'Trabajas directamente con quien hace el análisis, no con un equipo junior supervisado a distancia. Y la implementación viene incluida: no hay que contratar aparte a alguien que ejecute lo que se recomendó.',
       },
       {
         p: '¿Qué tipo de empresas atienden?',

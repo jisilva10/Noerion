@@ -1,18 +1,20 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './tailwind.css'
-import './index.css'
-import App from './App.tsx'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import './estilos.css';
+import App from './App.tsx';
 
-if ('scrollRestoration' in history) {
-  history.scrollRestoration = 'manual';
-}
-window.scrollTo(0, 0);
-if (window.location.hash) {
-  window.history.replaceState(null, '', window.location.pathname + window.location.search);
-}
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />
-  </StrictMode>,
-)
+  </StrictMode>
+);
+
+// Las páginas de servicio enlazan a /#servicios, /#nosotros… Como la portada
+// la arma React, el ancla todavía no existe cuando el navegador intenta
+// saltar: se salta a mano en cuanto el contenido está puesto.
+if (window.location.hash) {
+  const destino = decodeURIComponent(window.location.hash.slice(1));
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() => document.getElementById(destino)?.scrollIntoView())
+  );
+}
