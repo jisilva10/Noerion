@@ -142,9 +142,9 @@ ol.pasos li{display:grid;grid-template-columns:56px 1fr;gap:20px;align-items:sta
 ══════════════════════════════════════════ */
 
 const ENLACES = [
-  ['/#servicios', 'Qué hacemos'],
-  ['/#proceso', 'Cómo trabajamos'],
-  ['/#nosotros', 'Nosotros'],
+  ['/#servicios', 'Qué hago'],
+  ['/#proceso', 'Cómo trabajo'],
+  ['/#nosotros', 'Quién soy'],
   ['/#preguntas', 'Preguntas'],
 ];
 
@@ -155,7 +155,7 @@ const barra = () => `
     <nav class="barra-enlaces" aria-label="Secciones">
       ${ENLACES.map(([h, t]) => `<a href="${h}">${t}</a>`).join('\n      ')}
     </nav>
-    <a class="barra-cta" href="${SITIO.whatsapp}" target="_blank" rel="noopener">${WA_ICONO}<span>Escríbenos</span></a>
+    <a class="barra-cta" href="${SITIO.whatsapp}" target="_blank" rel="noopener">${WA_ICONO}<span>Escríbeme</span></a>
     <button class="barra-menu" id="menuToggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span></button>
   </div>
   <nav class="barra-hoja" id="navLinks" aria-label="Secciones">
@@ -318,7 +318,7 @@ ${barra()}
     <h2>Hablemos treinta minutos. <em>Sin costo.</em></h2>
     <p>Sin compromiso. Sales de ahí con claridad sobre qué está frenando tu negocio y cómo resolverlo.</p>
     <div class="acciones">
-      <a class="btn btn-principal" href="${SITIO.whatsapp}" target="_blank" rel="noopener">${WA_ICONO}Escríbenos por WhatsApp</a>
+      <a class="btn btn-principal" href="${SITIO.whatsapp}" target="_blank" rel="noopener">${WA_ICONO}Escríbeme por WhatsApp</a>
       <a class="btn btn-secundario" href="mailto:${SITIO.email}?subject=Consulta%20sobre%20${encodeURIComponent(p.breadcrumb)}">${SITIO.email}</a>
     </div>
   </section>

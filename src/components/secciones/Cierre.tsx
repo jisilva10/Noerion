@@ -26,13 +26,13 @@ export function Cierre() {
 
           <h2 className="cierre-titular">
             Cuéntanos qué se repite en tu negocio.
-            <em>Te decimos qué puede hacerse solo.</em>
+            <em>Te digo qué puede hacerse solo.</em>
           </h2>
 
           <div className="cierre-acciones">
             <a className="boton boton-tinta grande" href={WA_GENERAL} target="_blank" rel="noreferrer">
               <IconBrandWhatsapp size={22} stroke={1.6} />
-              Escríbenos por WhatsApp
+              Escríbeme por WhatsApp
             </a>
             <a className="boton boton-aire" href={MAILTO}>
               <IconMail size={18} stroke={1.5} />

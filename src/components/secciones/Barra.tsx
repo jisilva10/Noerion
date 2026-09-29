@@ -4,9 +4,9 @@ import { Logo } from '../marca/Logo';
 import { WA_GENERAL } from '../../datos';
 
 const ENLACES = [
-  { href: '#servicios', t: 'Qué hacemos' },
-  { href: '#proceso', t: 'Cómo trabajamos' },
-  { href: '#nosotros', t: 'Nosotros' },
+  { href: '#servicios', t: 'Qué hago' },
+  { href: '#proceso', t: 'Cómo trabajo' },
+  { href: '#nosotros', t: 'Quién soy' },
   { href: '#preguntas', t: 'Preguntas' },
 ];
 
@@ -70,7 +70,7 @@ export function Barra() {
 
         <a className="barra-cta" href={WA_GENERAL} target="_blank" rel="noreferrer">
           <IconBrandWhatsapp size={17} stroke={1.6} />
-          <span>Escríbenos</span>
+          <span>Escríbeme</span>
         </a>
 
         <button
@@ -99,7 +99,7 @@ export function Barra() {
         </nav>
         <a className="boton boton-tinta" href={WA_GENERAL} target="_blank" rel="noreferrer">
           <IconBrandWhatsapp size={20} stroke={1.6} />
-          Escríbenos por WhatsApp
+          Escríbeme por WhatsApp
         </a>
       </div>
     </header>

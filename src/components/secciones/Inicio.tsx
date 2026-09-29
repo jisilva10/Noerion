@@ -41,7 +41,7 @@ export function Inicio() {
           <motion.div className="inicio-acciones" {...entra(0.44)}>
             <a className="boton boton-tinta" href={WA_GENERAL} target="_blank" rel="noreferrer">
               <IconBrandWhatsapp size={20} stroke={1.6} />
-              Escríbenos por WhatsApp
+              Escríbeme por WhatsApp
             </a>
             <a className="boton boton-aire solo-grande" href="#servicios">
               Mira cómo funciona

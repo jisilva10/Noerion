@@ -78,8 +78,8 @@ export function Nosotros() {
             </p>
 
             <blockquote className="cita">
-              «No implementamos inteligencia artificial porque esté de moda. La usamos
-              donde entendimos que hace falta.»
+              «No implemento inteligencia artificial porque esté de moda. La uso
+              donde entiendo que hace falta.»
             </blockquote>
 
             <a className="fundador-red" href={INSTAGRAM} target="_blank" rel="noreferrer">

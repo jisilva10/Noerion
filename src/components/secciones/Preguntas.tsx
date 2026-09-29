@@ -14,7 +14,7 @@ export function Preguntas() {
       <div className="envoltura preguntas-dentro">
         <div className="cabecera">
           <h2 className="titular">
-            Lo que nos preguntan
+            Lo que me preguntan
             <br />
             <em>siempre.</em>
           </h2>

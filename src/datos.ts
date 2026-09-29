@@ -18,7 +18,7 @@ export const whatsapp = (mensaje: string) =>
   `https://wa.me/593986145983?text=${encodeURIComponent(mensaje)}`;
 
 export const WA_GENERAL = whatsapp(
-  'Hola, vi la web y me gustaría saber más sobre lo que hacen.'
+  'Hola, vi la web y me gustaría saber más sobre lo que haces.'
 );
 
 export const MAILTO = `mailto:${EMAIL}?subject=${encodeURIComponent(
@@ -135,7 +135,7 @@ export const SERVICIOS = [
 ];
 
 /* ─────────────────────────────────────────────
-   Cómo trabajamos.
+   Cómo trabajo.
 ───────────────────────────────────────────── */
 export const PASOS = [
   {
@@ -147,12 +147,12 @@ export const PASOS = [
     d: 'Dónde se va el tiempo, por escrito.',
   },
   {
-    t: 'Lo montamos',
+    t: 'Lo monto',
     d: 'Sobre lo que ya usas. En dos a cuatro semanas.',
   },
   {
-    t: 'Te acompañamos',
-    d: 'Tu equipo aprende. Si algo falla, lo arreglamos.',
+    t: 'Te acompaño',
+    d: 'Tu equipo aprende. Si algo falla, lo arreglo.',
   },
 ];
 
@@ -166,26 +166,26 @@ export const PASOS = [
 export const PREGUNTAS = [
   {
     p: '¿Cuánto se demora?',
-    r: 'Casi siempre, de dos a cuatro semanas. Si es más grande, te lo decimos antes.',
+    r: 'Casi siempre, de dos a cuatro semanas. Si es más grande, te lo digo antes.',
   },
   {
     p: '¿Y si se daña?',
-    r: 'Hay soporte cada mes. Si algo falla, lo arreglamos nosotros.',
+    r: 'Hay soporte cada mes. Si algo falla, lo arreglo yo.',
   },
   {
     p: '¿Mis datos están seguros?',
-    r: 'Tus datos se quedan en tus cuentas o en un servidor tuyo. No en los nuestros.',
+    r: 'Tus datos se quedan en tus cuentas o en un servidor tuyo. No en los míos.',
   },
   {
     p: '¿Mi gente lo va a saber usar?',
-    r: 'Enseñarles es parte del trabajo. Terminamos cuando lo usan solos.',
+    r: 'Enseñarles es parte del trabajo. Termino cuando lo usan solos.',
   },
   {
     p: '¿La IA se equivoca?',
-    r: 'A veces, como una persona. Por eso la ponemos solo donde ayuda.',
+    r: 'A veces, como una persona. Por eso la pongo solo donde ayuda.',
   },
   {
-    p: '¿Qué pasa si dejo de trabajar con ustedes?',
+    p: '¿Qué pasa si dejo de trabajar contigo?',
     r: 'Todo queda en tus cuentas y es tuyo. Sigue funcionando.',
   },
 ];
