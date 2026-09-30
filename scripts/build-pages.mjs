@@ -351,6 +351,9 @@ ${pie()}
   });
 })();
 </script>
+<!-- Vercel Analytics: el mismo contador que la portada, sin React. -->
+<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
 `;
