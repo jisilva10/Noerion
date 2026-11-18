@@ -4,8 +4,8 @@ import { Logo } from '../marca/Logo';
 import { EMAIL, INSTAGRAM, MAILTO, SERVICIOS, WA_GENERAL } from '../../datos';
 
 /**
- * El cierre: el logotipo a todo el ancho, con el ojo del chip vivo mirando
- * al cursor, y la invitación. Después, el pie.
+ * El cierre: el logotipo a todo el ancho, quieto (el ojo que se mueve es solo
+ * el del inicio), y la invitación. Después, el pie.
  */
 export function Cierre() {
   return (
@@ -20,13 +20,13 @@ export function Cierre() {
             viewport={{ once: true, amount: 0.4 }}
             transition={{ type: 'spring', stiffness: 60, damping: 18 }}
           >
-            <Logo vivo despierta={1400} titulo="Noerion Consulting & Engineering" />
+            <Logo titulo="Noerion Consulting & Engineering" />
           </motion.div>
           <p className="cierre-lema">Comprensión antes de la acción.</p>
 
           <h2 className="cierre-titular">
-            Cuéntanos qué se repite en tu negocio.
-            <em>Te digo qué puede hacerse solo.</em>
+            Dime cuál necesitas.
+            <em>Te muestro cómo funciona.</em>
           </h2>
 
           <div className="cierre-acciones">
@@ -39,7 +39,6 @@ export function Cierre() {
               {EMAIL}
             </a>
           </div>
-          <p className="inicio-nota centrada">30 minutos. Sin costo.</p>
         </div>
       </section>
 

@@ -1,5 +1,27 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/automatizacion-de-procesos",
+      "destination": "/inventario-automatico/",
+      "permanent": true
+    },
+    {
+      "source": "/automatizacion-de-procesos/",
+      "destination": "/inventario-automatico/",
+      "permanent": true
+    },
+    {
+      "source": "/inteligencia-artificial-empresas",
+      "destination": "/asistente-de-whatsapp-con-ia/",
+      "permanent": true
+    },
+    {
+      "source": "/inteligencia-artificial-empresas/",
+      "destination": "/asistente-de-whatsapp-con-ia/",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

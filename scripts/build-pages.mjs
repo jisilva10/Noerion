@@ -142,10 +142,8 @@ ol.pasos li{display:grid;grid-template-columns:56px 1fr;gap:20px;align-items:sta
 ══════════════════════════════════════════ */
 
 const ENLACES = [
-  ['/#servicios', 'Qué hago'],
-  ['/#proceso', 'Cómo trabajo'],
+  ['/#sistemas', 'Sistemas'],
   ['/#nosotros', 'Quién soy'],
-  ['/#preguntas', 'Preguntas'],
 ];
 
 const barra = () => `
@@ -316,9 +314,9 @@ ${barra()}
 
   <section class="cierre">
     <h2>Hablemos treinta minutos. <em>Sin costo.</em></h2>
-    <p>Sin compromiso. Sales de ahí con claridad sobre qué está frenando tu negocio y cómo resolverlo.</p>
+    <p>Me cuentas qué necesitas y te digo si se puede y cómo.</p>
     <div class="acciones">
-      <a class="btn btn-principal" href="${SITIO.whatsapp}" target="_blank" rel="noopener">${WA_ICONO}Escríbeme por WhatsApp</a>
+      <a class="btn btn-principal" href="${p.wa || SITIO.whatsapp}" target="_blank" rel="noopener">${WA_ICONO}Escríbeme por WhatsApp</a>
       <a class="btn btn-secundario" href="mailto:${SITIO.email}?subject=Consulta%20sobre%20${encodeURIComponent(p.breadcrumb)}">${SITIO.email}</a>
     </div>
   </section>

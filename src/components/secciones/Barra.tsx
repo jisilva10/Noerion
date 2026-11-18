@@ -4,10 +4,8 @@ import { Logo } from '../marca/Logo';
 import { WA_GENERAL } from '../../datos';
 
 const ENLACES = [
-  { href: '#servicios', t: 'Qué hago' },
-  { href: '#proceso', t: 'Cómo trabajo' },
+  { href: '#sistemas', t: 'Sistemas' },
   { href: '#nosotros', t: 'Quién soy' },
-  { href: '#preguntas', t: 'Preguntas' },
 ];
 
 /**

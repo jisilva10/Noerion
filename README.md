@@ -4,41 +4,33 @@ La web de Noerion. React + Vite; se publica en Vercel.
 
 ## La portada
 
-| Sección | Qué cuenta | De dónde sale |
-|---|---|---|
-| Inicio | «Que lo repetitivo se haga solo» y el teléfono al que le llega el reporte de las 7:00 | video 34 |
-| Qué hago | **un solo módulo con cuatro pestañas** que cabe entero en la pantalla (JIS, 29/9: «deberían vivir juntos y no depender del scroll»): *Antes y ahora*, dos lados de tres líneas (de noche, a mano; de día, cada venta se descuenta sola); *Tu nivel*, malo/bueno/excelente con la lista de negocios vertical (en el celular, «Tengo una tienda ▾»); *Qué automatizar*, las diez cosas; y *Haz la cuenta*, la calculadora | ficha de la empresa (17), videos 28 y 35, carrusel 12 |
-| Aparatos | «No todo se mide con IA. Algunas cosas se cuentan solas.»: balanza, cámara que cuenta y lector de códigos, lo que diferencia a Noerion | ficha de la empresa (20 y 24), colores del video 30 |
-| Proceso | conversación, diagnóstico, lo montamos (2 a 4 semanas), te acompañamos | |
-| Quién soy | «Primero entender. Después, que suceda.», noerós + -ion y el fundador | brand book |
-| Preguntas | las seis que le hacen a JIS antes de contratar | ficha de la empresa (15) |
-| Cierre | el logotipo con el ojo vivo, «Comprensión antes de la acción» y la invitación | |
+Cuatro pantallas y nada más (JIS, 18/11/2026: «minimalismo puro»). Cada una
+cabe entera, sin bajar, y la página se detiene en cada una al hacer scroll.
 
-La historia es de cualquier negocio: el cuaderno mezcla arroz, tornillos y
-rosas a propósito (con una sola floristería, la gente creía que era solo para
-floristerías).
+| Pantalla | Qué tiene |
+|---|---|
+| Inicio | «Tres sistemas para tu negocio.», la señal para bajar (una línea por la que cae una gota, sin palabras) y el chip del logo en grande dentro de un círculo de tinta. Entra dormido, abre el ojo, sigue el cursor o el dedo, mira lo que señalas, mira a su alrededor si nadie se mueve (a veces hacia la señal para bajar) y se duerme cuando te vas. Si lo tocas, salta. El titular va con «difference»: tinta sobre el papel, papel sobre el círculo |
+| Sistemas | una galería: Inventario, Mensajes y Contenido son paneles en fila; el que tocas (o pasas el cursor) se abre con su dibujo moviéndose y una línea; si lo vuelves a tocar, en cualquier parte, se abre una ventana (sin cambiar de página) con tres pasos y «Quiero este». El cuarto, «¿Otra cosa?», es angosto y abre su propia ventana. En el celular se abre hacia abajo |
+| Quién soy | la foto de la mesa oscura, «Primero entender. Después, que suceda.», el logotipo entero como una suma, «NOERION = noerós + -ion» (lo que comprende, lo que se hace), el nombre, la cita e Instagram |
+| Cierre y pie | el logotipo quieto (el único ojo que se mueve es el del inicio), «Dime cuál necesitas» y el pie |
 
-Todo el texto vive en `src/datos.ts`. Reglas que se cumplen ahí: «tú», **primera persona del singular** («te acompaño», nunca «te acompañamos»: Noerion es solo JIS, 29/9), frases
-cortas, cero jerga, ningún precio, ninguna ley ni multa, y las cifras del
-teléfono y de la planilla dicen que son de ejemplo. Las seis preguntas también
-van en el JSON-LD de `index.html`: si se cambia una, se cambia en los dos.
+Los dibujos (`piezas/Dibujos.tsx`) no llevan palabras y son formales: línea
+fina de tinta, papel por dentro y un solo acento por sistema. Se fueron cómo trabajo, las preguntas y las demos con texto.
+
+Todo el texto vive en `src/datos.ts` (`SISTEMAS`, `CONSULTORIA`). Reglas:
+«tú», primera persona del singular, frases cortas, cero jerga, ningún precio,
+nada de facturas ni cobros como servicio, y solo lo que se entrega hoy.
 
 La marca sale de `1Contenido/3 Marca`: las letras del logotipo están copiadas
 trazo a trazo en `src/components/marca/glifos.ts`, y los SVG oficiales en
-`public/marca/`.
+`public/marca/`. El titular del inicio y los nombres de la galería van en DM
+Sans 700; las frases de marca siguen en Cormorant.
 
-## En el celular
-
-No es la misma página en chico: va al grano y todo va centrado. Las pestañas
-de «Qué hago» se deslizan y la elegida se centra sola. Balanza, cámara y lector se deslizan de lado
-con puntitos; las diez cosas son fichas chicas; el WhatsApp está solo en la
-barra de arriba (JIS, 29/9: «con ese es suficiente»); todo lo que se toca mide al menos 44 px; y la luz de
-la ventana queda quieta para no gastar batería. Todo está en el bloque
-«EL CELULAR» de `src/estilos.css`.
+Se prueba en 1280×800, 390×844 y 360×740.
 
 ## Las páginas de servicio
 
-`scripts/build-pages.mjs` genera tres páginas estáticas (el contenido está en
+`scripts/build-pages.mjs` genera cuatro páginas estáticas (una por sistema y la consultoría; las dos direcciones viejas redirigen en `vercel.json`) (el contenido está en
 `scripts/paginas.mjs`) y el sitemap, para que Google las lea sin ejecutar
 JavaScript. Tienen la misma barra, letras y colores que la portada.
 

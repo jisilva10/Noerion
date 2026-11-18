@@ -1,226 +1,230 @@
 /**
- * Contenido de las páginas de servicio.
+ * Contenido de las páginas de servicio: una por sistema y la consultoría
+ * puntual (18/11/2026). Son las mismas cuatro cosas de la portada, contadas
+ * un poco más, sin empresas, sin precios y solo con lo que se entrega hoy.
  *
- * Cada entrada de acá se convierte, al hacer `npm run build`, en una página
- * HTML completa y estática en `dist/<slug>/index.html`, más su línea en el
- * sitemap. El buscador la recibe ya escrita: no depende de que el navegador
- * ejecute React para poder leerla.
- *
- * Para agregar una página nueva basta con sumar un objeto a esta lista.
+ * Cada entrada se convierte, al hacer `npm run build`, en una página HTML
+ * estática en `dist/<slug>/index.html`, más su línea en el sitemap. Las
+ * direcciones viejas (automatizacion-de-procesos, inteligencia-artificial-
+ * empresas) redirigen a las nuevas en `vercel.json`.
  */
+
+const wa = (m) => `https://wa.me/593986145983?text=${encodeURIComponent(m)}`;
 
 export const SITIO = {
   url: 'https://www.noerionconsulting.com',
   nombre: 'Noerion Consulting & Engineering',
   telefono: '+593986145983',
   email: 'jisignacio10@gmail.com',
-  whatsapp:
-    'https://wa.me/593986145983?text=Hola%2C%20vi%20la%20web%20y%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20lo%20que%20haces.',
+  whatsapp: wa('Hola, vi la web y me gustaría saber más sobre lo que haces.'),
   ogImage: 'https://www.noerionconsulting.com/og-image.jpg',
 };
 
 export const PAGINAS = [
   {
-    slug: 'automatizacion-de-procesos',
+    slug: 'inventario-automatico',
     // El <title> es lo que se ve en el resultado de búsqueda: Google corta
     // alrededor de los 60 caracteres, así que lo importante va adelante.
-    metaTitle: 'Automatización de Procesos para Empresas | Noerion Ecuador',
+    metaTitle: 'Inventario automático para negocios | Noerion Quito',
     metaDescription:
-      'Automatizo inventarios, pagos y tareas repetitivas con n8n e integraciones a medida. Diagnóstico de 30 minutos, sin compromiso. Ecuador.',
-    breadcrumb: 'Automatización de procesos',
-    h1: 'Automatización de procesos',
-    lead: 'Tu equipo hace en cuatro horas lo que podría hacerse en veinte minutos. Mapeo dónde se pierde el tiempo y construyo los flujos que lo devuelven.',
+      'Un inventario que se descuenta con cada venta y te avisa al celular cuando algo se acaba. Con una app, lector de códigos, balanza o cámara. Quito, Ecuador.',
+    breadcrumb: 'Inventario que se cuenta solo',
+    h1: 'Inventario que se cuenta solo',
+    lead: 'Sabes lo que tienes sin contar. Y te avisa antes de que algo se acabe.',
+    wa: wa('Hola, me interesa el inventario que se cuenta solo.'),
     servicioSchema: {
-      name: 'Automatización de procesos',
+      name: 'Inventario automático',
       description:
-        'Diseño e implementación de flujos automatizados para inventarios, pagos, reportería y tareas administrativas repetitivas en empresas de Ecuador.',
+        'Inventario que se descuenta con cada venta, suma la mercadería que llega y avisa al celular cuando algo se acaba, para negocios en Ecuador.',
     },
     secciones: [
       {
-        h2: 'Qué automatizo',
-        parrafos: [
-          'No empiezo por la herramienta. Empiezo por encontrar en qué se va el día de tu equipo, que casi nunca es donde crees.',
-        ],
-        lista: [
-          '<strong>Inventarios.</strong> Stock que se actualiza solo, alertas antes de que falte, sin nadie cuadrando hojas de cálculo a fin de mes.',
-          '<strong>Pagos y cobranza.</strong> Facturación, recordatorios y conciliación corriendo sin que alguien tenga que acordarse.',
-          '<strong>Reportería.</strong> Los números que hoy alguien arma a mano cada lunes, listos solos y siempre iguales.',
-          '<strong>Entrada de datos.</strong> Información que hoy se copia de un sistema a otro a mano, moviéndose sola y sin errores de tipeo.',
-          '<strong>Seguimiento comercial.</strong> Que ningún contacto se enfríe porque nadie se acordó de responderle.',
-        ],
-      },
-      {
-        h2: 'Cómo lo hago',
+        h2: 'Cómo funciona',
         pasos: [
-          {
-            n: '01',
-            t: 'Conversación',
-            d: 'Treinta minutos para entender tu operación. Sin costo y sin compromiso.',
-          },
-          {
-            n: '02',
-            t: 'Diagnóstico',
-            d: 'Mapeo el proceso completo y te muestro, por escrito, dónde está la fuga y cuánto pesa.',
-          },
-          {
-            n: '03',
-            t: 'Ejecución',
-            d: 'Construyo el flujo, lo pongo a correr y acompaño a tu equipo hasta que lo usa solo.',
-          },
+          { n: '01', t: 'Vendes', d: 'Cada venta se descuenta sola del inventario.' },
+          { n: '02', t: 'Algo se acaba', d: 'Te llega un aviso al celular, antes de quedarte sin nada.' },
+          { n: '03', t: 'Llega mercadería', d: 'Lo que entra se suma solo.' },
         ],
       },
       {
-        h2: 'Con qué lo construyo',
-        parrafos: [
-          'Trabajo con <strong>n8n</strong> para orquestar los flujos, con modelos de lenguaje donde hace falta criterio y no solo reglas, y con integraciones directas a los sistemas que ya usas.',
-          'La regla es simple: si tu operación ya funciona sobre una herramienta, construyo encima de ella. Cambiar de sistema es caro, lento y casi nunca es lo que resuelve el problema real.',
-        ],
-      },
-      {
-        h2: 'Señales de que lo necesitas',
+        h2: 'De dónde salen los números',
         lista: [
-          'Alguien de tu equipo dedica horas cada semana a copiar información entre sistemas.',
-          'Los reportes llegan tarde, o llegan distintos según quién los arme.',
-          'Los errores aparecen siempre en el mismo punto del proceso.',
-          'Creciste y la respuesta fue contratar más gente para sostener la misma tarea manual.',
+          '<strong>Una app.</strong> Tu equipo anota lo que sale, en el celular.',
+          '<strong>Un lector de códigos.</strong> Pasas el producto y listo.',
+          '<strong>Una balanza.</strong> Cuenta por peso lo que no se cuenta a mano.',
+          '<strong>Una cámara.</strong> Cuenta lo que entra y sale de la bodega.',
+        ],
+      },
+      {
+        h2: 'Qué recibes',
+        lista: [
+          'Tu inventario al día, en una hoja de cálculo.',
+          'Un aviso al celular con cada entrada y salida.',
+          'Un aviso cuando algo está por acabarse.',
         ],
       },
     ],
     faq: [
       {
-        p: '¿Cuánto tarda una automatización?',
-        r: 'Depende del proceso, pero la mayoría de los flujos que construyo entran en operación entre dos y cuatro semanas desde el diagnóstico. Priorizo que algo esté funcionando pronto antes que entregar todo de golpe al final.',
+        p: '¿Tengo que cambiar mi sistema?',
+        r: 'No. Lo monto sobre lo que ya usas.',
       },
       {
-        p: '¿Tengo que cambiar el sistema que ya uso?',
-        r: 'Casi nunca. Construyo sobre las herramientas que tu empresa ya tiene y que tu equipo ya sabe usar. Propongo un cambio de sistema solo cuando el que tienes es la causa directa del problema.',
+        p: '¿Sirve para mi negocio?',
+        r: 'Si vendes cosas que se acaban, sí. El rubro no importa.',
       },
       {
-        p: '¿Sirve si mi equipo no es técnico?',
-        r: 'Es justamente el caso para el que diseño. Una automatización que solo funciona si hay alguien técnico vigilándola no sirve de nada. Entrego los flujos andando y acompaño al equipo hasta que los opera sin ayuda.',
-      },
-      {
-        p: '¿Trabajas con empresas fuera de Ecuador?',
-        r: 'Sí. El trabajo es remoto en su mayor parte, así que la ubicación no es un límite. En Ecuador además hago sesiones presenciales cuando el proyecto lo pide.',
+        p: '¿Cuánto se demora?',
+        r: 'Casi siempre, de dos a cuatro semanas. Si es más grande, te lo digo antes.',
       },
     ],
   },
 
   {
-    slug: 'inteligencia-artificial-empresas',
-    metaTitle: 'Inteligencia Artificial para Empresas | Noerion Ecuador',
+    slug: 'asistente-de-whatsapp-con-ia',
+    metaTitle: 'Asistente de WhatsApp con IA para negocios | Noerion Quito',
     metaDescription:
-      'Implemento IA donde de verdad hace falta: tableros, asistentes internos y decisiones con datos. Diagnóstico de 30 minutos, sin compromiso.',
-    breadcrumb: 'Inteligencia artificial para empresas',
-    h1: 'Inteligencia artificial para empresas',
-    lead: 'No implemento inteligencia artificial porque esté de moda. La uso donde entiendo que hace falta, y digo que no cuando no hace falta.',
+      'Un asistente con inteligencia artificial que contesta tu WhatsApp al instante, pasa a una persona cuando no sabe y te muestra en un panel quién está interesado.',
+    breadcrumb: 'Asistente que contesta tus mensajes',
+    h1: 'Asistente que contesta tus mensajes',
+    lead: 'Contesta tu WhatsApp con IA, de día y de noche. Tú ves todo en un panel.',
+    wa: wa('Hola, me interesa el asistente que contesta los mensajes.'),
     servicioSchema: {
-      name: 'Inteligencia artificial para empresas',
+      name: 'Asistente de WhatsApp con inteligencia artificial',
       description:
-        'Implementación de inteligencia artificial aplicada a operaciones empresariales: tableros de control, asistentes internos y análisis de datos para empresas en Ecuador.',
+        'Asistente con inteligencia artificial que contesta los mensajes de WhatsApp de un negocio, pasa a una persona cuando no sabe y muestra en un panel a los interesados.',
     },
     secciones: [
       {
-        h2: 'Dónde la inteligencia artificial rinde de verdad',
-        parrafos: [
-          'La mayoría de proyectos de IA fallan por el mismo motivo: se elige la tecnología antes de entender el problema. Yo hago el recorrido al revés.',
+        h2: 'Cómo funciona',
+        pasos: [
+          { n: '01', t: 'Te escriben', d: 'Contesta al instante, con lo que tú le enseñaste.' },
+          { n: '02', t: 'No sabe algo', d: 'Lo dice, y da el WhatsApp de una persona de tu equipo.' },
+          { n: '03', t: 'Hay un interesado', d: 'Aparece primero en tu panel.' },
         ],
+      },
+      {
+        h2: 'Tu panel',
         lista: [
-          '<strong>Tableros de control.</strong> Ver el rendimiento del negocio sin esperar a que alguien arme el reporte.',
-          '<strong>Asistentes internos.</strong> Que tu equipo pregunte en lenguaje normal y obtenga la respuesta de tus propios documentos y datos.',
-          '<strong>Clasificación y lectura de documentos.</strong> Facturas, contratos y correos que hoy alguien abre y ordena uno por uno.',
-          '<strong>Apoyo a la decisión.</strong> Detectar patrones en tus datos históricos que a simple vista no se ven.',
+          '<strong>Cada conversación</strong>, completa.',
+          '<strong>Quién está más interesado</strong>, primero.',
+          '<strong>Atiendes tú</strong> cuando quieras, con un botón.',
+          '<strong>Lo que sabe el asistente</strong> lo cambias tú, y lo pruebas antes.',
         ],
       },
       {
-        h2: 'Software especializado',
+        h2: 'Instagram y Facebook',
         parrafos: [
-          'Cuando ninguna herramienta del mercado hace exactamente lo que tu operación necesita, la construyo. Software hecho para tu proceso, no un producto genérico al que tu equipo tenga que adaptarse.',
-          'Eso incluye los tableros donde ves el negocio completo y las integraciones que conectan lo que hoy vive en islas separadas.',
-        ],
-      },
-      {
-        h2: 'Cuándo te voy a decir que no',
-        parrafos: [
-          'Si tu problema se resuelve ordenando un proceso, con una automatización simple o con una conversación difícil que nadie ha tenido, te lo voy a decir. Meter inteligencia artificial encima de un proceso roto solo hace que se rompa más rápido y más caro.',
-          'Prefiero perder un proyecto a entregarte algo que no vas a usar.',
+          'Si te escriben por ahí, les responde con un botón que los lleva a tu WhatsApp.',
         ],
       },
     ],
     faq: [
       {
-        p: '¿Mi empresa es demasiado pequeña para usar inteligencia artificial?',
-        r: 'El tamaño importa menos que el volumen de tareas repetitivas. Una empresa de diez personas con mucho trabajo manual suele ganar más, y más rápido, que una de doscientas con procesos ya ordenados.',
+        p: '¿La IA se equivoca?',
+        r: 'A veces, como una persona. Por eso solo contesta lo que sabe, y lo demás pasa a una persona.',
       },
       {
-        p: '¿Mis datos quedan expuestos?',
-        r: 'Es la primera pregunta que defino, antes de escribir una línea. Según lo sensible que sea la información se elige la arquitectura: modelos con acuerdos de confidencialidad, aislamiento de datos o procesamiento local. La decisión se toma contigo y queda por escrito.',
+        p: '¿Necesito otro número?',
+        r: 'Sí, un número nuevo para el asistente. Te ayudo a sacarlo.',
       },
       {
-        p: '¿Cuánto cuesta implementar IA en una empresa?',
-        r: 'Depende del alcance, y no doy un número antes de entender el problema. El diagnóstico inicial de treinta minutos no tiene costo, y de ahí sale una propuesta concreta con precio cerrado.',
+        p: '¿Guarda las fotos de mis clientes?',
+        r: 'No. Las lee para contestar y no las guarda.',
+      },
+    ],
+  },
+
+  {
+    slug: 'sistema-de-contenido',
+    metaTitle: 'Sistema de contenido para redes con IA | Noerion Quito',
+    metaDescription:
+      'Revisa cada día qué funciona en tu rubro, te da ideas y la mejor hora, y arma tus carruseles y videos con tu marca. Tú solo grabas y publicas.',
+    breadcrumb: 'Sistema para tu contenido',
+    h1: 'Sistema para tu contenido',
+    lead: 'Te dice qué publicar y arma tus publicaciones. Tú solo grabas y publicas.',
+    wa: wa('Hola, me interesa el sistema para el contenido.'),
+    servicioSchema: {
+      name: 'Sistema de contenido para redes sociales',
+      description:
+        'Radar que revisa qué funciona en las cuentas de un rubro, propone ideas y horarios, y arma carruseles y videos con la marca del negocio.',
+    },
+    secciones: [
+      {
+        h2: 'Cómo funciona',
+        pasos: [
+          { n: '01', t: 'Mira', d: 'Cada día revisa qué funciona en las cuentas de tu rubro.' },
+          { n: '02', t: 'Te propone', d: 'Tres ideas y la mejor hora para publicar.' },
+          { n: '03', t: 'Lo arma', d: 'Tus carruseles y tus videos, con tu marca.' },
+        ],
       },
       {
-        p: '¿Qué pasa si mi equipo se resiste al cambio?',
-        r: 'Es lo normal, y es parte del trabajo. Un sistema que el equipo no adopta es un sistema que no existe. Por eso la gestión del talento y el acompañamiento entran en el proyecto, no se venden aparte.',
+        h2: 'Qué recibes',
+        lista: [
+          '<strong>Tu radar.</strong> Una página en tu celular con lo que más funcionó.',
+          '<strong>Carruseles</strong> con tu logo, tus colores y tu letra.',
+          '<strong>Videos</strong> cortados y con subtítulos, listos para subir.',
+        ],
+      },
+      {
+        h2: 'Lo que haces tú',
+        parrafos: ['Grabas con tu celular y publicas. Nada se sube solo a tus redes.'],
+      },
+    ],
+    faq: [
+      {
+        p: '¿Tengo que saber editar?',
+        r: 'No. Grabas, dejas el video en una carpeta y te llega listo.',
+      },
+      {
+        p: '¿De qué cuentas aprende?',
+        r: 'De las de tu rubro que tú elijas, y de las tuyas.',
+      },
+      {
+        p: '¿Necesito algo más?',
+        r: 'Una cuenta de Claude, la IA que lo hace funcionar. Te ayudo a abrirla.',
       },
     ],
   },
 
   {
     slug: 'consultoria-de-procesos',
-    metaTitle: 'Consultoría de Procesos y Estrategia | Noerion Ecuador',
+    metaTitle: 'Consultoría puntual en automatización e IA | Noerion Quito',
     metaDescription:
-      'Diagnostico dónde tu empresa pierde tiempo y dinero, y construyo la solución. Consultoría de procesos en Ecuador. Primera conversación gratuita.',
-    breadcrumb: 'Consultoría de procesos',
-    h1: 'Consultoría de procesos',
-    lead: 'No entrego diagnósticos que terminan en un cajón. Entrego sistemas claros que tu equipo adopta y resultados que se pueden medir.',
+      'Si lo que necesitas no es inventario, mensajes ni contenido: te escucho 30 minutos, sin costo, y te digo si se puede, cómo y cuánto tiempo toma.',
+    breadcrumb: 'Consultoría para algo puntual',
+    h1: 'Consultoría para algo puntual',
+    lead: '¿Lo tuyo es otra cosa? Te escucho y te digo si se puede y cómo.',
+    wa: wa('Hola, tengo algo puntual y quería ver si me puedes ayudar.'),
     servicioSchema: {
-      name: 'Consultoría de procesos y estrategia empresarial',
+      name: 'Consultoría puntual en automatización e inteligencia artificial',
       description:
-        'Diagnóstico organizacional, rediseño de procesos, estrategia empresarial y gestión del talento para empresas en Ecuador.',
+        'Revisión de una tarea concreta de un negocio para decir si se puede automatizar, cómo y en cuánto tiempo.',
     },
     secciones: [
       {
-        h2: 'El problema con la consultoría tradicional',
-        parrafos: [
-          'La consultoría clásica entrega un informe y se va. El informe describe con precisión un problema que en la empresa ya se conocía, propone un modelo que nadie sabe cómo aplicar un lunes por la mañana, y termina archivado.',
-          'Mi trabajo no se acaba en el diagnóstico. Se acaba cuando el proceso nuevo está corriendo y el equipo lo usa sin que nadie tenga que recordárselo.',
+        h2: 'Cómo funciona',
+        pasos: [
+          { n: '01', t: 'Me cuentas', d: '30 minutos. Sin costo.' },
+          { n: '02', t: 'Te digo', d: 'Si se puede, cómo y cuánto tiempo toma. Por escrito.' },
+          { n: '03', t: 'Lo armamos juntos', d: 'Paso a paso, hasta que funcione.' },
         ],
       },
       {
-        h2: 'Qué cubre',
-        lista: [
-          '<strong>Diagnóstico organizacional.</strong> Dónde se pierde el tiempo, el dinero y la información, con evidencia y no con impresiones.',
-          '<strong>Rediseño de procesos.</strong> El camino más corto entre lo que entra y lo que el cliente recibe.',
-          '<strong>Estrategia empresarial.</strong> Decidir qué se hace y, sobre todo, qué se deja de hacer.',
-          '<strong>Gestión del talento.</strong> Roles, responsabilidades y adopción real del cambio por parte del equipo.',
-        ],
-      },
-      {
-        h2: 'Estrategia, talento e inteligencia artificial en una sola conversación',
+        h2: 'Cuándo te digo que no',
         parrafos: [
-          'Lo habitual es contratar tres proveedores distintos: uno que piensa la estrategia, otro que trabaja el talento humano y otro que implementa la tecnología. Después nadie se hace cargo de que las tres cosas encajen.',
-          'Acá se resuelven en la misma conversación, porque casi siempre son el mismo problema visto desde tres ángulos.',
+          'Si no hace falta IA, te lo digo. Prefiero perder un trabajo a venderte algo que no vas a usar.',
         ],
       },
     ],
     faq: [
       {
-        p: '¿Cómo empieza el trabajo?',
-        r: 'Con una conversación de treinta minutos, sin costo y sin compromiso. Sales de ahí con claridad sobre qué está frenando tu empresa, contrates o no.',
+        p: '¿Qué tipo de cosas?',
+        r: 'Tareas que se repiten y que hoy alguien hace a mano.',
       },
       {
-        p: '¿Cuánto dura una consultoría?',
-        r: 'El diagnóstico toma entre dos y cuatro semanas según el tamaño de la operación. La implementación depende de lo que el diagnóstico encuentre, y siempre se define con un alcance y un plazo por escrito antes de empezar.',
-      },
-      {
-        p: '¿Qué diferencia tienes frente a una consultora grande?',
-        r: 'Trabajas directamente con quien hace el análisis, no con un equipo junior supervisado a distancia. Y la implementación viene incluida: no hay que contratar aparte a alguien que ejecute lo que se recomendó.',
-      },
-      {
-        p: '¿Qué tipo de empresas atiendes?',
-        r: 'Empresas medianas y pequeñas con operación real: cosas que entran, se procesan y salen. El sector importa menos que el hecho de tener procesos que hoy se sostienen a pulso.',
+        p: '¿Y si es muy grande?',
+        r: 'Te lo digo antes, con el tiempo que toma.',
       },
     ],
   },
